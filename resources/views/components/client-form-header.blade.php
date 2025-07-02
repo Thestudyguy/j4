@@ -23,6 +23,10 @@
                 <div class="client-step-icon"></div>
                 {{-- <p>Summary</p> --}}
             </div>
+            <div class="client-step step5">
+                <div class="client-step-icon"></div>
+                {{-- <p>Summary</p> --}}
+            </div>
         </section>
     </div>
         </div>

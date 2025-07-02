@@ -230,6 +230,7 @@
                     <option value="AB-">AB-</option>
                     <option value="O+">O+</option>
                     <option value="O-">O-</option>
+                    <option value="Unknown">Unknown</option>
                     </select>
                 </div>
 
@@ -239,6 +240,7 @@
                 </div>
                 </div>
                 <div class="col-sm-12 my-4">
+                    <hr class="my-4" style="border-top: 1px solid black; height: 1px;">
                     <label class="form-label fw-semibold">Do you have or have you had any of the following? <span class="fw-normal">Check which apply.</span></label>
                     <div class="row">
                         
@@ -302,7 +304,6 @@
 
                     </div>
                     </div>
-
         </div>
     </form>
 </div>

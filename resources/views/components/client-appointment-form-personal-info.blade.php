@@ -24,7 +24,7 @@
                                         <label for="birthdate" class="form-label fw-normal">Birthdate</label>
                                         <input type="date" class="form-control form-control-sm" id="birthdate" name="birthdate">
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-4 client-sex-field"><!-- added class for styling with a silly name lol -->
                                         <label for="sex" class="form-label fw-normal">Sex</label>
                                         <br>
                                         <div class="row p-2 sex-container"><!-- goffy ahh class name -->
@@ -302,6 +302,8 @@
                                         <label for="service" class="form-label fw-normal">Select Service</label>
                                         <select name="services" id="" class="form-control form-control-sm">
                                             <option value="" selected hidden>Select service</option>
+                                            <option value="test1">test1</option>
+                                            <option value="test2">test2</option>
                                         </select>
                                     </div>
                                     
@@ -325,7 +327,7 @@
                                     </div>
                                     <div class="col-sm-12">
                                         <label for="consultation" class="form-label fw-normal">Reason for consulation</label><br>
-                                        <textarea name="" id="" cols="30" rows="10" class="form-control form-control-sm" style="resize: none;"></textarea>
+                                        <textarea name="consultationreason" id="" cols="30" rows="10" class="form-control form-control-sm" style="resize: none;"></textarea>
                                     </div>
                                 </div>
                             </div>

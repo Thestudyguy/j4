@@ -5,6 +5,15 @@ $(document).ready(function() {
     showConfirmButton: false,
     timer: 2000
 });
+
+        let clientInfoForm = $('.client-info-form');
+        let clientInfoFormData = {};
+        $.each(clientInfoForm.serializeArray(), function(i, field) {
+            clientInfoFormData[field.name] = field.value;
+        });
+        console.log(clientInfoFormData);
+        
+    
     $('#signatureUpload').on('change', function (e) {
       const file = e.target.files[0];
       const $preview = $('#signaturePreview');
@@ -28,6 +37,24 @@ $(document).ready(function() {
     showStep(currentStep);
 
     $('.next-form-btn').click(function() {
+        if(currentStep === 1){
+            clientInfoForm = $('.client-info-form').serializeArray();
+            // console.log(clientInfoForm.name);
+            // $.each(clientInfoForm, (name, value)=>{
+            //     if(value.value === '' || value.name === 'sex') {
+            //         $(`[name="${value.name}"]`).addClass('is-invalid');
+            //         Toast.fire({
+            //             icon: 'error',
+            //             title: 'Missing Fields!',
+            //             text: 'Please fill out the required fields before proceeding.'
+            //         });
+            //         return;
+            //     }
+            // });
+            // return;
+        }
+
+
         if (currentStep < totalSteps) {
             currentStep++;
             showStep(currentStep);
@@ -58,8 +85,7 @@ $(document).ready(function() {
 
     if (step === 1) {
         $backBtn.addClass('visually-hidden');
-        let clientInfoForm = $('.client-info-form').serializeArray();
-        console.log(clientInfoForm);
+        
         
     } else {
         $backBtn.removeClass('visually-hidden');
