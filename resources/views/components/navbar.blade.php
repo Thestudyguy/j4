@@ -53,6 +53,9 @@
       <li class="nav-item mx-3">
         <a class="nav-link text-dark" style="color: #fff;" href="#contact">{{ __('Contact Us') }}</a>
       </li>
+      {{-- <li class="nav-item mx-3">
+        <a class="nav-link text-dark" style="color: #fff;" href="#">{{ __('LogIn') }}</a>
+      </li> --}}
     </ul>
     </div>
   </div>

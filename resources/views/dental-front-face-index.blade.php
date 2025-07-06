@@ -16,7 +16,11 @@
 
 <body>
     <div>
-        @yield('content')
+        <div id="home">@include('layouts.intro-banner')</div>
+        <div id="j4-story">@include('layouts.story')</div>
+        <div id="j4-doctors">@include('layouts.doctors')</div>
+        <div id="why-choose-us">@include('layouts.why-choose-j4dc')</div>
+        <div id="services">@include('layouts.services')</div>
     </div>
 
     @if (!View::hasSection('hideFooter'))

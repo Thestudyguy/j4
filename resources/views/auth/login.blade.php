@@ -1,4 +1,4 @@
-@extends('layouts.app')
+{{-- @extends('layouts.app')
 
 @section('content')
 <div class="container">
@@ -38,7 +38,6 @@
                                 @enderror
                             </div>
                         </div>
-
                         <div class="row mb-3">
                             <div class="col-md-6 offset-md-4">
                                 <div class="form-check">
@@ -70,4 +69,33 @@
         </div>
     </div>
 </div>
-@endsection
+@endsection --}}
+
+
+                <form method="POST" id="login-form"  action="{{ route('login') }}" style="width: 100%; display: flex; flex-direction: column;">
+                @csrf
+                <div style="margin-bottom: 0.5rem;">
+                    <input  id="username" class="form-control @error('UserName') is-invalid @enderror" type="text"
+                                placeholder="Username" name="UserName" value="{{ old('UserName') }}" autocomplete="UserName"
+                                autofocus
+                        style="width: 100%; padding: 0.5rem; font-size: 0.875rem; background-color: #1e1e1e; color: #fff; border: 1px solid #444; border-radius: 0; outline: none; box-sizing: border-box;">
+                                @error('UserName')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                    </div>
+                <div style="margin-bottom: 0.5rem;">
+                    <input type="password" name="password" required placeholder="Password"
+                        style="width: 100%; padding: 0.5rem; font-size: 0.875rem; background-color: #1e1e1e; color: #fff; border: 1px solid #444; border-radius: 0; outline: none; box-sizing: border-box;">
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                </div>
+                <button type="submit"
+                    style="width: 100%; padding: 0.5rem; font-size: 0.875rem; background-color: #0dcaf0; color: #000; border: none; border-radius: 0; cursor: pointer;">
+                    Login
+                </button>
+            </form>

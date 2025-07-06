@@ -20,7 +20,7 @@
             </div>
 
             <!-- Social Media -->
-            <div class="col-md-4 mb-4">
+            {{-- <div class="col-md-3 mb-4">
                 <h6 class="fw-semibold text-uppercase mb-3 text-info">Follow Us</h6>
                 <div class="d-flex gap-3">
                     <a href="#" class="text-white-50" aria-label="Facebook">
@@ -36,6 +36,29 @@
                         <i class="bi bi-linkedin fs-4"></i>
                     </a>
                 </div>
+            </div> --}}
+            <div class="col-md-4 mb-4">
+                <h6 class="fw-semibold text-uppercase mb-3 text-info">Received your login details? Sign in now to view your appointments</h6>
+                @include('auth.login')
+            </div>
+                    
+            <!-- Social Media -->
+            <center class="fw-semibold">Follow us on social media bitcheeeeeesssssss</center>
+            <div class="col-md-12 d-flex justify-content-center mt-3">
+                <div style="display: flex; gap: 20px;">
+                    <a href="#" target="_blank" aria-label="Facebook" style="color: #fff;">
+                        <i class="bi bi-facebook fs-4"></i>
+                    </a>
+                    <a href="#" target="_blank" aria-label="Instagram" style="color: #fff;">
+                        <i class="bi bi-instagram fs-4"></i>
+                    </a>
+                    {{-- <a href="#" target="_blank" aria-label="Twitter" style="color: #fff;">
+                        <i class="bi bi-twitter-x fs-4"></i>
+                    </a> --}}
+                    <a href="#" target="_blank" aria-label="LinkedIn" style="color: #fff;">
+                        <i class="bi bi-twitter fs-4"></i>
+                    </a>
+            </div>
             </div>
         </div>
 

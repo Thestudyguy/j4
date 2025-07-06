@@ -37,8 +37,12 @@
             <button class="btn btn-info mx-2 float-end visually-hidden">Finish</button>
         </div> --}}
 
-        <div class="row">
+        <div class="row border">
+            <div class="col-sm-12 p-5">
+            please fill all required fields
+            </div>
             <div class="col-sm-6 p-5">
+                
                 <div class="row  pr-5">
                     <div class="col-sm-12">
                         @include('components.client-appointment-form-personal-info')
@@ -51,19 +55,16 @@
             </div>
             <div class="col-sm-6">
                 <div class="row border-left">
-                    <div class="col-sm-12text-white p-5">
+                    <div class="col-sm-12 p-5">
                         @include('components.client-appointment-form-medical-history')
-                        {{-- @include('components.client-appointment-form-personal-info') --}}
                     </div>
-                    
-                    <div class="col-sm-12">
-                        {{-- @include('components.client-appointment-form-personal-info') --}}
-                    </div>
-                    <div class="col-sm-12 bg-info">@include('components.client-appointment-form-signature')</div>
                 </div>
             </div>
+            <div class="col-sm-12 p-5 d-flex justify-content-center">
+            @include('components.client-appointment-form-signature')
+            </div>
         </div>
-        <button class="btn btn-info btn-sm float-end">Finish</button>
+        {{-- <button class="btn btn-info btn-sm float-end">Finish</button> --}}
     </div>
 </div>
 @endsection

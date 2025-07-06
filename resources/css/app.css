@@ -16,7 +16,7 @@
     font-family: "Rubik", sans-serif;
     /* font-optical-sizing: auto; */
     font-style: normal;
-    font-variation-settings: "wdth" 100;
+    /* font-variation-settings: "wdth" 100; */
 }
 /* HTML: <div class="loader"></div> */
 .loader-overlay {
@@ -31,10 +31,22 @@
   justify-content: center;
   align-items: center;
 }
-body.lock-scroll {
+/* body.lock-scroll {
   overflow: hidden;
-}
+} */
 /* HTML: <div class="loader"></div> */
+.loader-container {
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 9999;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .loader {
   width: 50px;
   aspect-ratio: 1;
@@ -144,3 +156,13 @@ body.lock-scroll {
     font-size: 12px;
 }
 
+.nav-link p{
+    color: black;
+}
+.services-row-container{
+    background-color: whitesmoke;
+}
+.services-row-container:hover{
+    background-color: rgb(223, 223, 223);
+    cursor: pointer;
+}
