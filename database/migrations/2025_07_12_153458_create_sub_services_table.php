@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('services', function (Blueprint $table) {
+        Schema::create('sub_services', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('parent_service')->nullable();
+            $table->foreign('parent_service')->references('id')->on('services')->nullOnDelete();
             $table->string('Service')->unique();
-            $table->boolean('isVisible')->default(true);
+            $table->decimal('Price', 15);
+            $table->string('Description');
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('services');
+        Schema::dropIfExists('sub_services');
     }
 };

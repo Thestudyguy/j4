@@ -11,21 +11,6 @@
                     <label for="servicename" class="form-label">Service</label>
                     <input type="text" class="form-control form-control-sm rounded-1" name="servicename" id="servicename">
                 </div>
-
-                <div class="mb-3">
-                    <label for="serviceprice" class="form-label">Service Price</label>
-                    <input type="text" class="form-control form-control-sm rounded-1" name="serviceprice" id="serviceprice">
-                </div>
-
-                <div class="mb-3">
-                    <label for="servicedescription" class="form-label">Service Description</label>
-                    <textarea class="form-control form-control-sm" name="servicedescription" id="servicedescription" cols="20" rows="5" style="resize: none;"></textarea>
-                </div>
-
-                <div class="mb-3">
-                    <label for="serviceimage" class="form-label">Service Image</label>
-                    <input class="form-control form-control-sm" type="file" name="serviceimage" accept=".png, .jpg, .jpeg" id="serviceimage">
-                </div>
             </form>
 
             </div>

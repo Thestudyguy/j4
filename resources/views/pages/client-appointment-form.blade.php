@@ -1,13 +1,16 @@
-@extends('dental-front-face-index')
+<!DOCTYPE html>
+@include('components.layout-header')
+<div class="preloader flex-column justify-content-center align-items-center">
+    <div class="loaders">
+        <div class="load-inner load-one"></div>
+        <div class="load-inner load-two"></div>
+        <div class="load-inner load-three"></div>
+        <span class="text">Loading...</span>
+      </div>
+</div>
 
-@section('hideNavBar')
-@endsection
-
-@section('hideFooter')
-@endsection
-
-@section('content')
-<!-- Loader Overlay -->
+<body>
+    <!-- Loader Overlay -->
 <div class="loader-overlay visually-hidden">
   <div class="d-flex flex-column justify-content-center align-items-center vh-100">
     <div class="loader"></div>
@@ -67,4 +70,11 @@
         {{-- <button class="btn btn-info btn-sm float-end">Finish</button> --}}
     </div>
 </div>
-@endsection
+
+</body>
+
+@include('components.scripts')
+</html>
+
+
+

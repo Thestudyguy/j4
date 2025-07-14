@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body position-relative">
-                <p>Are you sure you want to remove the service named <span class="fw-bold">{{$service->Service_Name}}</span>?</p>
+                <p>Are you sure you want to remove the service named <span class="fw-bold">{{$service->Service}}</span>?</p>
 
             </div>
             <div class="modal-footer">

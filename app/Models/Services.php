@@ -8,10 +8,7 @@ class Services extends Model
 {
     //
     protected $fillable = [
-        'ServiceName',
-        'ServicePrice',
-        'ServiceDescription',
-        'ServiceImagePath',
+        'Service',
         'isVisible'
     ];
 }

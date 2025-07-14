@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Services;
+use App\Models\sub_services;
 use Illuminate\Http\Request;
 use Log;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +15,7 @@ class Controller
     }
 
     public function ClientDashboard(){
-        return view('pages.client-appointment-view');
+        return view('pages.dashboard-dashboard');
     }
 
     public function DentistDashboard(){
@@ -32,24 +33,12 @@ class Controller
     {
 
             $validateEntry = $request->validate([
-                'servicename' => 'required|string|max:255|unique:services,Service_Name',
-                'serviceprice' => 'required|numeric|min:0',
-                'servicedescription' => 'required|string|max:1000|unique:services,Service_Description',
-                'serviceimage' => 'required|image|mimes:jpeg,png,jpg,svg'
+                'servicename' => 'required|string|max:255|unique:services,Service',
             ]);
             try {
                 DB::beginTransaction();
                 $newService = new Services();
-                $newService->Service_Name = $request->input('servicename');
-                $newService->Service_Price = $request->input('serviceprice');
-                $newService->Service_Description = $request->input('servicedescription');
-                if ($request->hasFile('serviceimage')) {
-                    $image = $request->file('serviceimage');
-                    $imagePath = $image->store('service_images', 'public');
-                    $newService->Service_Image_Path = $imagePath;
-                } else {
-                    return response()->json(['message' => 'Service image is required'], 400);
-                }
+                $newService->Service = $request->input('servicename');
                 $newService->save();
                 DB::commit();
                 return response()->json(['message'=>'New Service Created']);
@@ -69,6 +58,49 @@ class Controller
     } catch (\Exception $ex) {
         DB::rollBack();
         return response()->json(['error' => 'Failed to remove service', 'details' => $ex->getMessage()], 500);
+    }
+}
+
+    public function NewSubService(Request $request)
+{
+    // ✅ Step 1: Validate input
+    $validated = $request->validate([
+        'servicename' => 'required|string|max:255|unique:sub_services,Service',
+        'serviceprice' => 'required|numeric',
+        'servicedescription' => 'required|string|max:1000',
+        'parent-service-id' => 'nullable|exists:services,id',
+        'serviceimage' => 'required|image|mimes:jpg,jpeg,png',
+    ]);
+
+    try {
+        // ✅ Step 2: Store the image in storage/app/public/services
+        $imagePath = $request->file('serviceimage')->store('services', 'public');
+
+        // ✅ Step 3: Create new sub-service record
+        $subService = sub_services::create([
+            'parent_service' => $validated['parent-service-id'],
+            'Service' => $validated['servicename'],
+            'Price' => $validated['serviceprice'],
+            'Description' => $validated['servicedescription'],
+            // Optional: store image path if you have a column for it later
+        ]);
+
+        // ✅ Optional: Log for debugging
+        Log::info('Sub-service added successfully.', ['id' => $subService->id]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Sub-service created successfully.',
+            'data' => $subService,
+        ], 201);
+
+    } catch (\Exception $e) {
+        Log::error('Error creating sub-service: ' . $e->getMessage());
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Something went wrong while creating sub-service.',
+        ], 500);
     }
 }
 }
