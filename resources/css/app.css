@@ -75,7 +75,7 @@
 
 /* HTML: <div class="sub-service-container-loader"></div> */
 .sub-service-container-loader {
-  width: 50px;
+  width: 30px;
   padding: 8px;
   aspect-ratio: 1;
   border-radius: 50%;

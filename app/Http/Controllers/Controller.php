@@ -63,7 +63,9 @@ class Controller
 
     public function NewSubService(Request $request)
 {
-    // ✅ Step 1: Validate input
+    
+Log::info($request->all());
+
     $validated = $request->validate([
         'servicename' => 'required|string|max:255|unique:sub_services,Service',
         'serviceprice' => 'required|numeric',
@@ -73,19 +75,19 @@ class Controller
     ]);
 
     try {
-        // ✅ Step 2: Store the image in storage/app/public/services
-        $imagePath = $request->file('serviceimage')->store('services', 'public');
+        // Save the uploaded image
+        $image = $request->file('serviceimage');
+        $fileName = 'sub_service_' . time() . '.' . $image->getClientOriginalExtension();
+        $imagePath = $image->storeAs('services', $fileName, 'public');
 
-        // ✅ Step 3: Create new sub-service record
+        // Create sub-service
         $subService = sub_services::create([
             'parent_service' => $validated['parent-service-id'],
             'Service' => $validated['servicename'],
             'Price' => $validated['serviceprice'],
             'Description' => $validated['servicedescription'],
-            // Optional: store image path if you have a column for it later
+            'image_path' => $imagePath,
         ]);
-
-        // ✅ Optional: Log for debugging
         Log::info('Sub-service added successfully.', ['id' => $subService->id]);
 
         return response()->json([
@@ -93,6 +95,7 @@ class Controller
             'message' => 'Sub-service created successfully.',
             'data' => $subService,
         ], 201);
+
 
     } catch (\Exception $e) {
         Log::error('Error creating sub-service: ' . $e->getMessage());
@@ -103,4 +106,15 @@ class Controller
         ], 500);
     }
 }
+
+    public function GetSubServices($id){
+        try {
+            $trimmedId = explode('_', $id);
+            Log::info($trimmedId[2]);
+            $subServices = sub_services::where('parent_service', $trimmedId[2])->get();
+            return response()->json(['sub_services' => $subServices], 200);
+        } catch (\Exception $th) {
+            throw $th;
+        }
+    }
 }

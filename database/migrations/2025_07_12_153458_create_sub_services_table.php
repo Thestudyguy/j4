@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('Service')->unique();
             $table->decimal('Price', 15);
             $table->string('Description');
+            $table->string('image_path');
             $table->timestamps();
         });
     }

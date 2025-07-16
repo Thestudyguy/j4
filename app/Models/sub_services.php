@@ -10,6 +10,7 @@ class sub_services extends Model
         'Service',
         'Price',
         'Description',
+        'image_path',
         'parent_service'
     ];
 }

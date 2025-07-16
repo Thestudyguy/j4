@@ -24,4 +24,5 @@ Route::middleware('authenticated')->group(function(){
     Route::post('/new-service', [Controller::class, 'NewService'])->name('new-service');
     Route::post('/remove-service/{id}', [Controller::class, 'RemoveService'])->name('remove-service');
     Route::post('/new-sub-service', [Controller::class, 'NewSubService'])->name('new-sub-service');
+    Route::post('get-sub-services/{id}', [Controller::class, 'GetSubServices'])->name('get-sub-services');
 });
