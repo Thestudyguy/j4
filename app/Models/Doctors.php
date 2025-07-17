@@ -8,11 +8,13 @@ class Doctors extends Model
 {
     //
     protected $fillable = [
+        'ProfessionalTitle',
         'FirstName',
         'LastName',
         'MiddleName',
         'Suffix',
         'MDLink',
+        'AreaOfExpertise',
         'NameExtensions',
         'image_path'
     ];

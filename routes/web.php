@@ -26,4 +26,6 @@ Route::middleware('authenticated')->group(function(){
     Route::post('/new-sub-service', [Controller::class, 'NewSubService'])->name('new-sub-service');
     Route::post('get-sub-services/{id}', [Controller::class, 'GetSubServices'])->name('get-sub-services');
     Route::get('/doctors', [Controller::class, 'DoctorsPage'])->name('doctors');
+    Route::post('/doctors/new', [Controller::class, 'NewDoctors']);
+
 });

@@ -19,8 +19,10 @@ return new class extends Migration
             $table->string('MiddleName')->nullable();
             $table->string('Suffix')->nullable(); // Jr., Sr., III, etc.
             $table->string('MDLink')->nullable(); // For doctor's profile or calendar link
+            $table->string('AreaOfExpertise')->nullable(); // For doctor's profile or calendar link
             $table->string('image_path')->nullable();
             $table->boolean('isVisible')->default(true);
+            $table->boolean('isRemoved')->default(false);
             $table->timestamps();
         });
     }

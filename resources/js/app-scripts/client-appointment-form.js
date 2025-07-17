@@ -1,27 +1,27 @@
-$(document).ready(function() {
+$(document).ready(function () {
     var Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 2000
-});
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000
+    });
     const patientPersonalInfo = {};
-    
-        
-    
-    $('#signatureUpload').on('change', function (e) {
-      const file = e.target.files[0];
-      const $preview = $('#signaturePreview');
 
-      if (file && file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          $preview.attr('src', e.target.result).removeClass('d-none');
-        };
-        reader.readAsDataURL(file);
-      } else {
-        $preview.attr('src', '#').addClass('d-none');
-      }
+
+
+    $('#signatureUpload').on('change', function (e) {
+        const file = e.target.files[0];
+        const $preview = $('#signaturePreview');
+
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                $preview.attr('src', e.target.result).removeClass('d-none');
+            };
+            reader.readAsDataURL(file);
+        } else {
+            $preview.attr('src', '#').addClass('d-none');
+        }
     });
 
 
@@ -31,8 +31,8 @@ $(document).ready(function() {
     const totalSteps = $('.multi-step').length
     FormNav(currentStep);
     //navigate through the form
-    $('.form-nav-btn-next').on('click', function(e){
-        if(currentStep === 1){
+    $('.form-nav-btn-next').on('click', function (e) {
+        if (currentStep === 1) {
             const personalInfoForm = $('.client-personal-info-form').serializeArray();
             const optionalFields = ['guardian', 'referal', 'guardianoccupation', 'faxno', 'nickname', 'officeno']
             let isFormEmpty = false;
@@ -48,106 +48,124 @@ $(document).ready(function() {
                     isFormEmpty = true;
                 }
             });
-            if(isFormEmpty){
-                $.each(personalInfoForm, (index, fields)=>{
-                    console.log(fields.value);
-                    // $(`[name='${fields.name}']`).addClass('is-invalid');
-                    return;
-                });
-                Toast.fire({
-                    icon: 'warning',
-                    title: 'Missing Fields!',
-                    text: 'Please fill out all the required fields'
-                });     
-                return;
-            }      
+            if (!$('input[name="sex"]:checked').val()) {
+                $('.client-sex-field').addClass(' border border-danger');
+                isFormEmpty = true;
+            } else {
+                $('.client-sex-field').removeClass(' border border-danger');
+            }
+            // if(isFormEmpty){
+            //     $.each(personalInfoForm, (index, fields)=>{
+            //         console.log(fields.value);
+            //         // $(`[name='${fields.name}']`).addClass('is-invalid');
+            //         return;
+            //     });
+            //     Toast.fire({
+            //         icon: 'warning',
+            //         title: 'Missing Fields!',
+            //         text: 'Please fill out all the required fields'
+            //     });     
+            //     return;
+            // }  
+            const PersonalInfoObj = {};
+            $.each(personalInfoForm, (index, fields) => {
+                PersonalInfoObj[fields.name] = fields.value
+            });
+            console.log(PersonalInfoObj);
         }
 
-        if(currentStep < totalSteps){
+        if (currentStep === 2) {
+            const medicalForm = $('.client-medical-history-form').serializeArray();
+            let isFormInvalid = false;
+
+            const requiredRadios = [
+                'isHealthy',
+                'hasUsedSubstances',
+                'hasMedicalCondition',
+                'hadSurgery',
+                'hadBeenHospitalized',
+                'isPregnant',
+                'isClientNursing',
+                'isOnBithControl',
+                'isTakingPrescription',
+                'isClientASmokeWhack'
+            ];
+
+            $('.is-invalid').removeClass('is-invalid');
+
+            requiredRadios.forEach(name => {
+                const selected = $(`input[name="${name}"]:checked`).val();
+                if (!selected) {
+                    $(`input[name="${name}"]`).closest('.col-sm-12').addClass('is-invalid');
+                    isFormInvalid = true;
+                }
+            });
+
+            if ($('#otherIllness').is(':checked')) {
+                const otherDetail = $('input[name="otherIllnessDetails"]');
+                if (otherDetail.val().trim() === '') {
+                    otherDetail.addClass('border-warning');
+                }
+            }
+            // if (isFormInvalid) {
+            //     Toast.fire({
+            //         icon: 'warning',
+            //         title: 'Missing Required Fields!',
+            //         text: 'Please complete all required questions.'
+            //     });
+            //     return;
+            // }UNCOMMENT AFTER MAHUMAN
+
+            const formData = {};
+            medicalForm.forEach(({ name, value }) => {
+                if (formData[name]) {
+                    if (Array.isArray(formData[name])) {
+                        formData[name].push(value);
+                    } else {
+                        formData[name] = [formData[name], value];
+                    }
+                } else {
+                    formData[name] = value;
+                }
+            });
+            if (!$('input[name="illnesses[]"]:checked').length) {
+                formData['illnesses'] = [];
+            }
+            console.log('Step 2 Form Data:', formData);
+        }
+
+
+        if (currentStep < totalSteps) {
             currentStep++;
             FormNav(currentStep);
         }
     });
 
-    $('.form-nav-btn-back').on('click', function(){
-        if(currentStep > 1){
+    $('.form-nav-btn-back').on('click', function () {
+        if (currentStep > 1) {
             currentStep--;
             FormNav(currentStep);
         }
     });
 
-    function FormNav(steps){
+    function FormNav(steps) {
         $('.multi-step').addClass('visually-hidden');
         $('.multi-step.step-' + steps).removeClass('visually-hidden');
-        $('.form-step-indicator').each(function(index){
-            
-            if(index < steps){
+        $('.form-step-indicator').each(function (index) {
+
+            if (index < steps) {
                 $(this).
-                removeClass('bg-secondary')
-                .addClass('bg-info')
-            }else{
+                    removeClass('bg-secondary')
+                    .addClass('bg-info')
+            } else {
                 $(this)
-                 .removeClass('bg-info fw-bold')
-                .addClass('bg-secondary');
+                    .removeClass('bg-info fw-bold')
+                    .addClass('bg-secondary');
             }
         });
     }
 
-    //multistep form navigation
-    // let currentStep = 1;
-    // const totalSteps = $('.multi-step').length;
-
-    // showStep(currentStep);
-
-    // $('.form-nav-btn-next').click(function() {
-    //     if(currentStep === 1){
-    //     }
-
-
-    //     if (currentStep < totalSteps) {
-    //         currentStep++;
-    //         showStep(currentStep);
-    //     }
-    // });
-
-    // $('.form-nav-btn-back').on('click', function () {
-    //     if (currentStep > 1) {
-    //         currentStep--;
-    //         showStep(currentStep);
-    //     }
-    // });
-
-    // function showStep(step) {
-    // $('.multi-step').addClass('visually-hidden');
-    // $('.multi-step.step-' + step).removeClass('visually-hidden');
-    // $('.client-step').removeClass('active');
-    // $('.client-form-indicator-line').removeClass('active');
-    // for (let i = 1; i <= step; i++) {
-    //     $('.client-step.step' + i).addClass('active');
-    //     if (i < step) {
-    //         $('.client-form-indicator-line').eq(i - 1).addClass('active');
-    //     }
-    // }
-    // const $nextBtn = $('.next-form-btn');
-    // const $backBtn = $('.button-container .btn:contains("Back")');
-    // const $finishBtn = $('.button-container .btn:contains("Finish")');
-
-    // if (step === 1) {
-    //     $backBtn.addClass('visually-hidden');
-        
-        
-    // } else {
-    //     $backBtn.removeClass('visually-hidden');
-    // }
-
-    // if (step === totalSteps) {
-    //     $nextBtn.addClass('visually-hidden');
-    //     $finishBtn.removeClass('visually-hidden');
-    // } else {
-    //     $nextBtn.removeClass('visually-hidden');
-    //     $finishBtn.addClass('visually-hidden');
-    // }
-// }
+    
     $('.button-container .btn:contains("Finish")').on('click', function () {
         // $('.loader-overlay').removeClass('visually-hidden');
         Toast.fire({
@@ -156,6 +174,6 @@ $(document).ready(function() {
             text: 'Your appointment form has been successfully submitted!'
         });
     });
-    
+
 });
 

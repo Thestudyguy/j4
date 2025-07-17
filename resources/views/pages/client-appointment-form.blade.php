@@ -29,11 +29,14 @@
     </div>
     <div class="form-container-sheesh">
         <!-- <form action="" class="p-5 appointment-form-multi-step-container"> -->
-            <div class="container multi-step step-1 personal-info">
+            <div class="container multi-step step-1 personal-info visually-hidden">
                     @include('components.client-appointment-form-personal-info')
             </div>
             <div class="container multi-step step-2 medical-history visually-hidden">
                     @include('components.client-appointment-form-medical-history')
+            </div>
+            <div class="container multi-step step-3 patient-select-service">
+                    @include('components.client-appointment-form-select-service')
             </div>
             <button class="btn btn-primary float-right form-nav-btn-next">Next</button>
             <button class="btn btn-primary mx-2 float-right form-nav-btn-back">Back</button>

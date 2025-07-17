@@ -1,6 +1,6 @@
 <div class="">
     <p class="fw-bold">History</p>
-    <form action="">
+    <form action="" class="client-medical-history-form">
         <div class="row">
             <div class="col-sm-6">
                 <label for="previousdentist" class="form-label fw-normal">Previous Dentist</label>
