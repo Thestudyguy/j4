@@ -10,64 +10,35 @@
 </div>
 
 <body>
-    <!-- Loader Overlay -->
 <div class="loader-overlay visually-hidden">
   <div class="d-flex flex-column justify-content-center align-items-center vh-100">
     <div class="loader"></div>
   </div>
 </div>
-<div class="container-fluid bg-white rounded">
-    <div class="row form-cotainer">
-        {{-- <p class="fw-semibold text-lg">Book an Appointment</p>
-        @include('components.client-form-header')
-        <div class="col-sm-12 forms">
-            <div class="multi-step step-1 personal-info">
-                @include('components.client-appointment-form-personal-info')
-            </div>
-            <div class="multi-step step-2 medical-history visually-hidden">
-                @include('components.client-appointment-form-medical-history')
-            </div>
-            <div class="multi-step step-3 client-signature visually-hidden">
-                @include('components.client-appointment-form-signature')
-            </div>
-            <div class="multi-step step-4 client-signature visually-hidden">
-                preview here
-            </div>
+<div class="container-fluid bg-white rounded d-flex align-items-center justify-content-center flex-column">
+    <div class="row form-cotainer container">
+        <!-- <div class="form-title lead fw-bold">form title</div> -->
+        <div class="fw-semibold lead text-uppercase p-5">Appointment Form</div>
+        <div class="d-flex align-items-center justify-content-center">
+            <div class="col-sm-2 p-2 bg-info text-sm p-0 m-0 form-step-indicator" style="border-top-right-radius: 100px; border-bottom-right-radius: 100px;">Personal Info</div>
+            <div class="col-sm-2 p-2 bg-secondary text-sm p-0 m-0 form-step-indicator" style="border-top-right-radius: 100px; border-bottom-right-radius: 100px;">Medical History</div>
+            <div class="col-sm-2 p-2 bg-secondary text-sm p-0 m-0 form-step-indicator" style="border-top-right-radius: 100px; border-bottom-right-radius: 100px;">Services</div>
+            <div class="col-sm-2 p-2 bg-secondary text-sm p-0 m-0 form-step-indicator" style="border-top-right-radius: 100px; border-bottom-right-radius: 100px;">Choose a Doctor</div>
+            <div class="col-sm-2 p-2 bg-secondary text-sm p-0 m-0 form-step-indicator" style="border-top-right-radius: 100px; border-bottom-right-radius: 100px;">Application Preview</div>
         </div>
-        <div class="button-container">
-            <button class="btn btn-primary float-end next-form-btn">Next</button>
-            <button class="btn btn-secondary mx-2 float-end visually-hidden">Back</button>
-            <button class="btn btn-info mx-2 float-end visually-hidden">Finish</button>
-        </div> --}}
-
-        <div class="row border">
-            <div class="col-sm-12 p-5">
-            please fill all required fields
+    </div>
+    <div class="form-container-sheesh">
+        <!-- <form action="" class="p-5 appointment-form-multi-step-container"> -->
+            <div class="container multi-step step-1 personal-info">
+                    @include('components.client-appointment-form-personal-info')
             </div>
-            <div class="col-sm-6 p-5">
-                
-                <div class="row  pr-5">
-                    <div class="col-sm-12">
-                        @include('components.client-appointment-form-personal-info')
-                    </div>
-                    {{-- <hr style="border-top: 15px solid rgb(0, 0, 0); height: 1px;"> --}}
-                    <div class="col-sm-12">
-                        {{-- @include('components.client-appointment-form-medical-history') --}}
-                    </div>
-                </div>
+            <div class="container multi-step step-2 medical-history visually-hidden">
+                    @include('components.client-appointment-form-medical-history')
             </div>
-            <div class="col-sm-6">
-                <div class="row border-left">
-                    <div class="col-sm-12 p-5">
-                        @include('components.client-appointment-form-medical-history')
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-12 p-5 d-flex justify-content-center">
-            @include('components.client-appointment-form-signature')
-            </div>
-        </div>
-        {{-- <button class="btn btn-info btn-sm float-end">Finish</button> --}}
+            <button class="btn btn-primary float-right form-nav-btn-next">Next</button>
+            <button class="btn btn-primary mx-2 float-right form-nav-btn-back">Back</button>
+            <button class="btn btn-primary float-right form-nav-btn-finish">Finish</button>
+        <!-- </form> -->
     </div>
 </div>
 

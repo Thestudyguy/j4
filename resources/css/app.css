@@ -184,3 +184,11 @@
     background-color: rgb(223, 223, 223);
     cursor: pointer;
 }
+
+.form-step-indicator {
+    clip-path: polygon(0 0, 100% 0, 90% 100%, 0% 100%);
+    transition: background-color 0.3s ease;
+    color: white;
+    text-align: center;
+    font-weight: 500;
+}

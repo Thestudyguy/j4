@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Services;
 use App\Models\sub_services;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Log;
 use Illuminate\Support\Facades\DB;
@@ -24,8 +25,6 @@ class Controller
 
     public function ServicesDashboard(){
         $services = Services::where('isVisible', 1)->get();
-
-
         return view('pages.dashboard-services', compact('services'));
     }
 
@@ -73,14 +72,11 @@ Log::info($request->all());
         'parent-service-id' => 'nullable|exists:services,id',
         'serviceimage' => 'required|image|mimes:jpg,jpeg,png',
     ]);
-
     try {
-        // Save the uploaded image
         $image = $request->file('serviceimage');
         $fileName = 'sub_service_' . time() . '.' . $image->getClientOriginalExtension();
         $imagePath = $image->storeAs('services', $fileName, 'public');
 
-        // Create sub-service
         $subService = sub_services::create([
             'parent_service' => $validated['parent-service-id'],
             'Service' => $validated['servicename'],
@@ -113,6 +109,15 @@ Log::info($request->all());
             Log::info($trimmedId[2]);
             $subServices = sub_services::where('parent_service', $trimmedId[2])->get();
             return response()->json(['sub_services' => $subServices], 200);
+        } catch (\Exception $th) {
+            throw $th;
+        }
+    }
+
+    public function DoctorsPage(){
+        try {
+            $users = User::all();
+            return view('pages.dashboard-doctors', compact('users'));
         } catch (\Exception $th) {
             throw $th;
         }

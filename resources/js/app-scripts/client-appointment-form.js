@@ -5,13 +5,8 @@ $(document).ready(function() {
     showConfirmButton: false,
     timer: 2000
 });
-
-        let clientInfoForm = $('.client-info-form');
-        let clientInfoFormData = {};
-        $.each(clientInfoForm.serializeArray(), function(i, field) {
-            clientInfoFormData[field.name] = field.value;
-        });
-        console.log(clientInfoFormData);
+    const patientPersonalInfo = {};
+    
         
     
     $('#signatureUpload').on('change', function (e) {
@@ -30,75 +25,129 @@ $(document).ready(function() {
     });
 
 
-    //multistep form navigation
+    // multi step nav
+
     let currentStep = 1;
-    const totalSteps = $('.multi-step').length;
-
-    showStep(currentStep);
-
-    $('.next-form-btn').click(function() {
+    const totalSteps = $('.multi-step').length
+    FormNav(currentStep);
+    //navigate through the form
+    $('.form-nav-btn-next').on('click', function(e){
         if(currentStep === 1){
-            clientInfoForm = $('.client-info-form').serializeArray();
-            // console.log(clientInfoForm.name);
-            // $.each(clientInfoForm, (name, value)=>{
-            //     if(value.value === '' || value.name === 'sex') {
-            //         $(`[name="${value.name}"]`).addClass('is-invalid');
-            //         Toast.fire({
-            //             icon: 'error',
-            //             title: 'Missing Fields!',
-            //             text: 'Please fill out the required fields before proceeding.'
-            //         });
-            //         return;
-            //     }
-            // });
-            // return;
+            const personalInfoForm = $('.client-personal-info-form').serializeArray();
+            const optionalFields = ['guardian', 'referal', 'guardianoccupation', 'faxno', 'nickname', 'officeno']
+            let isFormEmpty = false;
+
+            $.each(personalInfoForm, (index, field) => {
+                $(`[name='${field.name}']`).removeClass('is-invalid');
+            });
+            $.each(personalInfoForm, (index, field) => {
+                if (optionalFields.includes(field.name)) return;
+                const value = field.value.trim();
+                if (value === '') {
+                    $(`[name='${field.name}']`).addClass('is-invalid');
+                    isFormEmpty = true;
+                }
+            });
+            if(isFormEmpty){
+                $.each(personalInfoForm, (index, fields)=>{
+                    console.log(fields.value);
+                    // $(`[name='${fields.name}']`).addClass('is-invalid');
+                    return;
+                });
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'Missing Fields!',
+                    text: 'Please fill out all the required fields'
+                });     
+                return;
+            }      
         }
 
-
-        if (currentStep < totalSteps) {
+        if(currentStep < totalSteps){
             currentStep++;
-            showStep(currentStep);
+            FormNav(currentStep);
         }
     });
 
-    $('.button-container .btn:contains("Back")').on('click', function () {
-        if (currentStep > 1) {
+    $('.form-nav-btn-back').on('click', function(){
+        if(currentStep > 1){
             currentStep--;
-            showStep(currentStep);
+            FormNav(currentStep);
         }
     });
 
-    function showStep(step) {
-    $('.multi-step').addClass('visually-hidden');
-    $('.multi-step.step-' + step).removeClass('visually-hidden');
-    $('.client-step').removeClass('active');
-    $('.client-form-indicator-line').removeClass('active');
-    for (let i = 1; i <= step; i++) {
-        $('.client-step.step' + i).addClass('active');
-        if (i < step) {
-            $('.client-form-indicator-line').eq(i - 1).addClass('active');
-        }
-    }
-    const $nextBtn = $('.next-form-btn');
-    const $backBtn = $('.button-container .btn:contains("Back")');
-    const $finishBtn = $('.button-container .btn:contains("Finish")');
-
-    if (step === 1) {
-        $backBtn.addClass('visually-hidden');
-        
-        
-    } else {
-        $backBtn.removeClass('visually-hidden');
+    function FormNav(steps){
+        $('.multi-step').addClass('visually-hidden');
+        $('.multi-step.step-' + steps).removeClass('visually-hidden');
+        $('.form-step-indicator').each(function(index){
+            
+            if(index < steps){
+                $(this).
+                removeClass('bg-secondary')
+                .addClass('bg-info')
+            }else{
+                $(this)
+                 .removeClass('bg-info fw-bold')
+                .addClass('bg-secondary');
+            }
+        });
     }
 
-    if (step === totalSteps) {
-        $nextBtn.addClass('visually-hidden');
-        $finishBtn.removeClass('visually-hidden');
-    } else {
-        $nextBtn.removeClass('visually-hidden');
-        $finishBtn.addClass('visually-hidden');
-    }
-}
+    //multistep form navigation
+    // let currentStep = 1;
+    // const totalSteps = $('.multi-step').length;
+
+    // showStep(currentStep);
+
+    // $('.form-nav-btn-next').click(function() {
+    //     if(currentStep === 1){
+    //     }
+
+
+    //     if (currentStep < totalSteps) {
+    //         currentStep++;
+    //         showStep(currentStep);
+    //     }
+    // });
+
+    // $('.form-nav-btn-back').on('click', function () {
+    //     if (currentStep > 1) {
+    //         currentStep--;
+    //         showStep(currentStep);
+    //     }
+    // });
+
+    // function showStep(step) {
+    // $('.multi-step').addClass('visually-hidden');
+    // $('.multi-step.step-' + step).removeClass('visually-hidden');
+    // $('.client-step').removeClass('active');
+    // $('.client-form-indicator-line').removeClass('active');
+    // for (let i = 1; i <= step; i++) {
+    //     $('.client-step.step' + i).addClass('active');
+    //     if (i < step) {
+    //         $('.client-form-indicator-line').eq(i - 1).addClass('active');
+    //     }
+    // }
+    // const $nextBtn = $('.next-form-btn');
+    // const $backBtn = $('.button-container .btn:contains("Back")');
+    // const $finishBtn = $('.button-container .btn:contains("Finish")');
+
+    // if (step === 1) {
+    //     $backBtn.addClass('visually-hidden');
+        
+        
+    // } else {
+    //     $backBtn.removeClass('visually-hidden');
+    // }
+
+    // if (step === totalSteps) {
+    //     $nextBtn.addClass('visually-hidden');
+    //     $finishBtn.removeClass('visually-hidden');
+    // } else {
+    //     $nextBtn.removeClass('visually-hidden');
+    //     $finishBtn.addClass('visually-hidden');
+    // }
+// }
     $('.button-container .btn:contains("Finish")').on('click', function () {
         // $('.loader-overlay').removeClass('visually-hidden');
         Toast.fire({

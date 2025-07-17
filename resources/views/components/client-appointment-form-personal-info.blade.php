@@ -1,6 +1,6 @@
             <div class="">
                 <p class="client-info fw-bold">Personal Info</p>
-                <form action="" class="client-info-form">
+                <form action="" class="client-personal-info-form">
                         <div class="row">
                             <div class="col-sm-12 p-3">
                                 <div class="row">
@@ -296,7 +296,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12 p-3">
+                            <!-- <div class="col-sm-12 p-3">
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label for="service" class="form-label fw-normal">Select Service</label>
@@ -308,7 +308,7 @@
                                     </div>
                                     
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-sm-12 p-3 for-minor">
                                 <hr style="height: 1px; background-color: black; border: none;" class="mt-5">
                                 <p class="fw-semibold" style="font-style: italic">For Minors</p>

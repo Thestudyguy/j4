@@ -21,7 +21,15 @@
                             <i class="nav-icon fa fa-file-invoice"></i>
                             <i class="fa-solid fa-gauge"></i>
                             <p class="text-sm">
-                                {{ __('Settings') }}
+                                {{ __('Services') }}
+                            </p>
+                        </a>
+                </li>
+                <li class="nav-item">
+                        <a href="{{route('doctors')}}" class="nav-link">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p class="text-sm">
+                                {{ __('Doctors') }}
                             </p>
                         </a>
                 </li>
