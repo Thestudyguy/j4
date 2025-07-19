@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class sub_services extends Model
+class SubService extends Model
 {
+    use HasFactory;
     protected $fillable =[
         'Service',
         'Price',

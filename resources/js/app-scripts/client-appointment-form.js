@@ -6,8 +6,33 @@ $(document).ready(function () {
         timer: 2000
     });
     const patientPersonalInfo = {};
+    let selectedServiceID = null;
+    let selectedDoctorID = null;
+    //patient/client selecting a service: block
+    $('.is-dom-card-selected').on('click', function () {
+        if ($(this).hasClass('border-info')) {
+            $(this).removeClass('border border-info');
+            selectedServiceID = null;
+        } else {
+            $('.is-dom-card-selected').removeClass('border border-info');
+            $(this).addClass('border border-info');
+            selectedServiceID = $(this).attr('id');
+        }
+    });
+    //patient/client selecting a service: block
 
-
+    //patient/client selecting a doctor: block
+    $('.is-doctor-dom-card-selected').on('click', function () {
+        if ($(this).hasClass('border-info')) {
+            $(this).removeClass('border border-info');
+            selectedDoctorID = null;
+        } else {
+            $('.is-doctor-dom-card-selected').removeClass('border border-info');
+            $(this).addClass('border border-info');
+            selectedDoctorID = $(this).attr('id');
+        }
+    });
+    //patient/client selecting a doctor: block
 
     $('#signatureUpload').on('change', function (e) {
         const file = e.target.files[0];
@@ -54,19 +79,19 @@ $(document).ready(function () {
             } else {
                 $('.client-sex-field').removeClass(' border border-danger');
             }
-            // if(isFormEmpty){
-            //     $.each(personalInfoForm, (index, fields)=>{
-            //         console.log(fields.value);
-            //         // $(`[name='${fields.name}']`).addClass('is-invalid');
-            //         return;
-            //     });
-            //     Toast.fire({
-            //         icon: 'warning',
-            //         title: 'Missing Fields!',
-            //         text: 'Please fill out all the required fields'
-            //     });     
-            //     return;
-            // }  
+            if(isFormEmpty){
+                $.each(personalInfoForm, (index, fields)=>{
+                    console.log(fields.value);
+                    // $(`[name='${fields.name}']`).addClass('is-invalid');
+                    return;
+                });
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'Missing Fields!',
+                    text: 'Please fill out all the required fields'
+                });     
+                return;
+            }  
             const PersonalInfoObj = {};
             $.each(personalInfoForm, (index, fields) => {
                 PersonalInfoObj[fields.name] = fields.value
@@ -107,14 +132,14 @@ $(document).ready(function () {
                     otherDetail.addClass('border-warning');
                 }
             }
-            // if (isFormInvalid) {
-            //     Toast.fire({
-            //         icon: 'warning',
-            //         title: 'Missing Required Fields!',
-            //         text: 'Please complete all required questions.'
-            //     });
-            //     return;
-            // }UNCOMMENT AFTER MAHUMAN
+            if (isFormInvalid) {
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'Missing Required Fields!',
+                    text: 'Please complete all required questions.'
+                });
+                return;
+            }
 
             const formData = {};
             medicalForm.forEach(({ name, value }) => {
@@ -134,12 +159,30 @@ $(document).ready(function () {
             console.log('Step 2 Form Data:', formData);
         }
 
+         if (currentStep === 3 && !selectedServiceID) {
+            Toast.fire({
+                icon: 'info',
+                title: 'No service selected',
+                text: 'Please select a service to proceed.'
+            });
+            return;
+        }
+        if(currentStep === 4 && !selectedDoctorID){
+            Toast.fire({
+                icon: 'info',
+                title: 'No Doctor selected',
+                text: 'Please select a Doctor to proceed.'
+            });
+        }
 
         if (currentStep < totalSteps) {
             currentStep++;
             FormNav(currentStep);
         }
     });
+
+    
+
 
     $('.form-nav-btn-back').on('click', function () {
         if (currentStep > 1) {

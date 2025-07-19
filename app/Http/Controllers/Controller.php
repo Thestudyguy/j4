@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Doctors;
 use App\Models\Services;
 use App\Models\sub_services;
+use App\Models\SubService;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Log;
@@ -12,6 +13,12 @@ use Validator;
 class Controller
 {
     //
+
+    // public function SiteData(){
+    //     $services = Services::all();
+    //     $doctors = Doctors::all();
+    //     view('pages.client-appointment-form', compact('services', 'doctors'));
+    // }
 
     public function Dashboard(){
         return view('pages.dashboard-dashboard');
@@ -79,7 +86,7 @@ Log::info($request->all());
         $fileName = 'sub_service_' . time() . '.' . $image->getClientOriginalExtension();
         $imagePath = $image->storeAs('services', $fileName, 'public');
 
-        $subService = sub_services::create([
+        $subService = SubService::create([
             'parent_service' => $validated['parent-service-id'],
             'Service' => $validated['servicename'],
             'Price' => $validated['serviceprice'],
@@ -109,7 +116,7 @@ Log::info($request->all());
         try {
             $trimmedId = explode('_', $id);
             Log::info($trimmedId[2]);
-            $subServices = sub_services::where('parent_service', $trimmedId[2])->get();
+            $subServices = SubService::where('parent_service', $trimmedId[2])->get();
             return response()->json(['sub_services' => $subServices], 200);
         } catch (\Exception $th) {
             throw $th;
