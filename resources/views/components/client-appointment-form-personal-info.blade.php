@@ -6,15 +6,15 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <label for="name" class="form-label fw-normal">Last Name</label>
-                                        <input type="text" class="form-control form-control-sm" id="lname" name="lastname">
+                                        <input type="text" class="form-control form-control-sm" id="Last_Name" name="lastname">
                                     </div>
                                     <div class="col-sm-4">
                                         <label for="name" class="form-label fw-normal">First Name</label>
-                                        <input type="text" class="form-control form-control-sm" id="fname" name="firstname" >
+                                        <input type="text" class="form-control form-control-sm" id="First_Name" name="firstname" >
                                     </div>
                                      <div class="col-sm-4">
-                                        <label for="name" class="form-label fw-normal">Last Name</label>
-                                        <input type="text" class="form-control form-control-sm" id="mname" name="middlename">
+                                        <label for="name" class="form-label fw-normal">Middle Name</label>
+                                        <input type="text" class="form-control form-control-sm" id="Middle_Name" name="middlename">
                                     </div>
                                 </div>
                             </div>
@@ -22,19 +22,19 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <label for="birthdate" class="form-label fw-normal">Birthdate</label>
-                                        <input type="date" class="form-control form-control-sm" id="birthdate" name="birthdate">
+                                        <input type="date" class="form-control form-control-sm" id="Birthdate" name="birthdate">
                                     </div>
                                     <div class="col-sm-4 client-sex-field"><!-- added class for styling with a silly name lol -->
                                         <label for="sex" class="form-label fw-normal">Sex</label>
                                         <br>
                                         <div class="row p-2 sex-container"><!-- goffy ahh class name -->
-                                            <div class="col-sm-6"><input type="radio" name="sex" id="" value="Male">Male</div>
-                                            <div class="col-sm-6"><input type="radio" name="sex" id="" value="Female">Female</div>
+                                            <div class="col-sm-6"><input type="radio" name="sex" id="Gender" value="Male">Male</div>
+                                            <div class="col-sm-6"><input type="radio" name="sex" id="Gender" value="Female">Female</div>
                                         </div>
                                     </div>
                                      <div class="col-sm-4">
                                         <label for="age" class="form-label fw-normal">Age</label>
-                                        <input type="number" class="form-control form-control-sm" id="age" name="age">
+                                        <input type="number" class="form-control form-control-sm" id="Age" name="age">
                                     </div>
                                 </div>
                             </div>
@@ -42,11 +42,11 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <label for="religion" class="form-label fw-normal">Religion</label>
-                                        <input type="text" class="form-control form-control-sm" id="religion" name="religion">
+                                        <input type="text" class="form-control form-control-sm" id="Religion" name="religion">
                                     </div>
                                     <div class="col-sm-4">
                                         <label for="nationality" class="form-label fw-normal">Nationality</label>
-                                        <select class="form-select" id="nationality" name="nationality">
+                                        <select class="form-select" id="Nationality" name="nationality">
                                             <option value="" hidden selected>Select your nationality</option>
                                             <option value="Afghan">Afghan</option>
                                             <option value="Albanian">Albanian</option>
@@ -247,7 +247,7 @@
 
                                      <div class="col-sm-4">
                                         <label for="nickname" class="form-label fw-normal">Nickname</label>
-                                        <input type="text" class="form-control form-control-sm" id="nickname" name="nickname">
+                                        <input type="text" class="form-control form-control-sm" id="Nickname" name="nickname">
                                     </div>
                                 </div>
                             </div>
@@ -255,11 +255,11 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                     <label for="address" class="form-label fw-normal">Address</label>
-                                    <input type="text" class="form-control form-control-sm" id="address" name="address">
+                                    <input type="text" class="form-control form-control-sm" id="Address" name="address">
                                     </div>
                                     <div class="col-sm-6">
                                     <label for="homeno" class="form-label fw-normal">Home No.</label>
-                                    <input type="text" class="form-control form-control-sm" id="homeno" name="homeno">
+                                    <input type="text" class="form-control form-control-sm" id="Home_No." name="homeno">
                                     </div>
                                 </div>
                             </div>
@@ -268,19 +268,19 @@
                                 <div class="row">
                                     <div class="col-sm-3">
                                         <label for="occupation" class="form-label fw-normal">Occupation</label>
-                                        <input type="text" class="form-control form-control-sm" id="occupation" name="occupation">
+                                        <input type="text" class="form-control form-control-sm" id="Occupation" name="occupation">
                                     </div>
                                     <div class="col-sm-3">
                                         <label for="officeno" class="form-label fw-normal">Office No.</label>
-                                        <input type="text" class="form-control form-control-sm" id="officeno" name="officeno">
+                                        <input type="text" class="form-control form-control-sm" id="Office_No." name="officeno">
                                     </div>
                                     <div class="col-sm-3">
                                         <label for="effectivedate" class="form-label fw-normal">Effective Date</label>
-                                        <input type="text" class="form-control form-control-sm" id="effectivedate" name="effectivedate">
+                                        <input type="text" class="form-control form-control-sm" id="Effective_Date" name="effectivedate">
                                     </div>
                                     <div class="col-sm-3">
                                         <label for="faxno" class="form-label fw-normal">Fax No.</label>
-                                        <input type="text" class="form-control form-control-sm" id="faxno" name="faxno">
+                                        <input type="text" class="form-control form-control-sm" id="Fax_No." name="faxno">
                                     </div>
                                 </div>
                             </div>
@@ -288,11 +288,11 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                     <label for="email" class="form-label fw-normal">Email</label>
-                                    <input type="email" class="form-control form-control-sm" id="email" name="email">
+                                    <input type="email" class="form-control form-control-sm" id="Email" name="email">
                                     </div>
                                     <div class="col-sm-6">
                                     <label for="mobileno" class="form-label fw-normal">Mobile No.</label>
-                                    <input type="text" class="form-control form-control-sm" id="mobileno" name="mobileno">
+                                    <input type="text" class="form-control form-control-sm" id="Mobile_No." name="mobileno">
                                     </div>
                                 </div>
                             </div>
@@ -315,19 +315,19 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <label for="guardian" class="form-label fw-normal">Parent/Guardian Name</label>
-                                        <input type="text" class="form-control form-control-sm" id="guardian" name="guardian">
+                                        <input type="text" class="form-control form-control-sm" id="Guardian" name="guardian">
                                     </div>
                                     <div class="col-sm-6">
                                         <label for="guardianoccupation" class="form-label fw-normal">Occupation</label>
-                                        <input type="text" class="form-control form-control-sm" id="guardianoccupation" name="guardianoccupation">
+                                        <input type="text" class="form-control form-control-sm" id="Guardian_Occupation" name="guardianoccupation">
                                     </div>
                                     <div class="col-sm-12 my-5">
                                         <label for="referal" class="form-label fw-normal">Who may we thank for refering you?</label>
-                                        <input type="text" class="form-control form-control-sm" id="referal" name="referal">
+                                        <input type="text" class="form-control form-control-sm" id="Referal" name="referal">
                                     </div>
                                     <div class="col-sm-12">
                                         <label for="consultation" class="form-label fw-normal">Reason for consulation</label><br>
-                                        <textarea name="consultationreason" id="" cols="30" rows="10" class="form-control form-control-sm" style="resize: none;"></textarea>
+                                        <textarea name="consultationreason" id="Reason_For_Consultation" cols="30" rows="10" class="form-control form-control-sm" style="resize: none;"></textarea>
                                     </div>
                                 </div>
                             </div>

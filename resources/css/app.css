@@ -206,3 +206,10 @@
     text-align: center;
     font-weight: 500;
 }
+
+.form-nav-btn-finish, .form-nav-btn-next, .form-nav-btn-back{
+    transition: background-color 0.3s ease;
+    color: white;
+    text-align: center;
+    font-weight: 500;   
+}

@@ -36,7 +36,7 @@
                             <div class="row p-2 m-2 border doctor-list text-sm rounded-5 doctor-row-container"
                                 id="doctor_id_{{$doctor->id}}">
                                 <div class="col-sm-4">
-                                   {{$doctor->ProfessionalTitle}}. {{$doctor->LastName}}, {{$doctor->FirstName}} {{$doctor->MiddleName}} - {{$doctor->Suffix}}
+                                   {{$doctor->ProfessionalTitle ?? ''}} {{$doctor->LastName}}, {{$doctor->FirstName}} {{ $doctor->MiddleName && $doctor->Suffix ? $doctor->MiddleName . ' - ' . $doctor->Suffix : ($doctor->MiddleName ?? $doctor->Suffix) }}
                                 </div>
                                 <div class="col-sm-4">
 

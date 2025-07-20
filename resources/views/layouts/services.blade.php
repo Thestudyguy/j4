@@ -26,6 +26,6 @@
                 </div>
             @endforeach
         </div>
-        <center><h4 class="text-dark text-sm fw-semibold">View all services</h4></center>
+        <center><h4 class="text-dark text-md fw-semibold mt-3">View all services</h4></center>
     </div>
 </div>
