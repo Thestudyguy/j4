@@ -43,7 +43,7 @@
             </div>
                     
             <!-- Social Media -->
-            <center class="fw-semibold">Follow us on social media bitcheeeeeesssssss</center>
+            <center class="fw-semibold">Follow us on social media</center>
             <div class="col-md-12 d-flex justify-content-center mt-3">
                 <div style="display: flex; gap: 20px;">
                     <a href="#" target="_blank" aria-label="Facebook" style="color: #fff;">
@@ -57,6 +57,7 @@
                     </a> --}}
                     <a href="#" target="_blank" aria-label="LinkedIn" style="color: #fff;">
                         <i class="bi bi-twitter fs-4"></i>
+                        <!-- <i class="fas fa-user"></i> -->
                     </a>
             </div>
             </div>

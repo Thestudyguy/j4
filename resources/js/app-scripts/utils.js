@@ -1,19 +1,6 @@
 $(document).ready(function() {
     console.log('hey im loaded');
-    $('[name="illnesses[]"]').on('change', function() {
-        const $this = $(this);
-        const $extraField = $this.siblings('.medical-history-extra-field');
-
-        if ($this.is(':checked') && $this.val() === 'Other') {
-            $extraField.removeClass('d-none').prop('required', true);
-        } else {
-            $extraField.addClass('d-none').prop('required', false);
-        }
-    const selectedValues = $('[name="illnesses[]"]:checked').map(function() {
-            return $(this).val();
-        }).get();
-        console.log(selectedValues);
-    });
+   
    
 //     $(document).ready(function () {
 //     $.ajaxSetup({
@@ -52,5 +39,39 @@ $(document).ready(function() {
 //         });
 //     });
 // });
+
+
+    //for step 2 medical history
+    $('input[name="medicalcondition"]').change(function() {
+        if($(this).val() === 'yes'){
+            $('.medicalconditiontextcontainer').removeClass('d-none');
+        }else{
+            $('.medicalconditiontextcontainer').addClass('d-none');
+        }
+    });
+
+    $('input[name="surgery"]').change(function() {
+        if($(this).val() === 'yes'){
+            $('.surgerytextcontainer').removeClass('d-none');
+        }else{
+            $('.surgerytextcontainer').addClass('d-none');
+        }
+    });
+
+    $('input[name="hospital"]').change(function() {
+        if($(this).val() === 'yes'){
+            $('.hospitaltextcontainer').removeClass('d-none');
+        }else{
+            $('.hospitaltextcontainer').addClass('d-none');
+        }
+    });
+
+    $('input[name="prescription"]').change(function() {
+        if($(this).val() === 'yes'){
+            $('.prescriptioncontainer').removeClass('d-none');
+        }else{
+            $('.prescriptioncontainer').addClass('d-none');
+        }
+    });
 
 });

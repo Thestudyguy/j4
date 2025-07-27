@@ -13,7 +13,10 @@
         <li class="nav-item dropdown mr-3">
             <a id="navbarDropdown" class="nav-link" href="#" role="button" data-bs-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false" v-pre>
-               Hello, {{ Auth::user()->FirstName }} <sup>({{ Auth::user()->Role }})</sup>
+               Hello, {{ Auth::user()->FirstName }}
+@if (Auth::user()->Role !== 'patient')
+    <sup>({{ Auth::user()->Role }})</sup>
+@endif
             </a>
         </li>
         <li class="nav-item mr-3">

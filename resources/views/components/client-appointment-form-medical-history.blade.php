@@ -51,12 +51,12 @@
             <div class="col-sm-6">
                 <div class="row">
                     <div class="col-sm-12">
-                        <label style="font-weight: 500" for="isHealthy">Are you in good health?</label>
+                        <label style="font-weight: 500" for="goodhealth">Are you in good health?<sup class="text-sm text-danger">*</sup></label>
                     </div>
                     <div class="col-sm-12">
-                        <input type="radio" name="isHealthy" id="isHealthy" value="yes"> Yes
+                        <input type="radio" name="goodhealth" id="" value="yes"> Yes
                         <br>
-                        <input type="radio" name="isHealthy" id="isHealthy" value="no"> No
+                        <input type="radio" name="goodhealth" id="" value="no"> No
                     </div>
                 </div>
                 {{-- <label for="IsClientInGoodHealth" class="fw-normal">Are you in good health?</label><br> --}}
@@ -66,29 +66,29 @@
             <div class="col-sm-6">
                 <div class="row">
                     <div class="col-sm-12">
-                        <label style="font-weight: 500" for="hasUsedSubstances">Do you use alcohol, cocaine or other dangerous drugs?</label>
+                        <label style="font-weight: 500" for="alcohol">Do you use alcohol, cocaine or other dangerous drugs?<sup class="text-sm text-danger">*</sup></label>
                     </div>
                     <div class="col-sm-12">
-                        <input type="radio" name="hasUsedSubstances" id="hasUsedSubstances" value="yes"> Yes
+                        <input type="radio" name="alcohol" id="" value="yes"> Yes
                         <br>
-                        <input type="radio" name="hasUsedSubstances" id="hasUsedSubstances" value="no"> No
+                        <input type="radio" name="alcohol" id="" value="no"> No
                     </div>
                 </div>
             </div>
             <div class="col-sm-6 my-4">
                 <div class="row">
                     <div class="col-sm-12">
-                        <label style="font-weight: 500" for="hasMedicalCondition">Are you under medical condition now?</label>
+                        <label style="font-weight: 500" for="medicalcondition">Are you under medical condition now?<sup class="text-sm text-danger">*</sup></label>
                     </div>
                     <div class="col-sm-12">
-                        <input type="radio" name="hasMedicalCondition" id="hasMedicalCondition" value="yes"> Yes
+                        <input type="radio" name="medicalcondition" id="hasMedicalCondition" value="yes"> Yes
                         <br>
-                        <input type="radio" name="hasMedicalCondition" id="hasMedicalCondition" value="no"> No
-                        <div class="mx-3 isFieldRequired">
+                        <input type="radio" name="medicalcondition" id="hasMedicalCondition" value="no"> No
+                        <div class="mx-3 isFieldRequired medicalconditiontextcontainer d-none">
                             <div class="text-field-required">
                                 <span class="">If so what's the condition being treated?</span>
                             </div>
-                            <input type="text" name="clientcondition" class="mt-3 medical-history-extra-field form-control form-control-sm bg-transparent" id="">
+                            <input type="text" name="medicalconditiontext" class="mt-3 medical-history-extra-field form-control form-control-sm bg-transparent" id="">
                         </div>
                     </div>
                 </div>
@@ -96,7 +96,7 @@
             <div class="col-sm-6 my-4">
                 <div class="row">
                     <div class="col-sm-12">
-                        <label style="font-weight: 500" for="isAllergicTo">Are you Allergic to any of the following: </label>
+                        <label style="font-weight: 500" for="isAllergicTo">Are you Allergic to any of the following: <sup class="text-sm text-danger">*</sup></label>
                     </div>
                     <div class="col-sm-12">
                         <input type="checkbox" name="isAllergicTo[]" id="isAllergicTo" value="LocalAnesthetic"> Local Anesthetic (ex Lidocaine)
@@ -104,12 +104,13 @@
                         <input type="checkbox" name="isAllergicTo[]" id="isAllergicTo" value="Aspirin"> Aspirin <br>
                         <input type="checkbox" name="isAllergicTo[]" id="isAllergicTo" value="Latex"> Latex <br>
                         <input type="checkbox" name="isAllergicTo[]" id="isAllergicTo" value="Penicilin-Antibiotics"> Penicilin, Antibiotics <br>
+                        <input type="checkbox" name="isAllergicTo[]" id="isAllergicTo" value="None">None<br>
                         {{-- <input type="radio" name="isAllergicTo" id="isAllergicTo" value="SulfaDrugs"> Sulfa Drugs --}}
                         <div class="mx-3 isFieldRequired">
                             <div class="text-field-required mt-2">
                                 <span class="">Others, Specify</span>
                             </div>
-                            <input type="text" name="clientcondition" class="medical-history-extra-field form-control form-control-sm bg-transparent" id="">
+                            <input type="text" name="isAllergicToTextInput" class="medical-history-extra-field form-control form-control-sm bg-transparent" id="">
                         </div>
                         
                     </div>
@@ -118,17 +119,17 @@
             <div class="col-sm-6">
                 <div class="row">
                     <div class="col-sm-12">
-                        <label style="font-weight: 500" for="hadSurgery">Have you ever had serious illness or surgical operation?</label>
+                        <label style="font-weight: 500" for="surgery">Have you ever had serious illness or surgical operation?<sup class="text-sm text-danger">*</sup></label>
                     </div>
                     <div class="col-sm-12">
-                        <input type="radio" name="hadSurgery" id="hadSurgery" value="yes"> Yes
+                        <input type="radio" name="surgery" id="" value="yes"> Yes
                         <br>
-                        <input type="radio" name="hadSurgery" id="hadSurgery" value="no"> No
-                        <div class="mx-3 isFieldRequired">
+                        <input type="radio" name="surgery" id="" value="no"> No
+                        <div class="mx-3 isFieldRequired surgerytextcontainer d-none">
                             <div class="text-field-required">
                                 <span class="">If so what Illness or Operation?</span>
                             </div>
-                            <input type="text" name="clientSurgeryIllness" class="mt-3 medical-history-extra-field form-control form-control-sm bg-transparent" id="">
+                            <input type="text" name="surgerytext" class="mt-3 medical-history-extra-field form-control form-control-sm bg-transparent" id="">
                         </div>
                     </div>
                 </div>
@@ -136,7 +137,7 @@
             <div class="col-sm-6">
                 <div class="row">
                     <div class="col-sm-12">
-                        <label style="font-weight: 500" for="isPregnant">Are you Pregnant? <sup class="text-warning">(for women)</sup></label>
+                        <label style="font-weight: 500" for="isPregnant">Are you Pregnant? <sup class="text-warning">(for women)<sup class="text-sm text-danger">*</sup></sup></label>
                     </div>
                     <div class="col-sm-12">
                         <input type="radio" name="isPregnant" id="isPregnant" value="yes"> Yes
@@ -148,17 +149,17 @@
             <div class="col-sm-6 my-4">
                 <div class="row">
                     <div class="col-sm-12">
-                        <label style="font-weight: 500" for="hadBeenHospitalized">Have you ever been hospitalized?</label>
+                        <label style="font-weight: 500" for="hospital">Have you ever been hospitalized?<sup class="text-sm text-danger">*</sup></label>
                     </div>
                     <div class="col-sm-12">
-                        <input type="radio" name="hadBeenHospitalized" id="hadBeenHospitalized" value="yes"> Yes
+                        <input type="radio" name="hospital" id="hadBeenHospitalized" value="yes"> Yes
                         <br>
-                        <input type="radio" name="hadBeenHospitalized" id="hadBeenHospitalized" value="no"> No
-                        <div class="mx-3 isFieldRequired">
+                        <input type="radio" name="hospital" id="hadBeenHospitalized" value="no"> No
+                        <div class="mx-3 isFieldRequired hospitaltextcontainer d-none">
                             <div class="text-field-required">
                                 <span class="">If so what Why & When?</span>
                             </div>
-                            <input type="text" name="clientHospitalizationHistory" class="mt-3 medical-history-extra-field form-control form-control-sm bg-transparent" id="">
+                            <input type="text" name="hospitaltext" class="mt-3 medical-history-extra-field form-control form-control-sm bg-transparent" id="">
                         </div>
                     </div>
                 </div>
@@ -166,7 +167,7 @@
             <div class="col-sm-6">
                 <div class="row">
                     <div class="col-sm-12">
-                        <label style="font-weight: 500" for="isOnBithControl">Are you taking Birth Control pills? <sup class="text-warning">(for women)</sup></label>
+                        <label style="font-weight: 500" for="isOnBithControl">Are you taking Birth Control pills? <sup class="text-warning">(for women)<sup class="text-sm text-danger">*</sup></sup></label>
                     </div>
                     <div class="col-sm-12">
                         <input type="radio" name="isOnBithControl" id="isOnBithControl" value="yes"> Yes
@@ -178,17 +179,17 @@
             <div class="col-sm-6 my-4">
                 <div class="row">
                     <div class="col-sm-12">
-                        <label style="font-weight: 500" for="isTakingPrescription">Are you taking any prescription/non-prescription medication?</label>
+                        <label style="font-weight: 500" for="prescription">Are you taking any prescription/non-prescription medication?<sup class="text-sm text-danger">*</sup></label>
                     </div>
                     <div class="col-sm-12">
-                        <input type="radio" name="isTakingPrescription" id="isTakingPrescription" value="yes"> Yes
+                        <input type="radio" name="prescription" id="isTakingPrescription" value="yes"> Yes
                         <br>
-                        <input type="radio" name="isTakingPrescription" id="isTakingPrescription" value="no"> No
-                        <div class="mx-3 isFieldRequired">
+                        <input type="radio" name="prescription" id="isTakingPrescription" value="no"> No
+                        <div class="mx-3 isFieldRequired prescriptioncontainer d-none">
                             <div class="text-field-required">
                                 <span class="">If so specify</span>
                             </div>
-                            <input type="text" name="clientPrescription" class="mt-3 medical-history-extra-field form-control form-control-sm bg-transparent" id="">
+                            <input type="text" name="prescriptiontext" class="mt-3 medical-history-extra-field form-control form-control-sm bg-transparent" id="">
                         </div>
                     </div>
                 </div>
@@ -196,7 +197,7 @@
             <div class="col-sm-6">
                 <div class="row">
                     <div class="col-sm-12">
-                        <label style="font-weight: 500" for="isClientASmokeWhack">Do you use tobacco products?</label>
+                        <label style="font-weight: 500" for="isClientASmokeWhack">Do you use tobacco products?<sup class="text-sm text-danger">*</sup></label>
                     </div>
                     <div class="col-sm-12">
                         <input type="radio" name="isClientASmokeWhack" id="isClientASmokeWhack" value="yes"> Yes
@@ -208,7 +209,7 @@
             <div class="col-sm-6">
                 <div class="row">
                     <div class="col-sm-12">
-                        <label style="font-weight: 500" for="isClientNursing">Are you nursing?</label> <!-- idk what the question is. Is the client a Nursing student or Nursing a kid or a child? Silly question tho -->
+                        <label style="font-weight: 500" for="isClientNursing">Are you nursing?<sup class="text-sm text-danger">*</sup></label> <!-- idk what the question is. Is the client a Nursing student or Nursing a kid or a child? Silly question tho -->
                     </div>
                     <div class="col-sm-12">
                         <input type="radio" name="isClientNursing" id="isClientNursing" value="yes"> Yes
@@ -219,7 +220,7 @@
             </div>
             <div class="col-sm-6">
                 <div class="mb-3">
-                    <label for="bloodType" class="form-label fw-medium">Blood Type</label>
+                    <label for="bloodType" class="form-label fw-medium">Blood Type<sup class="text-sm text-danger">*</sup></label>
                     <select name="bloodType" id="bloodType" class="form-select form-select-sm">
                     <option value="" selected hidden>Select blood type</option>
                     <option value="A+">A+</option>
@@ -235,8 +236,8 @@
                 </div>
 
                 <div>
-                    <label for="bloodPressure" class="form-label fw-medium">Blood Pressure</label>
-                    <input type="text" class="form-control form-control-sm" id="bloodPressure" name="bloodPressure" placeholder="e.g., 120/80 mmHg">
+                    <label for="bloodPressure" class="form-label fw-medium">Blood Pressure<sup class="text-sm text-danger">*</sup></label>
+                    <input type="text" class="form-control form-control-sm" id="bloodPressure" name="bloodPressure" placeholder="e.g., 120/80 mmHg or n/a if unknown">
                 </div>
                 </div>
                 <div class="col-sm-12 my-4">
@@ -293,12 +294,13 @@
                         <div class="col-md-3">
                         <div class="form-check"><input class="form-check-input" type="checkbox" name="illnesses[]" value="Head Injuries" id="headInjuries"><label class="form-check-label" for="headInjuries">Head Injuries</label></div>
                         <div class="form-check"><input class="form-check-input" type="checkbox" name="illnesses[]" value="Arthritis/Rheumatism" id="arthritis"><label class="form-check-label" for="arthritis">Arthritis/Rheumatism</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" name="illnesses[]" value="none" id="none"><label class="form-check-label" for="none">None</label></div>
 
                         <!-- Other -->
                         <div class="form-check d-flex align-items-center mt-2">
-                            <input class="form-check-input me-2" type="checkbox" name="illnesses[]" value="Other" id="otherIllness">
-                            <label class="form-check-label me-2" for="otherIllness">Other</label>
-                            <input type="text" class="form-control form-control-sm border-bottom border-dark d-none rounded-0 bg-transparent medical-history-extra-field" placeholder="Specify" name="otherIllnessDetails" style="max-width: 150px;">
+                            <!-- <input class="form-check-input me-2" type="checkbox" name="illnesses[]" value="Other" id="otherIllness"> -->
+                            <label class="form-check-label me-2" for="otherIllness">Others</label>
+                            <input type="text" class="form-control form-control-sm border-bottom border-dark rounded-0 bg-transparent medical-history-extra-field" placeholder="..." name="otherIllnessDetails" style="max-width: 150px;">
                         </div>
                         </div>
 

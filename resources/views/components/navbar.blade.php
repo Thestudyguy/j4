@@ -37,7 +37,7 @@
     <div class="container-fluid col d-flex flex-row align-items-center float-left justify-content-center" style="font-size: 18px;">
       <ul class="navbar-nav">
       <li class="nav-item active mx-3">
-       <a href="{{ route('client-appointment-form') }}">
+       <a href="{{ route('register') }}">
             
          <button style="background-color: #20536B; font-size: 12px;" class="text-white btn rounded-5 p-2 mx-2 px-4">
             BOOK AN APPOINTMENT

@@ -22,9 +22,15 @@
 <script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
 <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <!-- AdminLTE -->
 <script src="{{ asset('dist/js/adminlte.js') }}"></script>
-
+<script>
+     flatpickr("#inline-calendar", {
+        inline: true,
+        dateFormat: "Y-m-d",
+        minDate: "today",
+    });
+</script>
 <!-- Custom App Script -->
 <script src="{{ asset('dist/js/pages/dashboard.js') }}"></script>

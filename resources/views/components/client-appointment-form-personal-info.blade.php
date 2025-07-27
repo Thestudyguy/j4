@@ -276,7 +276,8 @@
                                     </div>
                                     <div class="col-sm-3">
                                         <label for="effectivedate" class="form-label fw-normal">Effective Date</label>
-                                        <input type="text" class="form-control form-control-sm" id="Effective_Date" name="effectivedate">
+                                        <!-- <input type="text" class="form-control form-control-sm" id="Effective_Date" name="effectivedate"> -->
+                                            <input type="date" class="form-control form-control-sm" name="effectivedate" id="Effective_Date">
                                     </div>
                                     <div class="col-sm-3">
                                         <label for="faxno" class="form-label fw-normal">Fax No.</label>

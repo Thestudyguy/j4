@@ -7,9 +7,10 @@ class CreatePatientsTable extends Migration
 {
     public function up()
     {
-        Schema::create('patients', function (Blueprint $table) {
+        Schema::create('patient_info', function (Blueprint $table) {
             $table->id();
-            
+            $table->unsignedBigInteger('patient_id')->nullable();
+            $table->foreign('patient_id')->references('id')->on('users')->nullOnDelete();
             // Required fields
             $table->string('FirstName');
             $table->string('LastName');

@@ -23,7 +23,6 @@
         <div id="welcome-to-j4-dc">@include('layouts.consultation')</div>
         <!-- <div id="j4-story">@include('layouts.story')</div> -->
         <div id="j4-doctors">@include('layouts.doctors')</div>
-        <div id="test">@include('components.appointment-preview-personal-info')</div>
 
         <div id="why-choose-j4dc">@include('layouts.why-choose-j4dc')</div>
 

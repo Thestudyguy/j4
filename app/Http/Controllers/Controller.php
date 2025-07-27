@@ -6,11 +6,14 @@ use App\Models\Services;
 use App\Models\sub_services;
 use App\Models\SubService;
 use App\Models\User;
+use Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Log;
 use Illuminate\Support\Facades\DB;
 use Validator;
 class Controller
+
 {
     //
 
@@ -36,6 +39,58 @@ class Controller
         $services = Services::where('isVisible', 1)->get();
         return view('pages.dashboard-services', compact('services'));
     }
+
+
+    public function NewUser(Request $request)
+{
+    
+    try {
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'user_name' => 'required|string|max:255|unique:users,UserName',
+            'email' => 'required|email|unique:users,Email',
+            'password' => 'required|string|confirmed', // expects password_confirmation field
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $data = [
+    'FirstName' => $request->first_name,
+    'LastName' => $request->last_name,
+    'UserName' => $request->user_name,
+    'Email' => $request->email,
+    'password' => Hash::make($request->password),
+];
+
+if ($request->has('role')) {
+    $data['Role'] = $request->role;
+}
+
+$user = User::create($data);
+           Auth::login($user);
+            // return redirect()->route('dashboard')->with('success', 'Account created successfully.');
+
+        return response()->json([
+    'status' => 'success',
+    'redirect' => route('patient-profile'),
+]);
+
+        
+
+    } catch (\Throwable $th) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Something went wrong.',
+            'error' => $th->getMessage()
+        ], 500);
+    }
+}
 
     public function NewService(Request $request)
     {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PatientController;
 use App\Models\Doctors;
 use App\Models\Services;
 use App\Models\SubService;
@@ -18,6 +19,7 @@ Route::get('/client-appointment-form', [function() {
     $subServices = SubService::all();//'isVisible', true put this shit back when we rollback its migration
     return view('pages.client-appointment-form', compact('services', 'doctors', 'subServices'));
 }])->name('client-appointment-form');
+Route::post('/new-user', [Controller::class, 'NewUser'])->name('new-user');
 Route::middleware('authenticated')->group(function(){
     Route::get('/dashboard', [Controller::class, 'Dashboard'])->name('dashboard');
     Route::get('/client-dashboard', [Controller::class, 'ClientDashboard'])->name('client-dashboard');
@@ -30,5 +32,9 @@ Route::middleware('authenticated')->group(function(){
     Route::post('get-sub-services/{id}', [Controller::class, 'GetSubServices'])->name('get-sub-services');
     Route::get('/doctors', [Controller::class, 'DoctorsPage'])->name('doctors');
     Route::post('/doctors/new', [Controller::class, 'NewDoctors']);
-
+    Route::get('/patient-profile', [PatientController::class, 'PatientProfile'])->name('patient-profile');
 });
+Route::post('/patient-setup', [PatientController::class, 'PatientSetUp'])->name('patient-setup')->middleware('auth');
+Route::post('/available-slots', [PatientController::class, 'GetVacantTimeSlots'])->name('available-slots')->middleware('auth');
+Route::post('/appointments', [PatientController::class, 'AppointmentConfirmation'])->name('appointment-confirmation')->middleware('auth');
+Route::get('/user-appointment-list', [PatientController::class, 'PostAppointmentLoc'])->name('appointment-lists')->middleware('auth');

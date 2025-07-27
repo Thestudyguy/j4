@@ -3,3 +3,6 @@ import './app-scripts/utils';
 import './app-scripts/client-appointment-form';
 import './app-scripts/service';
 import './app-scripts/doctors';
+import './app-scripts/patient-account-creation';
+import './app-scripts/patient-setup';
+import './app-scripts/patient-appointment';

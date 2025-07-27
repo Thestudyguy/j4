@@ -86,19 +86,19 @@ $(document).ready(function () {
             } else {
                 $('.client-sex-field').removeClass(' border border-danger');
             }
-            // if(isFormEmpty){
-            //     console.log(personalInfoForm);
-            //     $.each(personalInfoForm, (index, fields)=>{
-            //         // $(`[name='${fields.name}']`).addClass('is-invalid');
-            //         return;
-            //     });
-            //     Toast.fire({
-            //         icon: 'warning',
-            //         title: 'Missing Fields!',
-            //         text: 'Please fill out all the required fields'
-            //     });     
-            //     return;
-            // }
+            if(isFormEmpty){
+                console.log(personalInfoForm);
+                $.each(personalInfoForm, (index, fields)=>{
+                    // $(`[name='${fields.name}']`).addClass('is-invalid');
+                    return;
+                });
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'Missing Fields!',
+                    text: 'Please fill out all the required fields'
+                });     
+                return;
+            }
             //building html for preview personal-info
             $.each(personalInfoForm, (index, fields) => {
             const $input = $(`[name='${fields.name}']`);
@@ -123,93 +123,25 @@ $(document).ready(function () {
         }
 
         if (currentStep === 2) {
-    const medicalForm = $('.client-medical-history-form').serializeArray();
-    let isFormInvalid = false;
-
-    const yesFollowUps = {
-        hasMedicalCondition: 'medicalConditionDetails',
-        hadSurgery: 'surgeryDetails',
-        hadBeenHospitalized: 'hospitalizationReason',
-        isTakingPrescription: 'prescriptionDetails'
-    };
-
-    const requiredRadios = [
-        'isHealthy',
-        'hasUsedSubstances',
-        'hasMedicalCondition',
-        'hadSurgery',
-        'hadBeenHospitalized',
-        'isPregnant',
-        'isClientNursing',
-        'isOnBithControl',
-        'isTakingPrescription',
-        'isClientASmokeWhack'
-    ];
-
-    $('.is-invalid').removeClass('is-invalid');
-    $('.border-warning').removeClass('border-warning');
-
-    // Validate required yes/no radios
-    requiredRadios.forEach(name => {
-        const selected = $(`input[name="${name}"]:checked`).val();
-        const wrapper = $(`input[name="${name}"]`).closest('.col-sm-12');
-
-        if (!selected) {
-            wrapper.addClass('is-invalid');
-            isFormInvalid = true;
-        }
-
-        // If "yes" is selected, validate the follow-up field (if applicable)
-        if (selected === 'yes' && yesFollowUps[name]) {
-            const followUpField = $(`input[name="${yesFollowUps[name]}"]`);
-            if (followUpField.length && followUpField.val().trim() === '') {
-                followUpField.addClass('is-invalid');
-                isFormInvalid = true;
+            const basicForm = $('.client-medical-history-form').serializeArray();
+            console.log(basicForm);
+            let hasError = false;
+            let finalObject = {};
+            if($('input[name="hospital"]').val() === 'yes' && !$('.hospitaltextcontainer').hasClass('d-none')){
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'Missing Field!',
+                    text: 'Please enter a valid reason for the hospitalization history'
+                });
+                console.log('you fucking dick you gotta put something init you said yes ass');
+                return;
             }
+            console.log('your fine now');
+                    
+            
+
+        
         }
-    });
-
-    // Validate "Other Illness" if checked
-    if ($('#otherIllness').is(':checked')) {
-        const otherDetail = $('input[name="otherIllnessDetails"]');
-        if (otherDetail.val().trim() === '') {
-            otherDetail.addClass('border-warning');
-            isFormInvalid = true;
-        }
-    }
-
-    // Uncomment this after testing
-    // if (isFormInvalid) {
-    //     Toast.fire({
-    //         icon: 'warning',
-    //         title: 'Missing Required Fields!',
-    //         text: 'Please complete all required questions.'
-    //     });
-    //     return;
-    // }
-
-    // Build structured form data
-    const formData = {};
-    medicalForm.forEach(({ name, value }) => {
-        if (formData[name]) {
-            if (Array.isArray(formData[name])) {
-                formData[name].push(value);
-            } else {
-                formData[name] = [formData[name], value];
-            }
-        } else {
-            formData[name] = value;
-        }
-    });
-
-    // If no illnesses[] checked, ensure it exists as empty array
-    if (!$('input[name="illnesses[]"]:checked').length) {
-        formData['illnesses'] = [];
-    }
-
-    console.log('Step 2 Form Data:', formData);
-}
-
 
          if (currentStep === 3 && !selectedServiceID) {
              Toast.fire({

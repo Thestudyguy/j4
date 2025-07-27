@@ -11,7 +11,7 @@ class CreatePatientHistoriesTable  extends Migration
         Schema::create('patient_history', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('patient_id')->nullable();
-            $table->foreign('patient_id')->references('id')->on('patients')->nullOnDelete();
+            $table->foreign('patient_id')->references('id')->on('users')->nullOnDelete();
             $table->string('previous_dentist')->nullable();
             $table->date('last_visit')->nullable();
             
@@ -20,26 +20,22 @@ class CreatePatientHistoriesTable  extends Migration
             $table->string('physician_office_address')->nullable();
             $table->string('physician_office_no')->nullable();
 
-            $table->boolean('good_health')->nullable();
-            $table->boolean('uses_drugs')->nullable();
-            $table->boolean('under_medical_care')->nullable();
-            $table->text('current_medical_condition')->nullable();
+            $table->string('good_health')->nullable();
+            $table->string('uses_drugs')->nullable();
+            $table->string('under_medical_care')->nullable();
+            $table->string('medical_condition_text')->nullable();
 
-            $table->boolean('pregnant')->nullable();
-            $table->boolean('hospitalized')->nullable();
+            $table->string('pregnant')->nullable();
+            $table->string('hospitalized')->nullable();
             $table->text('hospitalization_details')->nullable();
-            $table->boolean('taking_birth_control')->nullable();
-            $table->boolean('taking_medications')->nullable();
-            $table->text('medications_details')->nullable();
-            $table->boolean('using_tobacco')->nullable();
-            $table->boolean('nursing')->nullable();
+            $table->string('taking_birth_control')->nullable();
+            $table->string('taking_medications')->nullable();
+            $table->string('medications_details')->nullable();
+            $table->string('using_tobacco')->nullable();
+            $table->string('nursing')->nullable();
 
             // Allergies
-            $table->boolean('allergy_anesthetic')->nullable();
-            $table->boolean('allergy_sulfa')->nullable();
-            $table->boolean('allergy_aspirin')->nullable();
-            $table->boolean('allergy_latex')->nullable();
-            $table->boolean('allergy_penicillin')->nullable();
+            $table->string('allergy')->nullable();
             $table->text('allergy_others')->nullable();
 
             // Other conditions (JSON or individual columns)

@@ -14,17 +14,28 @@ class Middleware
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle($request, Closure $next)
-    {
-        if (Auth::check()) {
-            $user = Auth::user();
-            if (!$user->UserPrivilege || !$user->isVisible) {
-                redirect('/login')->withErrors(['error' => 'Your account is restricted by the admin for some reasons']);
-                return Auth::logout();
-            }
-        } else {
-            return redirect('/login');
+{
+    if (Auth::check()) {
+        $user = Auth::user();
+
+        // Restrict users without privilege or visibility
+        if (!$user->UserPrivilege || !$user->isVisible) {
+            Auth::logout();
+            return redirect('/login')->withErrors([
+                'error' => 'Your account is restricted by the admin for some reasons'
+            ]);
         }
 
-        return $next($request);
+        // Prevent redirect loop: only redirect if not already on patient-profile
+        if ($user->Role === 'patient' && !$request->is('patient-profile')) {
+            return redirect('patient-profile');
+        }
+
+    } else {
+        return redirect('/login');
     }
+
+    return $next($request);
+}
+
 }
