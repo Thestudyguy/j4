@@ -1,7 +1,10 @@
 @extends('dashboard')
 @section('content')
     <div class="container-fluid p-2 pt-5 vh-100" style="overflow-y: hide;">
-        <h1 class="h1 mt-2 p-3">Doctors/Dentists</h1>
+    <div class="loader-container doctors-page visually-hidden">
+        <div class="loader"></div>
+    </div>    
+    <h1 class="h1 mt-2 p-3">Doctors/Dentists</h1>
         <div class="row bg-white p-3 m-2 border rounded-2">
             <div class="col-sm-3">
                 <input type="search" class="form-control rounded-5 form-control-sm" name="search-doctors"
@@ -33,8 +36,8 @@
                 <div class="row bg-white p-3 m-2 border rounded-2">
                     <div class="col-sm-12">
                         @foreach ($doctors as $doctor)
-                            <div class="row p-2 m-2 border doctor-list text-sm rounded-5 doctor-row-container"
-                                id="doctor_id_{{$doctor->id}}">
+                            <div class="row p-2 m-2 border doctor-list text-sm rounded-5 doctor-row-container"  style="cursor: pointer;"
+                                id="doctor-{{$doctor->id}}">
                                 <div class="col-sm-4">
                                    {{$doctor->ProfessionalTitle ?? ''}} {{$doctor->LastName}}, {{$doctor->FirstName}} {{ $doctor->MiddleName && $doctor->Suffix ? $doctor->MiddleName . ' - ' . $doctor->Suffix : ($doctor->MiddleName ?? $doctor->Suffix) }}
                                 </div>
@@ -56,6 +59,26 @@
                         @endforeach
                     </div>
                 </div>
+            </div>
+            <div class="col-sm-6" style="max-height: 500px; overflow: hidden;">
+                <div class="row bg-white p-3 m-2 border rounded-2 doctor-info-container" style="max-height: 500px; overflow-y: auto">
+                    <div class="doctor-loader-container visually-hidden">
+                        <div class="doctor-container-loader"></div>
+                        Searching services for: <p class="do-this fw-semibold text-sm"></p>
+                    </div>
+                    <center>
+                        
+                        <div class="col-sm-12 service-info-container">
+                            <div class="text-center text-muted">
+                                <i class="bi bi-info-circle doctor-card-icon" style="font-size: 2rem;"></i>
+                                <p class="mt-2 mb-0 fw-semibold doctor-card-title">No doctor selected</p>
+                                <small class="doctor-card-text">Click a doctor on the left to view its scheduled appointments
+                                    and details here.</small>
+                            </div>
+                        </div>
+                    </center>
+                </div>
+                
             </div>
         </div>
         @include('modals.new-doctor')

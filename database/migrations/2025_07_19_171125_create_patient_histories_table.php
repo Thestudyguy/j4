@@ -24,6 +24,8 @@ class CreatePatientHistoriesTable  extends Migration
             $table->string('uses_drugs')->nullable();
             $table->string('under_medical_care')->nullable();
             $table->string('medical_condition_text')->nullable();
+            $table->string('had_surgery')->nullable();
+            $table->string('surgery_text')->nullable();
 
             $table->string('pregnant')->nullable();
             $table->string('hospitalized')->nullable();

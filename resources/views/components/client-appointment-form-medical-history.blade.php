@@ -137,7 +137,7 @@
             <div class="col-sm-6">
                 <div class="row">
                     <div class="col-sm-12">
-                        <label style="font-weight: 500" for="isPregnant">Are you Pregnant? <sup class="text-warning">(for women)<sup class="text-sm text-danger">*</sup></sup></label>
+                        <label style="font-weight: 500" for="isPregnant">Are you Pregnant? <sup class="text-warning">(for women)</sup></label>
                     </div>
                     <div class="col-sm-12">
                         <input type="radio" name="isPregnant" id="isPregnant" value="yes"> Yes
@@ -167,7 +167,7 @@
             <div class="col-sm-6">
                 <div class="row">
                     <div class="col-sm-12">
-                        <label style="font-weight: 500" for="isOnBithControl">Are you taking Birth Control pills? <sup class="text-warning">(for women)<sup class="text-sm text-danger">*</sup></sup></label>
+                        <label style="font-weight: 500" for="isOnBithControl">Are you taking Birth Control pills? <sup class="text-warning">(for women)</sup></label>
                     </div>
                     <div class="col-sm-12">
                         <input type="radio" name="isOnBithControl" id="isOnBithControl" value="yes"> Yes
@@ -262,7 +262,7 @@
 
                         <!-- Column 2 -->
                         <div class="col-md-3">
-                        <div class="form-check"><input class="form-check-input" type="checkbox" name="illnesses[]" value="Heart Attack" id="heartAttack"><label class="form-check-label" for="heartAttack">Heart Attack</label></div>
+                        <div class="form-check"><input class="form-check-input bg-secondary" type="checkbox" name="illnesses[]" value="Heart Attack" id="heartAttack"><label class="form-check-label" for="heartAttack">Heart Attack</label></div>
                         <div class="form-check"><input class="form-check-input" type="checkbox" name="illnesses[]" value="Thyroid Problem" id="thyroid"><label class="form-check-label" for="thyroid">Thyroid Problem</label></div>
                         <div class="form-check"><input class="form-check-input" type="checkbox" name="illnesses[]" value="Heart Disease" id="heartDisease"><label class="form-check-label" for="heartDisease">Heart Disease</label></div>
                         <div class="form-check"><input class="form-check-input" type="checkbox" name="illnesses[]" value="Head Murmur" id="headMurmur"><label class="form-check-label" for="headMurmur">Head Murmur</label></div>

@@ -23,12 +23,33 @@ class PatientController extends Controller
 
     }
 
+    public function CreateAppointment(){
+        $subServices = SubService::all();//'isVisible', true put this shit back when we rollback its migration
+            $doctors = Doctors::where('isRemoved', false)->get();
+        return view('pages.patients.new-appointment-form', compact('subServices', 'doctors'));
+    }
+
     public function PatientProfile()
     {
         try {
+            $prepAppointment = DB::table('appointments')
+                ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
+                ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
+                ->join('users', 'users.id', '=', 'appointments.patient_id')
+                ->select(
+                    'doctors.FirstName as dfName',
+                    'doctors.ProfessionalTitle as title',
+                    'doctors.LastName as dlname',
+                    'doctors.MiddleName as dmname',
+                    'sub_services.Service as service',
+                    'appointments.Time',
+                    'appointments.Date',
+                    'appointments.status'
+                )
+                ->get();
             $subServices = SubService::all();//'isVisible', true put this shit back when we rollback its migration
             $doctors = Doctors::where('isRemoved', false)->get();
-            return view('pages.patients.patient-profile', compact('subServices', 'doctors'));
+            return view('pages.patients.patient-profile', compact('subServices', 'doctors', 'prepAppointment'));
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -36,82 +57,121 @@ class PatientController extends Controller
 
 
     public function GetVacantTimeSlots(Request $request)
-{
-    $date = $request->input('date');
+    {
+        $date = $request->input('date');
 
-    // Define all working hours
-    $workingHours = [
-    "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
-    "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM"
-];
+        $workingHours = [
+            "09:00 AM",
+            "10:00 AM",
+            "11:00 AM",
+            "12:00 PM",
+            "01:00 PM",
+            "02:00 PM",
+            "03:00 PM",
+            "04:00 PM",
+            "05:00 PM"
+        ];
 
-$bookedTimes = Appointment::whereDate('date', $date)
-    ->pluck('time')
-    ->toArray();
+        $bookedTimes = Appointment::whereDate('date', $date)
+            ->pluck('time')
+            ->toArray();
 
-if (empty($bookedTimes)) {
-    $availableSlots = $workingHours; // no bookings yet
-} else {
-    $availableSlots = array_values(array_diff($workingHours, $bookedTimes));
-}
+        if (empty($bookedTimes)) {
+            $availableSlots = $workingHours;
+        } else {
+            $availableSlots = array_values(array_diff($workingHours, $bookedTimes));
+        }
 
 
-    return response()->json([
-        'availableSlots' => $availableSlots
-    ]);
-}
+        return response()->json([
+            'availableSlots' => $availableSlots
+        ]);
+    }
 
-    public function AppointmentConfirmation(Request $request){
+    public function AppointmentConfirmation(Request $request)
+    {
         try {
             $validated = $request->validate([
-        'selected_date' => 'required|date',
-        'selected_time' => 'required|string',
-        'selected_doctor_id' => 'required|exists:doctors,id',
-        'selected_service_id' => 'required|exists:sub_services,id',
-    ]);
+                'selected_date' => 'required|date',
+                'selected_time' => 'required|string',
+                'selected_doctor_id' => 'required|exists:doctors,id',
+                'selected_service_id' => 'required|exists:sub_services,id',
+            ]);
 
-    Appointment::create([
-        'patient_id' => auth()->id(),
-        'doctor_id' => $validated['selected_doctor_id'],
-        'service_id' => $validated['selected_service_id'],
-        'date' => $validated['selected_date'],
-        'time' => $validated['selected_time'],
-    ]);
+            Appointment::create([
+                'patient_id' => auth()->id(),
+                'doctor_id' => $validated['selected_doctor_id'],
+                'service_id' => $validated['selected_service_id'],
+                'date' => $validated['selected_date'],
+                'time' => $validated['selected_time'],
+            ]);
 
-    User::where('id', Auth::user()->id)->update(['is_set_up_complete' => true]);
-        // return redirect()->route('appointment-lists')->with('success', 'Appointment booked successfully!');
-return response()->json([
-    'status' => 'success',
-    'redirect' => route('appointment-lists'),
-]);
+            User::where('id', Auth::user()->id)->update(['is_set_up_complete' => true]);
+            // return redirect()->route('appointment-lists')->with('success', 'Appointment booked successfully!');
+            return response()->json([
+                'status' => 'success',
+                'redirect' => route('patient-boarding-page'),
+            ]);
         } catch (\Throwable $th) {
             throw $th;
         }
     }
 
-    public function PostAppointmentLoc() {
-    try {
-        $prepAppointment = DB::table('appointments')
-            ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
-            ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
-            ->join('users', 'users.id', '=', 'appointments.patient_id')
-            ->select(
-                'doctors.FirstName as dfName',
-                'doctors.ProfessionalTitle as title',
-                'doctors.LastName as dlname',
-                'doctors.MiddleName as dmname',
-                'sub_services.Service as service',
-                'appointments.Time',
-                'appointments.Date',
-                'appointments.status'
-            )
-            ->get();
+    public function PostAppointmentLoc()
+    {
+        try {
+            $prepAppointment = DB::table('appointments')
+                ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
+                ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
+                ->join('users', 'users.id', '=', 'appointments.patient_id')
+                ->select(
+                    'doctors.FirstName as dfName',
+                    'doctors.ProfessionalTitle as title',
+                    'doctors.LastName as dlname',
+                    'doctors.MiddleName as dmname',
+                    'sub_services.Service as service',
+                    'appointments.Time',
+                    'appointments.Date',
+                    'appointments.status'
+                )
+                ->get();
 
-        return view('pages.patients.appointments', compact('prepAppointment'));
-    } catch (\Throwable $th) {
-        throw $th;
+            return view('pages.patients.appointments', compact('prepAppointment'));
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
-}
+
+
+    public function PatientAppointmentList()
+    {
+        try {
+            $patientID = Auth::user()->id;
+        $patient = Patients::where('patient_id', $patientID)->first();
+        $patientHistory = PatientHistory::where('patient_id', $patientID)->first();
+            $prepAppointment = DB::table('appointments')
+                ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
+                ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
+                ->join('users', 'users.id', '=', 'appointments.patient_id')
+                ->select(
+                    'doctors.FirstName as dfName',
+                    'doctors.ProfessionalTitle as title',
+                    'doctors.LastName as dlname',
+                    'doctors.MiddleName as dmname',
+                    'sub_services.Service as service',
+                    'sub_services.Price as price',
+                    'appointments.Time',
+                    'appointments.Date',
+                    'appointments.status',
+                    'appointments.id'
+                )
+                ->get();
+                $patientDuePayments = $prepAppointment->sum('price');
+            return view('pages.patients.patient-appointment-list', compact('prepAppointment', 'patientDuePayments','patient', 'patientHistory'));
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 
     public function PatientSetUp(Request $request)
     {
@@ -148,46 +208,46 @@ return response()->json([
 
             // Save Patient History
             $medicalRaw = $request['patient_med_history']['basic_info'];
-        $medData = [];
+            $medData = [];
 
-        foreach ($medicalRaw as $item) {
-            $medData[$item['name']] = $item['value'];
-        }
+            foreach ($medicalRaw as $item) {
+                $medData[$item['name']] = $item['value'];
+            }
 
-        // Extract allergies and illnesses
-        $allergies = $request['patient_med_history']['listed_allergies_illness']['Allergies']['list'] ?? [];
-        $allergyOther = $request['patient_med_history']['listed_allergies_illness']['Allergies']['otherDetails'] ?? null;
+            // Extract allergies and illnesses
+            $allergies = $request['patient_med_history']['listed_allergies_illness']['Allergies']['list'] ?? [];
+            $allergyOther = $request['patient_med_history']['listed_allergies_illness']['Allergies']['otherDetails'] ?? null;
 
-        $illnesses = $request['patient_med_history']['listed_allergies_illness']['Illnesses']['list'] ?? [];
-        $illnessOther = $request['patient_med_history']['listed_allergies_illness']['Illnesses']['otherDetails'] ?? null;
+            $illnesses = $request['patient_med_history']['listed_allergies_illness']['Illnesses']['list'] ?? [];
+            $illnessOther = $request['patient_med_history']['listed_allergies_illness']['Illnesses']['otherDetails'] ?? null;
 
-        // Save Patient History
-        $history = PatientHistory::create([
-            'patient_id' => $patient_id, // Use patient table's ID (not auth user)
-            'previous_dentist' => $medData['previousdentist'] ?? null,
-            'last_visit' => $medData['lastvisit'] ?? null,
-            'physician_name' => $medData['physician'] ?? null,
-            'physician_specialty' => $medData['specialty'] ?? null,
-            'physician_office_address' => $medData['officeaddress'] ?? null,
-            'physician_office_no' => $medData['officeno'] ?? null,
-            'good_health' => $medData['goodhealth'] ?? null,
-            'uses_drugs' => $medData['alcohol'] ?? null,
-            'under_medical_care' => $medData['medicalcondition'] ?? null,
-            'medical_condition_text' => $medData['medicalconditiontext'] ?? null,
-            'pregnant' => $medData['isPregnant'] ?? null,
-            'hospitalized' => $medData['hospital'] ?? null,
-            'hospitalization_details' => $medData['hospitaltext'] ?? null,
-            'taking_birth_control' => $medData['isOnBithControl'] ?? null,
-            'taking_medications' => $medData['prescription'] ?? null,
-            'medications_details' => $medData['prescriptiontext'] ?? null,
-            'using_tobacco' => $medData['isClientASmokeWhack'] ?? null,
-            'nursing' => $medData['isClientNursing'] ?? null,
-            'allergy' => json_encode($allergies),
-            'allergy_others' => $allergyOther,
-            'known_conditions' => json_encode($illnesses),
-            'blood_type' => $medData['bloodType'] ?? null,
-            'blood_pressure' => $medData['bloodPressure'] ?? null,
-        ]);
+            // Save Patient History
+            $history = PatientHistory::create([
+                'patient_id' => $patient_id, // Use patient table's ID (not auth user)
+                'previous_dentist' => $medData['previousdentist'] ?? null,
+                'last_visit' => $medData['lastvisit'] ?? null,
+                'physician_name' => $medData['physician'] ?? null,
+                'physician_specialty' => $medData['specialty'] ?? null,
+                'physician_office_address' => $medData['officeaddress'] ?? null,
+                'physician_office_no' => $medData['officeno'] ?? null,
+                'good_health' => $medData['goodhealth'] ?? null,
+                'uses_drugs' => $medData['alcohol'] ?? null,
+                'under_medical_care' => $medData['medicalcondition'] ?? null,
+                'medical_condition_text' => $medData['medicalconditiontext'] ?? null,
+                'pregnant' => $medData['isPregnant'] ?? null,
+                'hospitalized' => $medData['hospital'] ?? null,
+                'hospitalization_details' => $medData['hospitaltext'] ?? null,
+                'taking_birth_control' => $medData['isOnBithControl'] ?? null,
+                'taking_medications' => $medData['prescription'] ?? null,
+                'medications_details' => $medData['prescriptiontext'] ?? null,
+                'using_tobacco' => $medData['isClientASmokeWhack'] ?? null,
+                'nursing' => $medData['isClientNursing'] ?? null,
+                'allergy' => json_encode($allergies),
+                'allergy_others' => $allergyOther,
+                'known_conditions' => json_encode($illnesses),
+                'blood_type' => $medData['bloodType'] ?? null,
+                'blood_pressure' => $medData['bloodPressure'] ?? null,
+            ]);
             User::where('id', $patient_id)->update(['is_first_login' => false]);
             DB::commit();
 
@@ -200,6 +260,7 @@ return response()->json([
 
         } catch (\Throwable $th) {
             DB::rollBack();
+            Log::info($th);
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong.',

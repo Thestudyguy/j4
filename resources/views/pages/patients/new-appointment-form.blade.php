@@ -1,41 +1,7 @@
 @extends('dashboard')
-
 @section('content')
-    <div class="container-fluid pt-5 bg-light">
-        <div class="appointment-loader-container visually-hidden">
-            <div class="appointment-loader"></div>
-        </div>
-        @if (Auth::check() && Auth::user()->is_first_login && Auth::user()->Role === 'patient')
-            <h1 class="fw-bold mt-2">My Profile</h1>
-            <div class="container">
-                <div class="row m-2">
-                    <div class="alert alert-warning">
-                        Please complete your account setup before making an appointment.
-                    </div>
-                    <div class="col-sm-12 patient-setup patient-setup-step-1">
-                        @include('components.client-appointment-form-personal-info')
-                        <!-- client-personal-info-form -->
-                    </div>
-                    <div class="col-sm-12 patient-setup patient-setup-step-2 visually-hidden">
-                        @include('components.client-appointment-form-medical-history')
-                    </div>
-                    <div class="col-sm-12 patient-setup patient-setup-step-3 visually-hidden">
-                        @include('pages.patients.patient-personal-info-preview')
-                        @include('pages.patients.patient-history-preview')
-                        <!-- preview -->
-                    </div>
-                    <div class="col-sm-12 d-flex justify-content-end align-items-end mb-3">
-                        <button
-                            class="visually-hidden btn-secondary mx-1 btn-sm fw-semibold lead patient-account-setup-back-btn">Back</button>
-                        <button class="btn-info btn-sm fw-semibold lead patient-account-setup-next-btn">Next</button>
-                        <button
-                            class="visually-hidden btn-primary btn-sm fw-semibold lead patient-account-setup-finish-btn">Finish</button>
-                    </div>
-                </div>
-            </div>
-        @endif
-
-       @if (Auth::check() && !Auth::user()->is_setup_complete && !Auth::user()->is_first_login && Auth::user()->Role === 'patient')
+    <div class="container p-5 mt-5">
+        <div class="row">
             <form id="appointment-form">
                 @csrf
                 <input type="hidden" name="selected_date" id="selected_date">
@@ -112,20 +78,15 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
-                    </div>
-                </div>
-                <div class="text-center mt-4 confirm-appt-btn">
+                            @endforeach
+                            
+        </div>
+    </div>
+    <div class="text-center mt-4 confirm-appt-btn">
                     <button type="submit" class="btn-secondary visually-hidden text-sm fw-semibold"
                         id="back-appointment-btn">Back</button>
                     <button type="submit" class="btn-info text-sm fw-semibold" id="Next-appointment-btn">Next</button>
                     <button type="submit" class="btn-success visually-hidden text-sm fw-semibold"
                         id="confirm-appointment-btn">Confirm Appointment</button>
                 </div>
-            </div>
-        @endif
-
-            
-
-    </div>
 @endsection

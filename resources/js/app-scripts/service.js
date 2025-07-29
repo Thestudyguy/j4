@@ -265,6 +265,8 @@ $(document).ready(function () {
             // Render sub-service cards
             let cards = '<div class="row g-3">';
             $.each(response.sub_services, function (index, data) {
+                console.log(data.image_path);
+                
                 cards += `
                     <div class="col-md-12">
                         <div class="card h-100">

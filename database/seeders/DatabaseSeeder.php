@@ -26,29 +26,37 @@ class DatabaseSeeder extends Seeder
             'password' => FacadesHash::make('admin')
         ]);
         User::factory()->create([
-            'FirstName' => 'Jane',
+            'FirstName' => 'Angie',
             'LastName' => 'Doe',
-            'UserName' => 'jane',
-            'Email' => 'janetest@email.com',  // lowercase 'email'
-            'Role' => 'Patient',              // lowercase 'role'
-            'password' => FacadesHash::make('admin')
+            'UserName' => 'angie',
+            'Email' => 'angie@gmail.com',  // lowercase 'email'
+            'Role' => 'Front Desk',              // lowercase 'role'
+            'password' => FacadesHash::make('staff')
         ]);
-        User::factory()->create([
-            'FirstName' => 'Edrian',
-            'LastName' => 'Lagrosa',
-            'UserName' => 'admin',
-            'Email' => 'lagrosaedrian06@gmail.com',  // lowercase 'email'
-            'Role' => 'SuperUser',              // lowercase 'role'
-            'password' => FacadesHash::make('admin')
-        ]);
-        User::factory()->create([
-            'FirstName' => 'Derik',
-            'LastName' => 'Doe',
-            'UserName' => 'derik',
-            'Email' => 'deriktestemail.com',  // lowercase 'email'
-            'Role' => 'Dentist',              // lowercase 'role'
-            'password' => FacadesHash::make('admin')
-        ]);
+        // User::factory()->create([
+        //     'FirstName' => 'Jane',
+        //     'LastName' => 'Doe',
+        //     'UserName' => 'jane',
+        //     'Email' => 'janetest@email.com',  // lowercase 'email'
+        //     'Role' => 'Patient',              // lowercase 'role'
+        //     'password' => FacadesHash::make('admin')
+        // ]);
+        // User::factory()->create([
+        //     'FirstName' => 'Edrian',
+        //     'LastName' => 'Lagrosa',
+        //     'UserName' => 'admin',
+        //     'Email' => 'lagrosaedrian06@gmail.com',  // lowercase 'email'
+        //     'Role' => 'SuperUser',              // lowercase 'role'
+        //     'password' => FacadesHash::make('admin')
+        // ]);
+        // User::factory()->create([
+        //     'FirstName' => 'Derik',
+        //     'LastName' => 'Doe',
+        //     'UserName' => 'derik',
+        //     'Email' => 'deriktestemail.com',  // lowercase 'email'
+        //     'Role' => 'Dentist',              // lowercase 'role'
+        //     'password' => FacadesHash::make('admin')
+        // ]);
 
         Services::factory()->create([
             'Service' => 'Veeners'

@@ -43,7 +43,7 @@ class PatientHistory extends Model
     ];
 
     protected $casts = [
-        'known_conditions' => 'array', // JSON field
+        'known_illnesses' => 'array', // JSON field
         'good_health' => 'boolean',
         'uses_drugs' => 'boolean',
         'under_medical_care' => 'boolean',

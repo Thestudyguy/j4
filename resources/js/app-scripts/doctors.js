@@ -7,6 +7,7 @@ $(document).ready(function () {
     });
 
     $('.save-new-doctor').on('click', function (e) {
+
         e.preventDefault();
         const form = $('.new-doctor-form')[0];
         const formData = new FormData(form);
@@ -30,8 +31,8 @@ $(document).ready(function () {
 
 
         if (hasEmpty) return;
-
-        $('.loader-container').removeClass('visually-hidden');
+    $('.doctors-page').removeClass('visually-hidden');
+        // $('.loader-container').removeClass('visually-hidden');
 
         $.ajax({
             type: 'POST',
@@ -43,15 +44,13 @@ $(document).ready(function () {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
             },
             success: function (response) {
-                $('.loader-container').addClass('visually-hidden');
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Doctor added successfully'
-                });
-                $('.new-doctor-form')[0].reset();
+                $('.doctors-page').addClass('visually-hidden');
+                location.reload();
+                localStorage.setItem('doctor', 'created');
+                // $('.new-doctor-form')[0].reset();
             },
             error: function (xhr) {
-                $('.loader-container').addClass('visually-hidden');
+                $('.doctors-page').addClass('visually-hidden');
                 const errors = xhr.responseJSON?.errors;
                 if (errors) {
                     Object.keys(errors).forEach(key => {
@@ -97,4 +96,21 @@ $(document).ready(function () {
         }));
     }
 
+$('.doctor-row-container').on('click', function(e){
+    console.log($(this).attr('id'));
+    
+});
+
+    const doctorStatus = localStorage.getItem('doctor');
+
+if (doctorStatus === 'created') {
+    Swal.fire({
+        icon: 'success',
+        title: 'Doctor Account Created',
+        text: 'A new dentist has been successfully added.',
+        confirmButtonText: 'OK'
+    });
+
+    localStorage.removeItem('doctor');
+}
 });

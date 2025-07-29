@@ -39,13 +39,37 @@
                             </div>
                         </div>
                         <div class="card-body">
+                            <!-- <div class="col">Edrian</div>
+                            <div class="col">Orthodontic</div>
+                            <div class="col">July 21, 2025</div>
+                            <div class="col">1:00 PM</div>
+                            <div class="col text-success rounded-5">Completed</div> -->
+                            @foreach ($appointments as $appt)
                             <div class="row bg-light p-3 rounded-3 small text-center">
-                                <div class="col">Edrian</div>
-                                <div class="col">Orthodontic</div>
-                                <div class="col">July 21, 2025</div>
-                                <div class="col">1:00 PM</div>
-                                <div class="col text-success rounded-5">Completed</div>
+                                <div class="col">{{ $appt->FirstName }}</div>
+                                <div class="col">{{ $appt->Service }}</div>
+                                <div class="col">{{ $appt->date }}</div>
+                                <div class="col">{{ $appt->time }}</div>
+                                <div class="col fw-semibold rounded-5">
+                                    @php
+                                        $status = $appt->status;
+                                    @endphp
+
+                                    <!-- Badge color coding based on status -->
+                                    @if($status == 'Pending')
+                                        <span class="badge bg-warning text-dark">{{ $status }}</span>
+                                    @elseif($status == 'Confirmed')
+                                        <span class="badge bg-success">{{ $status }}</span>
+                                    @elseif($status == 'Cancelled')
+                                        <span class="badge bg-danger">{{ $status }}</span>
+                                    @elseif($status == 'Completed')
+                                        <span class="badge bg-primary">{{ $status }}</span>
+                                    @else
+                                        <span class="badge bg-secondary">{{ $status }}</span>
+                                    @endif
+                                </div>              
                             </div>
+                                @endforeach
                         </div>
                     </div>
                 </div>

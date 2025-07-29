@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DentistController;
 use App\Http\Controllers\PatientController;
 use App\Models\Doctors;
 use App\Models\Services;
@@ -33,8 +34,33 @@ Route::middleware('authenticated')->group(function(){
     Route::get('/doctors', [Controller::class, 'DoctorsPage'])->name('doctors');
     Route::post('/doctors/new', [Controller::class, 'NewDoctors']);
     Route::get('/patient-profile', [PatientController::class, 'PatientProfile'])->name('patient-profile');
+    Route::get('/dentist', [DentistController::class, 'DentistBoard'])->name('dentist-interface');
+    Route::get('/inventory', [Controller::class, 'Inventory'])->name('inventory');
+    Route::get('/Patients', [Controller::class, 'Patients'])->name('patients');
+    Route::get('/appointments', [Controller::class, 'AllAppointments'])->name('appointments');
+    Route::get('/patient-details/{id}', [Controller::class, 'PatientDetails'])->name('patient-details-view');
+    Route::post('/patient-appointment-update', [Controller::class, 'UpdatePatientAppointment'])->name('update-appointment-naboangna');
 });
+Route::get('/patient-appointments', [PatientController::class, 'PatientAppointmentList'])->name('patient-appointments-page');
+Route::get('/patient-details', [Controller::class, 'ViewPatientDetails'])->name('patient-details');
 Route::post('/patient-setup', [PatientController::class, 'PatientSetUp'])->name('patient-setup')->middleware('auth');
 Route::post('/available-slots', [PatientController::class, 'GetVacantTimeSlots'])->name('available-slots')->middleware('auth');
 Route::post('/appointments', [PatientController::class, 'AppointmentConfirmation'])->name('appointment-confirmation')->middleware('auth');
 Route::get('/user-appointment-list', [PatientController::class, 'PostAppointmentLoc'])->name('appointment-lists')->middleware('auth');
+
+
+
+Route::get('/test-mail', function () {
+    try {
+        Mail::raw('Test email body', function ($message) {
+            $message->to('lagrosaedrian06@gmail.com') // change to your receiving email
+                    ->subject('Test Email');
+        });
+
+        return 'Mail sent!';
+    } catch (\Exception $e) {
+        return 'Mail failed: ' . $e->getMessage();
+    }
+});
+
+Route::get('/new-appointment-form', [PatientController::class, 'CreateAppointment'])->name('new-appointment-form');

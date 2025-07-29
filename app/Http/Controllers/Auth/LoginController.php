@@ -70,19 +70,24 @@ class LoginController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     protected function authenticated(Request $request, $user)
-    {
-        if ($user->Role === 'Patient') {
-            return redirect()->route('client-dashboard');
-        }
-        else if ($user->Role === 'Dentist') {
-            return redirect()->route('dentist-dashboard');
-        }
-        else{
-            // You can handle other roles or default behavior here
-            return redirect()->route('dashboard');
-        }
-        return redirect()->intended($this->redirectTo);
+{
+    // Normalize the role to lowercase to avoid case sensitivity issues
+    $role = strtolower(Auth::user()->Role);
+
+    if ($role === 'patient') {
+        return redirect()->route('patient-profile');
     }
+    else if ($role === 'dentist') {
+        return redirect()->route('dentist-interface');
+    }
+    else {
+        // Handle other roles or default behavior
+        return redirect()->route('dashboard');
+    }
+
+    return redirect()->intended($this->redirectTo);
+}
+
 
     /**
      * Handle a failed login attempt.
@@ -107,4 +112,4 @@ class LoginController extends Controller
     {
         return 'UserName'; // Make sure this is the correct field for username in your table
     }
-}
+} 

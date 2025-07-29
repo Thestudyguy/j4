@@ -16,7 +16,7 @@ $(document).ready(function() {
         
         $.each($(this).serializeArray(), (index, fields)=>{
                 $(`[name='${fields.name}']`).removeClass('is-invalid');
-            if(fields.value === ''){
+            if(fields.value === '' && fields.name !== 'email'){
                 Toast.fire({
                     icon: 'warning',
                     title: 'Missing Fields',

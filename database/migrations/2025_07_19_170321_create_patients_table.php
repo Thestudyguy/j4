@@ -12,21 +12,21 @@ class CreatePatientsTable extends Migration
             $table->unsignedBigInteger('patient_id')->nullable();
             $table->foreign('patient_id')->references('id')->on('users')->nullOnDelete();
             // Required fields
-            $table->string('FirstName');
-            $table->string('LastName');
-            $table->string('MiddleName');
-            $table->date('BirthDate');
-            $table->string('Gender');
-            $table->integer('Age');
-            $table->string('Religion');
-            $table->string('Nationality');
-            $table->string('Address');
-            $table->string('HomeNo');
-            $table->string('Occupation');
-            $table->date('EffectiveDate');
-            $table->string('Email');
-            $table->string('MobileNo');
-            $table->string('ReasonForVisit');
+            $table->string('FirstName')->nullable();
+            $table->string('LastName')->nullable();
+            $table->string('MiddleName')->nullable();
+            $table->date('BirthDate')->nullable();
+            $table->string('Gender')->nullable();
+            $table->integer('Age')->nullable();
+            $table->string('Religion')->nullable();
+            $table->string('Nationality')->nullable();
+            $table->string('Address')->nullable();
+            $table->string('HomeNo')->nullable();
+            $table->string('Occupation')->nullable();
+            $table->date('EffectiveDate')->nullable();
+            $table->string('Email')->nullable();
+            $table->string('MobileNo')->nullable();
+            $table->string('ReasonForVisit')->nullable();
 
             // Optional fields
             $table->string('NickName')->nullable();

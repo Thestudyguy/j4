@@ -8,10 +8,12 @@ class Doctors extends Model
 {
     //
     protected $fillable = [
+        'user_id',
         'ProfessionalTitle',
         'FirstName',
         'LastName',
         'MiddleName',
+        'Email',
         'Suffix',
         'MDLink',
         'AreaOfExpertise',

@@ -6,11 +6,11 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <label for="name" class="form-label fw-normal">Last Name</label>
-                                        <input type="text" class="form-control form-control-sm" id="Last_Name" name="lastname">
+                                        <input type="text" class="form-control form-control-sm" id="Last_Name" name="lastname" value="{{ Auth::user()->LastName }}">
                                     </div>
                                     <div class="col-sm-4">
                                         <label for="name" class="form-label fw-normal">First Name</label>
-                                        <input type="text" class="form-control form-control-sm" id="First_Name" name="firstname" >
+                                        <input type="text" class="form-control form-control-sm" id="First_Name" name="firstname" value="{{ Auth::user()->FirstName }}">
                                     </div>
                                      <div class="col-sm-4">
                                         <label for="name" class="form-label fw-normal">Middle Name</label>
@@ -21,11 +21,11 @@
                             <div class="col-sm-12 p-3">
                                 <div class="row">
                                     <div class="col-sm-4">
-                                        <label for="birthdate" class="form-label fw-normal">Birthdate</label>
+                                        <label for="birthdate" class="form-label fw-normal">Birthdate<sup class="text-sm text-danger">*</sup></label>
                                         <input type="date" class="form-control form-control-sm" id="Birthdate" name="birthdate">
                                     </div>
                                     <div class="col-sm-4 client-sex-field"><!-- added class for styling with a silly name lol -->
-                                        <label for="sex" class="form-label fw-normal">Sex</label>
+                                        <label for="sex" class="form-label fw-normal">Sex<sup class="text-sm text-danger">*</sup></label>
                                         <br>
                                         <div class="row p-2 sex-container"><!-- goffy ahh class name -->
                                             <div class="col-sm-6"><input type="radio" name="sex" id="Gender" value="Male">Male</div>
@@ -33,7 +33,7 @@
                                         </div>
                                     </div>
                                      <div class="col-sm-4">
-                                        <label for="age" class="form-label fw-normal">Age</label>
+                                        <label for="age" class="form-label fw-normal">Age<sup class="text-sm text-danger">*</sup></label>
                                         <input type="number" class="form-control form-control-sm" id="Age" name="age">
                                     </div>
                                 </div>
@@ -45,7 +45,7 @@
                                         <input type="text" class="form-control form-control-sm" id="Religion" name="religion">
                                     </div>
                                     <div class="col-sm-4">
-                                        <label for="nationality" class="form-label fw-normal">Nationality</label>
+                                        <label for="nationality" class="form-label fw-normal">Nationality<sup class="text-sm text-danger">*</sup></label>
                                         <select class="form-select" id="Nationality" name="nationality">
                                             <option value="" hidden selected>Select your nationality</option>
                                             <option value="Afghan">Afghan</option>
@@ -246,7 +246,7 @@
                                     </div>
 
                                      <div class="col-sm-4">
-                                        <label for="nickname" class="form-label fw-normal">Nickname</label>
+                                        <label for="nickname" class="form-label fw-normal">Nickname<sup class="text-sm text-danger">*</sup></label>
                                         <input type="text" class="form-control form-control-sm" id="Nickname" name="nickname">
                                     </div>
                                 </div>
@@ -254,7 +254,7 @@
                             <div class="col-sm-12 p-3">
                                 <div class="row">
                                     <div class="col-sm-6">
-                                    <label for="address" class="form-label fw-normal">Address</label>
+                                    <label for="address" class="form-label fw-normal">Address<sup class="text-sm text-danger">*</sup></label>
                                     <input type="text" class="form-control form-control-sm" id="Address" name="address">
                                     </div>
                                     <div class="col-sm-6">
@@ -267,7 +267,7 @@
                             <div class="col-sm-12 p-3">
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <label for="occupation" class="form-label fw-normal">Occupation</label>
+                                        <label for="occupation" class="form-label fw-normal">Occupation<sup class="text-sm text-danger">*</sup></label>
                                         <input type="text" class="form-control form-control-sm" id="Occupation" name="occupation">
                                     </div>
                                     <div class="col-sm-3">
@@ -289,10 +289,10 @@
                                 <div class="row">
                                     <div class="col-sm-6">
                                     <label for="email" class="form-label fw-normal">Email</label>
-                                    <input type="email" class="form-control form-control-sm" id="Email" name="email">
+                                    <input type="email" class="form-control form-control-sm" id="Email" name="email"  value="{{ Auth::user()->Email ?? '' }}">
                                     </div>
                                     <div class="col-sm-6">
-                                    <label for="mobileno" class="form-label fw-normal">Mobile No.</label>
+                                    <label for="mobileno" class="form-label fw-normal">Mobile No.<sup class="text-sm text-danger">*</sup></label>
                                     <input type="text" class="form-control form-control-sm" id="Mobile_No." name="mobileno">
                                     </div>
                                 </div>

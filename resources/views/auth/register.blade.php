@@ -38,16 +38,26 @@
                                     <input type="email" id="email" name="email" class="form-control" >
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="password" class="form-label">Password</label>
-                                    <input type="password" id="password" name="password" class="form-control" >
-                                </div>
+                                <div class="mb-3 position-relative">
+    <label for="password" class="form-label">Password</label>
+    <div class="input-group">
+        <input type="password" id="password" name="password" class="form-control">
+        <span class="input-group-text toggle-password" data-target="password" style="cursor: pointer;">
+            <i class="fas fa-eye"></i>
+        </span>
+    </div>
+</div>
 
-                                <div class="mb-3">
-                                    <label for="password_confirmation" class="form-label">Confirm Password</label>
-                                    <input type="password" id="password_confirmation" name="password_confirmation"
-                                        class="form-control" >
-                                </div>
+<!-- Confirm Password Field -->
+<div class="mb-3 position-relative">
+    <label for="password_confirmation" class="form-label">Confirm Password</label>
+    <div class="input-group">
+        <input type="password" id="password_confirmation" name="password_confirmation" class="form-control">
+        <span class="input-group-text toggle-password" data-target="password_confirmation" style="cursor: pointer;">
+            <i class="fas fa-eye"></i>
+        </span>
+    </div>
+</div>
 
                                 <div class="d-grid mb-3">
                                     <button type="submit" class="btn text-white" style="background-color: #4A7E88;">

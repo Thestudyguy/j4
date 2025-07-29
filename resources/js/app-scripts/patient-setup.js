@@ -80,7 +80,9 @@ $(document).ready(function () {
                 'faxno',
                 'guardian',
                 'guardianoccupation',
-                'referal'
+                'referal',
+                'consultationreason',
+                'email'
             ];
 
             let hasEmptyRequired = false;
@@ -122,6 +124,8 @@ $(document).ready(function () {
                     target.text(value || '--/--');
                 }
             });
+            console.log(PersonalInfoObj);
+            
         }
 
         if (currentStep === 2) {
@@ -135,7 +139,8 @@ $(document).ready(function () {
             function clearInvalid($el) {
                 $el.removeClass('is-invalid');
             }
-
+            console.log($('.client-medical-history-form').serializeArray());
+            
             const conditionalFields = [
                 { container: '.medicalconditiontextcontainer', input: 'input[name="medicalconditiontext"]' },
                 { container: '.surgerytextcontainer', input: 'input[name="surgerytext"]' },
@@ -196,7 +201,7 @@ $(document).ready(function () {
             // Required radio groups
             const radioGroups = [
                 'medicalcondition', 'surgery', 'hospital', 'prescription',
-                'goodhealth', 'alcohol', 'isPregnant', 'isOnBithControl',
+                'goodhealth', 'alcohol',
                 'isClientASmokeWhack', 'isClientNursing'
             ];
 

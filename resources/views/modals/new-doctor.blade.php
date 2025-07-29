@@ -32,6 +32,12 @@
                     </div>
 
                     <div class="mb-3">
+                        <label for="Email" class="form-label">Email</label>
+                        <input type="text" class="form-control form-control-sm rounded-1" name="Email"
+                            id="email">
+                    </div>
+
+                    <div class="mb-3">
                         <label for="Suffix" class="form-label">Suffix</label>
                         <input type="text" class="form-control form-control-sm rounded-1" name="Suffix" id="Suffix"
                             placeholder="e.g., Jr., Sr., III">

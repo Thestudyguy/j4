@@ -12,34 +12,34 @@ $(document).ready(function () {
     ];
 
     flatpickr("#calendar-container", {
-    inline: true,
-    dateFormat: "Y-m-d",
-    minDate: new Date().fp_incr(1), // disables today and past dates
-    onChange: function (selectedDates, dateStr, instance) {
-        const readableDate = selectedDates[0].toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
+        inline: true,
+        dateFormat: "Y-m-d",
+        minDate: new Date().fp_incr(1), // disables today and past dates
+        onChange: function (selectedDates, dateStr, instance) {
+            const readableDate = selectedDates[0].toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
 
-        $.ajax({
-            type: 'POST',
-            url: 'available-slots',
-            data: { date: dateStr },
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content") },
-            success: function (response) {
-                renderTimeSlots(dateStr, response.availableSlots);
-            },
-            error: function (error) {
-                console.error(error);
-            }
-        });
+            $.ajax({
+                type: 'POST',
+                url: 'available-slots',
+                data: { date: dateStr },
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content") },
+                success: function (response) {
+                    renderTimeSlots(dateStr, response.availableSlots);
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
 
-        $('#selected-date-title').text(`Available Time Slots for ${readableDate}`);
-        renderTimeSlots(dateStr);
-    }
-});
+            $('#selected-date-title').text(`Available Time Slots for ${readableDate}`);
+            renderTimeSlots(dateStr);
+        }
+    });
 
     function renderTimeSlots(date, availableSlots = []) {
         const container = $('#time-slots');
@@ -104,55 +104,151 @@ $(document).ready(function () {
 
 
     });
-$('#confirm-appointment-btn').on('click', function (e) {
-    e.preventDefault();
-    $('.appointment-loader-container').removeClass('is-invalid');
-    const date = $('#selected_date').val();
-    const time = $('#selected_time').val();
-    const doctor = $('#selected_doctor_id').val();
-    const service = $('#selected_service_id').val();
 
-    if (!date || !time || !doctor || !service) {
-        // alert('Please select date, time, doctor, and service first.');
-        Swal.fire({
-            icon: 'info',
-            title: 'Please select all necesarry data'
-        });
-        return;
+    let currentStep = 1;
+    const totalSteps = $('.appointment-step').length;
+
+    function showStep(step) {
+        // Hide all steps
+        $('.appointment-step').addClass('visually-hidden');
+        // Show the current step
+        $('.appointment-step.appointment-prep-step-' + step).removeClass('visually-hidden');
+        toggleButtons(step);
     }
 
-    // Optional: Show loader or disable button
-    $(this).prop('disabled', true).text('Booking...');
+    function toggleButtons(step) {
+        // Toggle Next and Confirm buttons
+        if (step === totalSteps) {
+            $('#Next-appointment-btn').addClass('visually-hidden');
+            $('#confirm-appointment-btn').removeClass('visually-hidden');
+        } else {
+            $('#Next-appointment-btn').removeClass('visually-hidden');
+            $('#confirm-appointment-btn').addClass('visually-hidden');
+        }
 
-    $.ajax({
-        url: '/appointments',
-        method: 'POST',
-        data: {
-            _token: $('input[name="_token"]').val(),
-            selected_date: date,
-            selected_time: time,
-            selected_doctor_id: doctor,
-            selected_service_id: service,
-        },
-        success: function (response) {
-            $('.appointment-loader-container').addClass('is-invalid');
-            // location.reload(); // or redirect
-            window.location.href = response.redirect;
-            localStorage.setItem('appointment', 'created');
-        },
-        error: function (xhr) {
-            Toast.fire({
-                icon: 'error',
-                title: 'Something went wrong',
-                text: xhr.responseJSON.message
-            });
-            $('.appointment-loader-container').addClass('is-invalid');
-            $('#confirm-appointment-btn').prop('disabled', false).text('Confirm Appointment');
+        // Show the Back button if not on the first step
+        if (step > 1) {
+            $('#back-appointment-btn').removeClass('visually-hidden');
+        } else {
+            $('#back-appointment-btn').addClass('visually-hidden');
+        }
+    }
+
+    // // Handle the Next button click
+    // $('#Next-appointment-btn').on('click', function (e) {
+    //     e.preventDefault();
+    //     if (currentStep < totalSteps) {
+    //         currentStep++;
+    //         showStep(currentStep);
+    //     }
+    // });
+
+    // Handle the Back button click
+    $('#back-appointment-btn').on('click', function (e) {
+        e.preventDefault();
+        if (currentStep > 1) {
+            currentStep--;
+            showStep(currentStep);
         }
     });
-});
 
-    if(localStorage.getItem('appointment') === 'created'){
+    $('#Next-appointment-btn').on('click', function (e) {
+        e.preventDefault();
+        if (currentStep === 1) {
+            if ($('#selected_date').val() === '' && $('#selected_time').val() === '') {
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'No date and time selected',
+                    text: 'Please select date and time for your appointment'
+                });
+                return;
+            }
+        }
+        if (currentStep === 2) {
+            if ($('#selected_service_id').val() === '') {
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'No Service selected',
+                    text: 'Please select a service'
+                });
+                return;
+            }
+        }
+        if (currentStep === 3) {
+            if ($('#selected_doctor_id').val() === '') {
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'No Doctor selected',
+                    text: 'Please select a doctor'
+                });
+                return;
+            }
+        }
+
+        if (currentStep < totalSteps) {
+            currentStep++;
+            showStep(currentStep);
+        }
+    });
+
+    $('#confirm-appointment-btn').on('click', function (e) {
+
+        e.preventDefault();
+        if($('#selected_doctor_id').val() === ''){
+            Toast.fire({
+                icon: 'warning',
+                title: 'No doctor selecteed',
+                text: 'Please select a doctor'
+            });
+            return;
+        }
+        $('.appointment-loader-container').removeClass('is-invalid');
+        const date = $('#selected_date').val();
+        const time = $('#selected_time').val();
+        const doctor = $('#selected_doctor_id').val();
+        const service = $('#selected_service_id').val();
+
+        if (!date || !time || !doctor || !service) {
+            // alert('Please select date, time, doctor, and service first.');
+            Swal.fire({
+                icon: 'info',
+                title: 'Please select all necesarry data'
+            });
+            return;
+        }
+
+        // Optional: Show loader or disable button
+        $(this).prop('disabled', true).text('Booking...');
+
+        $.ajax({
+            url: '/appointments',
+            method: 'POST',
+            data: {
+                _token: $('input[name="_token"]').val(),
+                selected_date: date,
+                selected_time: time,
+                selected_doctor_id: doctor,
+                selected_service_id: service,
+            },
+            success: function (response) {
+                $('.appointment-loader-container').addClass('is-invalid');
+                // location.reload(); // or redirect
+                window.location.href = response.redirect;
+                localStorage.setItem('appointment', 'created');
+            },
+            error: function (xhr) {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Something went wrong',
+                    text: xhr.responseJSON.message
+                });
+                $('.appointment-loader-container').addClass('is-invalid');
+                $('#confirm-appointment-btn').prop('disabled', false).text('Confirm Appointment');
+            }
+        });
+    });
+
+    if (localStorage.getItem('appointment') === 'created') {
         Swal.fire({
             icon: 'success',
             title: 'Your appointment has been created!',
