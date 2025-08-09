@@ -86,6 +86,7 @@
                                 @enderror
                     </div>
                 <div style="margin-bottom: 0.5rem;">
+                    
                     <input type="password" name="password" required placeholder="Password"
                         style="width: 100%; padding: 0.5rem; font-size: 0.875rem; background-color: #1e1e1e; color: #fff; border: 1px solid #444; border-radius: 0; outline: none; box-sizing: border-box;">
                                 @error('password')
@@ -93,7 +94,10 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
+
+                                
                 </div>
+                
                 <button type="submit"
                     style="width: 100%; padding: 0.5rem; font-size: 0.875rem; background-color: #0dcaf0; color: #000; border: none; border-radius: 0; cursor: pointer;">
                     Login

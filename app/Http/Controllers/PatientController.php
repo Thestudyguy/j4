@@ -110,7 +110,7 @@ class PatientController extends Controller
             // return redirect()->route('appointment-lists')->with('success', 'Appointment booked successfully!');
             return response()->json([
                 'status' => 'success',
-                'redirect' => route('patient-boarding-page'),
+                'redirect' => route('patient-profile'),
             ]);
         } catch (\Throwable $th) {
             throw $th;

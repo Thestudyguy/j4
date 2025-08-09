@@ -27,6 +27,19 @@
                         </div>
                     </div>
                 </div>
+               <div class="col-sm-4">
+                 <div class="card" style="height: 220px;">
+                       
+                    </div>
+               </div>
+               <div class="col-sm-4">
+                 <div class="card p-3" style="height: 220px;">
+                       <div class="row">
+                        <div class="col-sm-6">Notes</div>
+                        <div class="col-sm-6 text-end"><a href="">see all</a></div>
+                       </div>
+                    </div>
+               </div>
             </div>
 
             {{-- Header --}}
@@ -62,6 +75,11 @@
                 @empty
                     <div class="text-center text-muted py-4">No appointments found.</div>
                 @endforelse
+            </div>
+            <div class="row">
+                <div class="col-sm-12 mt-3">
+                    <img src="{{ asset('images/mouth.png') }}" alt="" style="width: 30%" width="75">
+                </div>
             </div>
         </div>
     </div>

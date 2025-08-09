@@ -80,6 +80,9 @@ class LoginController extends Controller
     else if ($role === 'dentist') {
         return redirect()->route('dentist-interface');
     }
+    else if ($role === 'Front Desk') {
+        return redirect()->route('front-desk');
+    }
     else {
         // Handle other roles or default behavior
         return redirect()->route('dashboard');

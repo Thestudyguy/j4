@@ -7,7 +7,7 @@
         <div class="load-inner load-two"></div>
         <div class="load-inner load-three"></div>
         <span class="text">Loading...</span>
-      </div>
+    </div>
 </div>
 
 @if (!View::hasSection('hideNavBar'))
@@ -16,7 +16,7 @@
 
 <body>
     <div>
-       
+
         <div id="home">@include('layouts.intro-banner')</div>
         <div id="welcome-to-j4-dc">@include('layouts.welcome-to-j4')</div>
         <div id="services">@include('layouts.services')</div>
@@ -24,14 +24,18 @@
         <!-- <div id="j4-story">@include('layouts.story')</div> -->
         <div id="j4-doctors">@include('layouts.doctors')</div>
 
+        
         <div id="why-choose-j4dc">@include('layouts.why-choose-j4dc')</div>
 
     </div>
 
-     @if (!View::hasSection('hideFooter'))
+    @if (!View::hasSection('hideFooter'))
         @include('layouts.footer')
-    @endif 
+    @endif
+
+
 </body>
 
 @include('components.scripts')
+
 </html>

@@ -48,7 +48,7 @@
             <div class="">
                 <div class="appointment-step appointment-prep-step-1">
                     <div class="container py-5">
-                        <h2 class="fw-bold mb-4 text-center text-primary">Book a Dental Appointment</h2>
+                        <h2 class="fw-bold mb-4 text-center" style="color: #063D58;">Book a Dental Appointment</h2>
 
                         {{-- Calendar and Time Slots --}}
                         <div class="row mb-5">

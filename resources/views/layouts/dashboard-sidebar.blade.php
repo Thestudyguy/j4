@@ -1,4 +1,4 @@
-<aside class="main-sidebar sidebar-info-primary elevation-1 fixed" style="position: fixed;background: #063D58;">
+<aside class="main-sidebar sidebar-info-primary elevation-1 fixed" style="position: fixed;background: whitesmoke;">
     <center>
         <img class="brand-image" src="{{ asset('images/dclogo.png') }}" alt="" style="width: 50%">
     </center>
@@ -7,6 +7,22 @@
     <div class="sidebar">
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column dashboard-nav-link" data-widget="treeview" role="menu" data-accordion="false">
+            @if (Auth::check() && Auth::user()->Role === 'Front Desk')
+                <li class="nav-item">
+                        <a href="{{ route('appointments') }}" class="nav-link">
+                            <i class="nav-icon fas fa-notes-medical"></i>
+                            <p class="text-sm">{{ __('Appointments') }}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('dashboard') }}" class="nav-link">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p class="text-sm">{{ __('Dashboard') }}</p>
+                        </a>
+                    </li>
+    @else
+    <!--  -->
+                    @endif
 
                 @if (Auth::check() && Auth::user()->Role === 'patient')
                     {{-- Only show this if the user is a patient --}}
@@ -23,7 +39,9 @@
                         </a>
                     </li>
 
-                @elseif (Auth::check() && Auth::user()->Role !== 'patient' && Auth::user()->Role !== 'Dentist')
+                
+
+                @elseif (Auth::check() && Auth::user()->Role !== 'patient' && Auth::user()->Role !== 'Dentist' && Auth::user()->Role !== 'Front Desk')
                     {{-- Show these for non-patient and non-dentist roles --}}
                     <li class="nav-item">
                         <a href="{{ route('appointments') }}" class="nav-link">

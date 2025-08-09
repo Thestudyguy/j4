@@ -13,9 +13,9 @@
             <!-- Contact Info -->
             <div class="col-md-4 mb-4">
                 <h6 class="fw-semibold text-uppercase mb-3 text-info">Contact</h6>
-                <p><i class="bi bi-geo-alt-fill text-info me-2"></i>123 Smile Street, Davao City, Philippines</p>
-                <p><i class="bi bi-telephone-fill text-info me-2"></i>(+63) 912 345 6789</p>
-                <p><i class="bi bi-envelope-fill text-info me-2"></i>contact@pdentalcare.com</p>
+                <p><i class="bi bi-geo-alt-fill text-info me-2"></i>Pereyras compound Barangay Magugpo West, Tagum City. Near Bus terminal</p>
+                <p><i class="bi bi-telephone-fill text-info me-2"></i>0956-483-5641</p>
+                <p><i class="bi bi-envelope-fill text-info me-2"></i>j4clinic.busines@gmail.com</p>
                 <p><i class="bi bi-clock-fill text-info me-2"></i>Mon–Sat: 9:00AM – 6:00PM</p>
             </div>
 

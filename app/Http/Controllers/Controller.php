@@ -32,7 +32,9 @@ class Controller
     public function Inventory(){
         return view('pages.inventory');
     }
-
+    public function FrontDeskBoardingPage(){
+        return view('pages.front-desk-boarding-page');
+    }
 
     public function UpdatePatientAppointment(Request $request){
        $details = [

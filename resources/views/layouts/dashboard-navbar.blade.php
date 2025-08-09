@@ -5,7 +5,7 @@
         </li>
         <li class="nav-item px-3">
             <a class="nav-link" style="color: #063D58; font-weight: bold; background: transparent;" href="{{ route('dashboard') }}" style="font-weight: 900;">
-                {{ __('J4 Dental Clini') }}
+                {{ __('J4 Dental Clinic') }}
             </a>
         </li>
     </ul>
