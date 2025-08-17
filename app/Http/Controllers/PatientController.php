@@ -106,7 +106,7 @@ class PatientController extends Controller
                 'time' => $validated['selected_time'],
             ]);
 
-            User::where('id', Auth::user()->id)->update(['is_set_up_complete' => true]);
+            User::where('id', Auth::user()->id)->update(['is_set_up_complete' => true, 'is_first_login' => false]);
             // return redirect()->route('appointment-lists')->with('success', 'Appointment booked successfully!');
             return response()->json([
                 'status' => 'success',

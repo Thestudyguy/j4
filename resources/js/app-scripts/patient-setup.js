@@ -66,11 +66,11 @@ $(document).ready(function () {
 
     $('.patient-account-setup-next-btn').on('click', function (e) {
         if (currentStep === 1) {
-
+            console.log($('.for-minor').hasClass('visually-hidden'));
             let PersonalInfoObj = {};
             const formData = $('.client-personal-info-form').serializeArray();
             console.log(formData);
-
+            let isOptional = true;
             const optionalFields = [
                 'middlename',
                 'religion',
@@ -85,19 +85,35 @@ $(document).ready(function () {
                 'email'
             ];
 
+             const minorRequiredFields = [
+        'guardian',
+        'guardianoccupation',
+        'consultationreason'
+    ];
+            
             let hasEmptyRequired = false;
             formData.forEach(field => {
                 $(`[name="${field.name}"]`).removeClass('is-invalid');
 
             });
             formData.forEach(field => {
-                if (optionalFields.includes(field.name)) return;
+        // Case 1: Always required fields (not in optionalFields)
+        if (!optionalFields.includes(field.name) && !field.value.trim()) {
+            $(`[name="${field.name}"]`).addClass('is-invalid');
+            hasEmptyRequired = true;
+        }
 
-                if (!field.value.trim()) {
-                    $(`[name="${field.name}"]`).addClass('is-invalid');
-                    hasEmptyRequired = true;
-                }
-            });
+        // Case 2: Minor fields required only if .for-minor is visible
+        if (!$('.for-minor').hasClass('visually-hidden') && minorRequiredFields.includes(field.name)) {
+            if (!field.value.trim()) {
+                $(`[name="${field.name}"]`).addClass('is-invalid');
+                hasEmptyRequired = true;
+            }
+        }
+    });
+
+            
+
             if (!$('input[name="sex"]:checked').val()) {
                 $('.client-sex-field').addClass(' border border-danger');
                 hasEmptyRequired = true;
@@ -335,7 +351,7 @@ $(document).ready(function () {
             location.reload();
         },
         error: function (xhr) {
-            console.error(xhr.responseText);
+            // console.error(xhr.responseText);
             Swal.fire({
                 icon: 'error',
                 title: 'Error!',

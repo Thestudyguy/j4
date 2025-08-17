@@ -33,8 +33,9 @@
                                         </div>
                                     </div>
                                      <div class="col-sm-4">
-                                        <label for="age" class="form-label fw-normal">Age<sup class="text-sm text-danger">*</sup></label>
-                                        <input type="number" class="form-control form-control-sm" id="Age" name="age">
+                                        <label for="age" class="form-label fw-normal">Age</label>
+                                        <input type="number" class="form-control form-control-sm" id="Age" name="age" readonly>
+                                        {{-- <input type="hidden" name="age" class="age" id="hiddenage"> --}}
                                     </div>
                                 </div>
                             </div>
@@ -310,7 +311,7 @@
                                     
                                 </div>
                             </div> -->
-                            <div class="col-sm-12 p-3 for-minor">
+                            <div class="col-sm-12 p-3 for-minor visually-hidden">
                                 <hr style="height: 1px; background-color: black; border: none;" class="mt-5">
                                 <p class="fw-semibold" style="font-style: italic">For Minors</p>
                                 <div class="row">

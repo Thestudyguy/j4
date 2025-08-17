@@ -86,4 +86,33 @@ $(document).ready(function() {
         }
     });
 
+
+$('#Birthdate').on('change', function(e){
+      let birthdate = new Date($(this).val());
+    let today = new Date();
+
+    let age = today.getFullYear() - birthdate.getFullYear();
+    let monthDiff = today.getMonth() - birthdate.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthdate.getDate())) {
+        age--;
+    }
+    $('#Age').val(age);
+    $('#hiddenage').val(age);
+
+    if(age <= 1 ){
+        Swal.fire({
+            icon: 'warning',
+        title: 'Invalid Age',
+        text: 'Patients must be at least 2 years old for consultation. \nthis is a temporary prompt and will inevitably changed to comply with the students needs'
+        });
+    }
+
+    if (age > 0 && age < 18) {
+    $('.for-minor').removeClass('visually-hidden');
+} else {
+    $('.for-minor').addClass('visually-hidden');
+}
+});
+
 });

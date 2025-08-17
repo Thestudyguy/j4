@@ -24,7 +24,7 @@
     <!--  -->
                     @endif
 
-                @if (Auth::check() && Auth::user()->Role === 'patient')
+                @if (Auth::check() && Auth::user()->Role == 'patient' && (Auth::user()->is_first_login == false &&  Auth::user()->is_set_up_complete == true))
                     {{-- Only show this if the user is a patient --}}
                     <li class="nav-item">
                         <a href="{{ route('patient-appointments-page') }}" class="nav-link">
