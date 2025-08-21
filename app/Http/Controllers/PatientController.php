@@ -269,5 +269,14 @@ class PatientController extends Controller
         }
     }
 
+    public function UpdateAppointment(Request $request){
+        try {
+            Log::info($request['date']);
+            return response()->json(['data'=> $request], 200);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
 
 }

@@ -43,6 +43,7 @@ Route::middleware('authenticated')->group(function(){
     Route::get('/front-desk-page', [Controller::class, 'FrontDeskBoardingPage'])->name('front-desk');
 });
 Route::get('/patient-appointments', [PatientController::class, 'PatientAppointmentList'])->name('patient-appointments-page');
+Route::post('/appointments/update', [PatientController::class, 'UpdateAppointment']);
 Route::get('/patient-details', [Controller::class, 'ViewPatientDetails'])->name('patient-details');
 Route::post('/patient-setup', [PatientController::class, 'PatientSetUp'])->name('patient-setup')->middleware('auth');
 Route::post('/available-slots', [PatientController::class, 'GetVacantTimeSlots'])->name('available-slots')->middleware('auth');

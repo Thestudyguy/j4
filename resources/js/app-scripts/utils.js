@@ -1,6 +1,11 @@
 $(document).ready(function() {
     console.log('hey im loaded');
-   
+   var Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 5000
+    });
         $('.toggle-password').on('click', function () {
             var targetId = $(this).data('target');
             var $input = $('#' + targetId);
@@ -98,7 +103,7 @@ $('#Birthdate').on('change', function(e){
         age--;
     }
     $('#Age').val(age);
-    $('#hiddenage').val(age);
+    // $('#hiddenage').val(age);
 
     if(age <= 1 ){
         Swal.fire({
@@ -114,5 +119,143 @@ $('#Birthdate').on('change', function(e){
     $('.for-minor').addClass('visually-hidden');
 }
 });
+
+
+    
+let apptStatFlag = null;
+$(document).on('change', '.appointment-update-selection', function(e) {
+    if ($(this).val() === 'reschedule') {
+        apptStatFlag = false;
+        $('.date-picker-update').removeClass('visually-hidden');
+    } else {
+        apptStatFlag = true;
+        $('.date-picker-update').addClass('visually-hidden');
+    }
+});
+
+const workingHours = [
+        "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
+        "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM"
+    ];
+
+    $(document).on('shown.bs.modal', '.patient-update-appt-modal', function() {
+    const modal = $(this);
+    const apptId = modal.attr('id').replace('update-appointment-', '');
+    const calendarEl = document.getElementById(`calendar-container-update-${apptId}`);
+
+    flatpickr(calendarEl, {
+        inline: true,
+        dateFormat: "Y-m-d",
+        minDate: new Date().fp_incr(1),
+        onChange: function (selectedDates, dateStr, instance) {
+            const readableDate = selectedDates[0].toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: 'available-slots',
+                data: { date: dateStr },
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content") },
+                success: function (response) {
+                    renderTimeSlots(dateStr, response.availableSlots, apptId);
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+
+            $(`#selected-date-title-update-${apptId}`).text(`Available Time Slots for ${readableDate}`);
+            renderTimeSlots(dateStr, [], apptId);
+        }
+    });
+});
+
+
+    function renderTimeSlots(date, availableSlots = [], apptId) {
+    const container = $(`#time-slots-update-${apptId}`);
+    container.empty();
+
+    const firstCol = $('<div class="col-6 d-flex flex-column gap-2"></div>');
+    const secondCol = $('<div class="col-6 d-flex flex-column gap-2"></div>');
+    const midpoint = Math.ceil(workingHours.length / 2);
+
+    workingHours.forEach((time, index) => {
+        const isAvailable = availableSlots.includes(time);
+
+        const btn = $('<button>')
+            .addClass('btn w-100 time-slots')
+            .addClass(isAvailable ? 'btn-outline-primary' : 'btn-secondary disabled')
+            .attr('data-time', time)
+            .attr('data-date', date)
+            .attr('data-id', apptId)
+            .text(time);
+
+        if (index < midpoint) {
+            firstCol.append(btn);
+        } else {
+            secondCol.append(btn);
+        }
+    });
+
+    container.append(firstCol, secondCol);
+}
+
+
+    $(document).on('click', '.time-slots', function () {
+    const selectedTime = $(this).data('time');
+    const selectedDate = $(this).data('date');
+    const apptId = $(this).data('id');
+
+    // Only clear active state inside the same modal
+    $(`#time-slots-update-${apptId} .time-slots`).removeClass('active');
+    $(this).addClass('active');
+
+    $(`#update_selected_time_${apptId}`).val(selectedTime);
+    $(`#update_selected_date_${apptId}`).val(selectedDate);
+});
+
+    $('.update-appt').on('click', function(){
+        $('.update-appointment-modal').removeClass('visually-hidden');
+            const apptId = $(this).data('id');
+            const selectedTime = $(`#update_selected_time_${apptId}`).val();
+            const selectedDate = $(`#update_selected_date_${apptId}`).val();
+            const apptID = $(`#update_appt_${apptId}`).val();
+            console.log(selectedTime);
+            $.ajax({
+            type: 'POST',
+            url: '/appointments/update',
+            data: {
+                appt_id: apptID,
+                date: selectedDate,
+                time: selectedTime,
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (response) {
+                $('.update-appointment-modal').addClass('visually-hidden');
+                console.log(response.data);
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Appointment Updated!',
+                    text: 'Your appointment has been rescheduled. We will be contacting you soon.'
+                });
+                // location.reload();
+            },
+            error: function (xhr) {
+                console.error(xhr.responseText);
+                $('.update-appointment-modal').addClass('visually-hidden');
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Appointment Update Failed!',
+                    text: 'Oh my god what did you do? Were all gonna die'
+                });
+            }
+        });
+    });
 
 });

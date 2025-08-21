@@ -1,23 +1,78 @@
-<div class="modal fade" id="update-appointment-{{ $appt->id }}" data-bs-backdrop="static">
-    <div class="modal-dialog modal-center">
-        <div class="modal-content rounded-0">
-            <div class="modal-header">
-                <h4 class="fw-bold">Update Appointment</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<div class="modal fade patient-update-appt-modal" id="update-appointment-{{ $appt->id }}" data-bs-backdrop="static">
+    <div class="loader-container update-appointment-modal visually-hidden">
+        <div class="loader"></div>
+    </div>  
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content rounded-0 shadow">
+            <div class="modal-header text-dark">
+                <h5 class="modal-title fw-bold">Update Appointment</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body position-relative">
-                <select name="appointment-update" id="" class="form-control">
-                    <option value="" selected hidden class="text-warning text-sm">{{ $appt->status }}</option>
-                    <option value="Cancel" class="fw-semibold text-danger text-sm">Cancel</option>
-                    <option value="reschedule" class="fw-semibold text-info text-sm">re-sched</option>
-                </select>
+            <form action="">
+                @csrf
+                <input type="hidden" name="appt_id_update" value="{{$appt->id}}" id="update_appt_{{$appt->id}}">
+                <input type="hidden" name="update_selected_date" id="update_selected_date_{{ $appt->id }}">
+                <input type="hidden" name="update_selected_time" id="update_selected_time_{{ $appt->id }}">
+            </form>
+            <div class="modal-body">
+                <!-- Appointment Details -->
+                <div class="p-3 mb-4 border rounded bg-light">
+                    <h6 class="fw-bold text-primary mb-3">Appointment Details</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <span class="fw-semibold">Date:</span> 
+                            <span>{{ $appt->Date }}</span>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <span class="fw-semibold">Time:</span> 
+                            <span>{{ $appt->Time }}</span>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <span class="fw-semibold">Service:</span> 
+                            <span>{{ $appt->service }}</span>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <span class="fw-semibold">Dentist:</span> 
+                            <span>{{ $appt->title }} {{ $appt->dfName }} {{ $appt->dlname }}</span>
+                        </div>
+                        {{-- <div class="col-md-6 mb-2">
+                            <span class="fw-semibold">Status:</span> 
+                            <span>{{ $appt->status }}</span>
+                        </div> --}}
+                    </div>
+                </div>
 
+                <!-- Update Selection -->
+                <div class="mb-4">
+                    <label class="fw-semibold mb-2">Update Action</label>
+                    <select name="appointment-update-selection" class="form-select appointment-update-selection">
+                        <option value="" selected hidden>{{ $appt->status }}</option>
+                        <option value="Cancel" class="text-danger fw-semibold">Cancel</option>
+                        <option value="reschedule" class="text-info fw-semibold">Reschedule</option>
+                    </select>
+                </div>
+
+                <div class="date-picker-update visually-hidden">
+                     <div class="row mb-5">
+                            <div class="col-md-6 mb-4">
+                                <div class="text-dark text-start fw-semibold">
+                                    Select a Date
+                                </div>
+                                <center>
+                                    <div class="card-body" id="calendar-container-update-{{ $appt->id }}"></div>
+                                </center>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <span id="selected-date-title-update">Select a date to see available slots</span>
+                                <div id="time-slots-update-{{ $appt->id }}" class="row g-2"></div>
+                            </div>
+                        </div>
+                </div>
             </div>
+
             <div class="modal-footer">
-                <button type="submit" class="btn rounded-0"
-                    style="background: #063D58; border-radius: 0px; color: whitesmoke;">{{__('Update')}}</button>
-                <button type="button" class="btn btn-secondary rounded-0"
-                    data-bs-dismiss="modal">{{__('Cancel')}}</button>
+                <button type="submit" class="btn btn-primary rounded-0 px-4 update-appt" data-id='{{$appt->id}}'>Update</button>
+                <button type="button" class="btn btn-secondary rounded-0 px-4" data-bs-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
