@@ -26,10 +26,14 @@ class Middleware
             ]);
         }
 
+        if($user->Role === 'patient' && $user->is_first_login == false && $user->is_setup_complete == true){
+            return redirect('patient-profile');
+        }
         // Prevent redirect loop: only redirect if not already on patient-profile
         if ($user->Role === 'patient' && !$request->is('patient-profile')) {
             return redirect('patient-profile');
         }
+
 
     } else {
         return redirect('/login');

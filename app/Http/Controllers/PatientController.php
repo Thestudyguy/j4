@@ -11,21 +11,25 @@ use App\Models\SubService;
 use App\Models\User;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Users;
+
 class PatientController extends Controller
 {
     public function NewPatient(Request $request)
     {
         Log::info($request->all());
+
         return response()->json(['message' => 'New patient created successfully!']);
 
     }
 
-    public function CreateAppointment(){
+    public function CreateAppointment()
+    {
         $subServices = SubService::all();//'isVisible', true put this shit back when we rollback its migration
-            $doctors = Doctors::where('isRemoved', false)->get();
+        $doctors = Doctors::where('isRemoved', false)->get();
         return view('pages.patients.new-appointment-form', compact('subServices', 'doctors'));
     }
 
@@ -147,8 +151,8 @@ class PatientController extends Controller
     {
         try {
             $patientID = Auth::user()->id;
-        $patient = Patients::where('patient_id', $patientID)->first();
-        $patientHistory = PatientHistory::where('patient_id', $patientID)->first();
+            $patient = Patients::where('patient_id', $patientID)->first();
+            $patientHistory = PatientHistory::where('patient_id', $patientID)->first();
             $prepAppointment = DB::table('appointments')
                 ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
                 ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
@@ -166,8 +170,9 @@ class PatientController extends Controller
                     'appointments.id'
                 )
                 ->get();
-                $patientDuePayments = $prepAppointment->sum('price');
-            return view('pages.patients.patient-appointment-list', compact('prepAppointment', 'patientDuePayments','patient', 'patientHistory'));
+            $patientForecastPayment = $prepAppointment->sum('price');
+            $patientDuePayments = $prepAppointment->where('status', 'completed')->sum('price');
+            return view('pages.patients.patient-appointment-list', compact('prepAppointment', 'patientForecastPayment', 'patient', 'patientHistory', 'patientDuePayments'));
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -269,12 +274,28 @@ class PatientController extends Controller
         }
     }
 
-    public function UpdateAppointment(Request $request){
+    public function UpdateAppointment(Request $request)
+    {
         try {
-            Log::info($request['date']);
-            return response()->json(['data'=> $request], 200);
+            Log::info($request['status']);
+            if ($request['status'] === 'cancel') {
+                Appointment::where('id', $request['appt_id'])->update(['status' => $request['status']]);
+                return response()->json(['status' => 'Appointment Cancelled'], 200);
+            }
+            if ($request['status'] === 're-sched') {
+
+                Appointment::where('id', $request['appt_id'])->update([
+                    'status' => $request['status'],
+                    'date' => Carbon::parse($request['date'])->format('Y-m-d'),
+                    'time' => $request['time'],
+                ]);
+                return response()->json(['status' => 'Appointment Rescheduled'], 200);
+            }
+            return response()->json(['data' => $request], 200);
         } catch (\Throwable $th) {
-            throw $th;
+            // throw $th;
+            Log::info($th);
+            return response()->json(['status' => $th], 500);
         }
     }
 
