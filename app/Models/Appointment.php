@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Appointment extends Model
 {
     //
+    public function service()
+    {
+        return $this->belongsTo(Services::class, 'service_id', 'id');
+    }
     protected $fillable = [
         'patient_id',
         'appointment_id',

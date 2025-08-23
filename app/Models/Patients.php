@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Patients extends Model
 {
     //
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'patient_id', 'id');
+    }
     protected $table = 'patient_info';
     protected $fillable = [
         'patient_id',

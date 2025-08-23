@@ -20,6 +20,33 @@
                             <p class="text-sm">{{ __('Dashboard') }}</p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('patients') }}" class="nav-link">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p class="text-sm">{{ __('Patients') }}</p>
+                        </a>
+                    </li>
+                    <div style="
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: #fffbe6;
+    border: 1px solid #ccc;
+    padding: 12px 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    z-index: 9999;">
+    <code class="text-info fw-bold">Current Tasks</code><br>
+    <strong>Front Desk Staff</strong>
+    <ol style="margin: 8px 0 0 20px; padding: 0;">
+        <li>Cancel / Reschedule patients appointment<span style="color:green;">&#10004;</span></li>
+        <li>Edit patient basic information<span style="color:green;">&#10004;</span></li>
+        <li>Manage confirm payments and billing transactions<span class="fw-bold text-dark text-lg">?</span></li>
+        <li>Create walk-in patient basic information</li>
+    </ol>
+</div>
     @else
     <!--  -->
                     @endif

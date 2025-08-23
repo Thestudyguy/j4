@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Services extends Model
 {
     //
+    public function subServices()
+    {
+        return $this->hasMany(SubService::class, 'parent_service', 'id');
+    }
     use HasFactory;
     protected $fillable = [
         'Service',

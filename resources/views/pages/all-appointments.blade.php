@@ -29,28 +29,51 @@
                     <div class="col-sm-2">Time</div>
                     <div class="col-sm-2">Service</div>
                     <div class="col-sm-2">Status</div>
-                    <div class="col-sm-2 text-end">Actions</div>
                 </div>
 
 
 
-                @foreach ($appointments as $appt)
-                    <div class="row align-items-center border rounded-3 m-1 px-3 py-2 small appointment-row bg-light shadow-sm" id="{{ $appt->refID }}">
-                        <div class="col-sm-2 fw-semibold text-dark">{{ $appt->FirstName . " " . $appt->LastName }}</div>
-                        <div class="col-sm-2 text-muted">{{ $appt->date }}</div>
-                        <div class="col-sm-2">{{ $appt->time }}</div>
-                        <div class="col-sm-2 text-primary">{{ $appt->Service }}</div>
-                        <div class="col-sm-2">
-                            <span class="badge text-dark" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#update-patient-appointment-{{ $appt->apptID }}">{{ $appt->status }}</span>
-                        </div>
-                        <div class="col-sm-2 text-end">
-                            <a href="{{ route('patient-details-view', ['id' => $appt->refID]) }}" class="text-secondary me-2" title="View" ><i class="fas fa-eye"></i></a>
-                            <a href="#" class="text-secondary me-2" title="Edit"><i class="fas fa-edit"></i></a>
-                            <a href="#" class="text-secondary" title="Cancel"><i class="fas fa-times-circle"></i></a>
-                        </div>
-                    </div>
-                    @include('modals.update-patient-appointment')
-                @endforeach
+               @foreach ($appointments as $appt)
+    @php
+        $isDisabled = in_array($appt->status, ['cancel', 'completed']);
+    @endphp
+
+    <div class="row align-items-center border rounded-3 m-1 px-3 py-2 small appointment-row bg-light shadow-sm"
+         id="{{ $appt->refID }}"
+         style="{{ $isDisabled ? 'opacity:0.6; pointer-events:none;' : '' }}">
+
+        <div class="col-sm-2 fw-semibold text-dark">
+            {{ $appt->FirstName . " " . $appt->LastName }}
+        </div>
+        <div class="col-sm-2 text-muted">{{ $appt->Date }}</div>
+        <div class="col-sm-2">{{ $appt->Time }}</div>
+        <div class="col-sm-2 text-primary">{{ $appt->service }}</div>
+
+        <div class="col-sm-2">
+            <span class="badge text-dark
+                {{ $appt->status === 'cancel' ? 'bg-danger' :
+                   ($appt->status === 'completed' ? 'bg-secondary' :
+                   ($appt->status === 'confirmed' ? '' : 'bg-info')) }}"
+                @if(!$isDisabled)
+                    style="cursor:pointer"
+                    data-bs-toggle="modal"
+                    data-bs-target="#update-appointment-{{ $appt->id }}"
+                @endif
+            >
+                {{ $appt->status }}
+            </span>
+        </div>
+
+        <div class="col-sm-2 text-end">
+           
+                <span class="text-muted">No actions</span>
+        </div>
+    </div>
+
+    @include('modals.patient-appointment-update-modal')
+@endforeach
+
+
 
             </div>
         </div>

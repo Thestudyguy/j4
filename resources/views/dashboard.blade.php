@@ -14,7 +14,7 @@
     {{-- ✅ Sidebar --}}
 
     {{-- ✅ Content --}}
-    <div class="content-wrapper bg-light">
+    <div class="content-wrapper bg-white">
         @yield('content')
     </div>
 

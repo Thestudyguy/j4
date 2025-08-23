@@ -217,14 +217,14 @@ $(document).ready(function () {
         $(`#update_selected_date_${apptId}`).val(selectedDate);
     });
 
-    $(document).on('click', '.update-appt',  function () {
+    $(document).on('click', '.update-appt', function () {
         $('.update-appointment-modal').removeClass('visually-hidden');
         const apptId = $(this).data('id');
-            const selectedTime = $(`#update_selected_time_${apptId}`).val();
-            const selectedDate = $(`#update_selected_date_${apptId}`).val();
-            const apptID = $(`#update_appt_${apptId}`).val();
-            console.log(selectedDate);
-            console.log(selectedTime);
+        const selectedTime = $(`#update_selected_time_${apptId}`).val();
+        const selectedDate = $(`#update_selected_date_${apptId}`).val();
+        const apptID = $(`#update_appt_${apptId}`).val();
+        console.log(selectedDate);
+        console.log(selectedTime);
         if (apptStatFlag === null) {
             Toast.fire({
                 icon: 'warning',
@@ -266,7 +266,7 @@ $(document).ready(function () {
                 success: function (response) {
                     $('.update-appointment-modal').addClass('visually-hidden');
                     console.log(response.data);
-                    
+
 
                     localStorage.setItem('appointment', response.status);
                     location.reload();
@@ -300,7 +300,7 @@ $(document).ready(function () {
                 },
                 success: function (response) {
                     $('.update-appointment-modal').addClass('visually-hidden');
-                    
+
                     localStorage.setItem('appointment', response.status);
                     location.reload();
 
@@ -318,22 +318,191 @@ $(document).ready(function () {
         }
     });
 
+    $('.birthdate-field-update').on('change', function () {
+        let birthdate = new Date($(this).val());
+        let today = new Date();
+
+        let age = today.getFullYear() - birthdate.getFullYear();
+        let monthDiff = today.getMonth() - birthdate.getMonth();
+
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthdate.getDate())) {
+            age--;
+        }
+        $('.age-field-update').val(age);
+
+        // $('#hiddenage').val(age);
+    });
+
+    $('.edit-patient-personal-info-form').on('submit', function (e) {
+        e.preventDefault();
+        $('.update-pbi-loader').removeClass('visually-hidden');
+        const patientInfo = $(this).serializeArray();
+        console.log(patientInfo);
+
+        const optionalFields = [
+            'patient-middlename',
+            'religion',
+            'effectivedate',
+            'homeno',
+            'officeno',
+            'faxno',
+            'guardian',
+            'guardianoccupation',
+            'referal',
+            'consultationreason',
+            'email',
+            'guardian',
+            'guardianoccupation',
+            'consultationreason'
+        ];
+        const requiredFieldsMinor = [
+
+        ];
+        let hasEmptyRequired = false;
+        patientInfo.forEach(field => {
+            $(`[name="${field.name}"]`).removeClass('is-invalid');
+
+        });
+        patientInfo.forEach(field => {
+            if (!optionalFields.includes(field.name) && !field.value.trim()) {
+                $(`[name="${field.name}"]`).addClass('is-invalid');
+                hasEmptyRequired = true;
+            }
+        });
+
+        if (hasEmptyRequired) {
+            Toast.fire({
+                icon: 'error',
+                title: 'Missing Fields',
+                text: 'Please fill all fields'
+            });
+            return;
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/update/patient-basic-info',
+            data: patientInfo,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (response) {
+            $('.update-pbi-loader').addClass('visually-hidden');
+            localStorage.setItem('patient-pbi', 'updated');
+            location.reload();
+            },
+            error: function (jqXHR, err, stat) {
+        $('.update-pbi-loader').addClass('visually-hidden');
+                Toast.fire({
+                    icon: 'error',
+                    title: stat,
+                    text: jqXHR.responseJSON.error
+                });
+             }
+        });
+    });
+
+    $('.save-walk-in').on('click', function(){
+        const walkInData = $('.walk-in-form').serializeArray();
+        console.log(walkInData);
+        const optionalFields = [
+                'middlename',
+                'religion',
+                'effectivedate',
+                'homeno',
+                'officeno',
+                'faxno',
+                'guardian',
+                'guardianoccupation',
+                'referal',
+                'consultationreason',
+                'email'
+            ];
+
+             const minorRequiredFields = [
+        'guardian',
+        'guardianoccupation',
+        'consultationreason'
+    ];
+            
+            let hasEmptyRequired = false;
+            walkInData.forEach(field => {
+                $(`[name="${field.name}"]`).removeClass('is-invalid');
+
+            });
+            walkInData.forEach(field => {
+        // Case 1: Always required fields (not in optionalFields)
+        if (!optionalFields.includes(field.name) && !field.value.trim()) {
+            $(`[name="${field.name}"]`).addClass('is-invalid');
+            hasEmptyRequired = true;
+        }
+
+        // Case 2: Minor fields required only if .for-minor is visible
+        if (!$('.for-minor').hasClass('visually-hidden') && minorRequiredFields.includes(field.name)) {
+            if (!field.value.trim()) {
+                $(`[name="${field.name}"]`).addClass('is-invalid');
+                hasEmptyRequired = true;
+            }
+        }
+    });
+        if (!$('input[name="sex"]:checked').val()) {
+                $('.client-sex-field').addClass(' border border-danger');
+                hasEmptyRequired = true;
+            } else {
+                $('.client-sex-field').removeClass(' border border-danger');
+            }
+
+            if (hasEmptyRequired) {
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'Missing Fields!',
+                    text: 'Please fill out all required fields.'
+                });
+                return;
+            }
+            $.ajax({
+        url: '/new/walk-in-patient',
+        type: 'POST',
+            headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
+            },
+        data: walkInData,
+        success: function (response) {
+            // localStorage.setItem('patient-setup', 'created');
+            // location.reload();
+        },
+        error: function (jqXHR, err, stat) {
+                Toast.fire({
+                    icon: 'error',
+                    title: stat,
+                    text: jqXHR.responseJSON.error
+                });
+             }
+    });
+    });
+
     const appointmentStatus = localStorage.getItem('appointment');
+    const patientPbi = localStorage.getItem('patient-pbi');
+    if (patientPbi === 'updated') {
+        Toast.fire({
+            icon: 'success',
+            title: 'Patient Info has been updated'
+        });
+        localStorage.removeItem('patient-pbi'); // clear so it doesn't fire again
+    }
+    if (appointmentStatus === 'Appointment Rescheduled') {
+        Toast.fire({
+            icon: 'success',
+            title: 'Appointment has been rescheduled successfully.'
+        });
+        localStorage.removeItem('appointment'); // clear so it doesn't fire again
+    }
 
-if (appointmentStatus === 'Appointment Rescheduled') {
-    Toast.fire({
-        icon: 'success',
-        title: 'Appointment has been rescheduled successfully.'
-    });
-    localStorage.removeItem('appointment'); // clear so it doesn't fire again
-}
-
-if (appointmentStatus === 'Appointment Cancelled') {
-    Toast.fire({
-        icon: 'info',
-        title: 'Appointment has been cancelled.'
-    });
-    localStorage.removeItem('appointment'); // clear so it doesn't fire again
-}
+    if (appointmentStatus === 'Appointment Cancelled') {
+        Toast.fire({
+            icon: 'info',
+            title: 'Appointment has been cancelled.'
+        });
+        localStorage.removeItem('appointment'); // clear so it doesn't fire again
+    }
 
 });

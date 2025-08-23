@@ -48,29 +48,32 @@ class Controller
         'time' => $request->time,
         'appointment_update' => $request->appointment_update,
     ];
-
+    
     Mail::to($details['email'])->send(new MailPatientAppointmentStatus($details));
         
     }
 
     public function Patients(){
-        $patients = DB::table('appointments')
-    ->join('patient_info', 'patient_info.patient_id', '=', 'appointments.patient_id')
-    ->join('users', 'users.id', '=', 'appointments.patient_id')
-    ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
-    ->select(
-        'users.id as refID',
-        'patient_info.FirstName',
-        'patient_info.LastName',
-        'appointments.date',
-        'appointments.time',
-        'appointments.status',
-        'sub_services.Service',
-    )
-    ->get()
-    ->groupBy('refID');
-
+    //     $patients = DB::table('appointments')
+    // ->join('patient_info', 'patient_info.patient_id', '=', 'appointments.patient_id')
+    // ->join('users', 'users.id', '=', 'appointments.patient_id')
+    // ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
+    // ->select(
+    //     'users.id as refID',
+    //     'patient_info.FirstName',
+    //     'patient_info.LastName',
+    //     'appointments.date',
+    //     'appointments.time',
+    //     'appointments.status',
+    //     'sub_services.Service',
+    // )
+    // ->get()
+    // ->groupBy('refID');
+        // $patients = DB::table('patient_info')->get();
         // Log::info(json_encode($patients, JSON_PRETTY_PRINT));
+$patients = Patients::with('user.appointments.service.subServices')->get();
+        // $patients = DB::table('patient_info')
+        // ->join('','','=','')
         return view('pages.patients', compact('patients'));
     }
 
@@ -79,16 +82,18 @@ class Controller
         ->join('patient_info', 'patient_info.patient_id', '=', 'appointments.patient_id')
         ->join('users', 'users.id', '=', 'appointments.patient_id')
         ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
+        ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
         ->select(
+            'doctors.ProfessionalTitle as title', 'doctors.Firstname as dfName', 'doctors.LastName as dlname',
             'users.id as refID',
             'patient_info.FirstName',
             'patient_info.LastName',
             'patient_info.Email',
-            'appointments.date',
-            'appointments.time',
+            'appointments.date as Date',
+            'appointments.time as Time',
             'appointments.status',
-            'sub_services.Service',
-            'appointments.id as apptID'
+            'sub_services.Service as service',
+            'appointments.id'
         )
         ->get();
         // Log::info($appointments);
@@ -377,6 +382,148 @@ class Controller
         Log::info($th);
         return response()->json(['error' => 'Server error occurred.'], 500);
     
+    }
+}
+
+    public function UpdatePatientBasicInformation(Request $request)
+{
+    try {
+        $patient = Patients::find($request['patient-id'])->get();
+        
+        $rules = [
+        'patient-id'           => 'required|exists:patient_info,id',
+        'patient-lastname'     => 'required|string|max:255',
+        'patient-firstname'    => 'required|string|max:255',
+        'birthdate'            => 'required|date',
+        'sex'                  => 'required|in:Male,Female',
+        'age'                  => 'required|integer|min:0',
+        'nationality'          => 'required|string|max:255',
+        'nickname'             => 'required|string|max:255',
+        'address'              => 'required|string|max:500',
+        'occupation'           => 'required|string|max:255',
+        'mobileno'             => 'required|string|max:20',
+
+        'patient-middlename'   => 'nullable|string|max:255',
+        'religion'             => 'nullable|string|max:255',
+        'effectivedate'        => 'nullable|date',
+        'homeno'               => 'nullable|string|max:20',
+        'officeno'             => 'nullable|string|max:20',
+        'faxno'                => 'nullable|string|max:20',
+        'email'                => 'nullable|email|max:255',
+        'guardian'             => 'nullable|string|max:255',
+        'guardianoccupation'   => 'nullable|string|max:255',
+        'referal'              => 'nullable|string|max:255',
+        'consultationreason'   => 'nullable|string|max:1000',
+    ];
+
+    $validated = $request->validate($rules);
+    Log::info('Validated patient ID: ' . $validated['patient-id']);
+
+    // $patient = DB::table('patient_info')->where('id', $validated['patient-id'])->first();
+
+    // $patient = Patients::find($validated['patient-id']);
+
+    if (!$patient) {
+        return response()->json(['message' => 'Patient not found'], 404);
+    }
+
+    DB::table('patient_info')
+    ->where('id', $validated['patient-id'])
+    ->update([
+        'LastName'            => $validated['patient-lastname'],
+        'FirstName'           => $validated['patient-firstname'],
+        'MiddleName'          => $validated['patient-middlename'] ?? null,
+        'BirthDate'           => $validated['birthdate'],
+        'Gender'                 => $validated['sex'],
+        'Age'                 => $validated['age'],
+        'Nationality'         => $validated['nationality'],
+        'NickName'            => $validated['nickname'],
+        'Address'             => $validated['address'],
+        'Occupation'          => $validated['occupation'],
+        'MobileNo'            => $validated['mobileno'],
+        'HomeNo'              => $validated['homeno'] ?? null,
+        'OfficeNo'            => $validated['officeno'] ?? null,
+        'FaxNo'               => $validated['faxno'] ?? null,
+        'Email'               => $validated['email'] ?? null,
+        'Religion'            => $validated['religion'] ?? null,
+        'Guardian'            => $validated['guardian'] ?? null,
+        'GuardianOccupation' => $validated['guardianoccupation'] ?? null,
+        'Referal'             => $validated['referal'] ?? null,
+        'ReasonForVisit' => $validated['consultationreason'] ?? null,
+        'EffectiveDate'       => $validated['effectivedate'] ?? null,
+    ]);
+
+    return response()->json(['message' => 'Patient updated successfully']);
+    } catch (\Throwable $th) {
+        Log::error($th);
+        return response()->json(['message' => 'Update failed', 'error' => $th->getMessage()], 500);
+    }
+}
+
+
+public function AddWalkInPatient(Request $request)
+{
+    try {
+        $rules = [
+            'firstname'    => 'required|string|max:255',
+            'lastname'     => 'required|string|max:255',
+            'middlename'   => 'nullable|string|max:255',
+            'birthdate'            => 'required|date',
+            'sex'                  => 'required|in:male,female,Male,Female',
+            'age'                  => 'required|integer|min:0',
+            'religion'             => 'nullable|string|max:255',
+            'nationality'          => 'required|string|max:255',
+            'nickname'             => 'required|string|max:255',
+            'address'              => 'required|string|max:500',
+            'homeno'               => 'nullable|string|max:20',
+            'occupation'           => 'required|string|max:255',
+            'officeno'             => 'nullable|string|max:20',
+            'effectivedate'        => 'nullable|date',
+            'faxno'                => 'nullable|string|max:20',
+            'email'                => 'nullable|email|max:255',
+            'mobileno'             => 'required|string|max:20',
+            'guardian'             => 'nullable|string|max:255',
+            'guardianoccupation'   => 'nullable|string|max:255',
+            'referal'              => 'nullable|string|max:255',
+            'consultationreason'   => 'nullable|string|max:1000',
+        ];
+
+        $validated = $request->validate($rules);
+
+        $data = [
+            'FirstName'          => $validated['firstname'],
+            'LastName'           => $validated['lastname'],
+            'MiddleName'         => $validated['middlename'] ?? null,
+            'BirthDate'          => $validated['birthdate'],
+            'Gender'             => $validated['sex'],
+            'Age'                => $validated['age'],
+            'Religion'           => $validated['religion'] ?? null,
+            'Nationality'        => $validated['nationality'],
+            'NickName'           => $validated['nickname'],
+            'Address'            => $validated['address'],
+            'HomeNo'             => $validated['homeno'] ?? null,
+            'Occupation'         => $validated['occupation'],
+            'OfficeNo'           => $validated['officeno'] ?? null,
+            'EffectiveDate'      => $validated['effectivedate'] ?? null,
+            'FaxNo'              => $validated['faxno'] ?? null,
+            'Email'              => $validated['email'] ?? null,
+            'MobileNo'           => $validated['mobileno'],
+            'Guardian'           => $validated['guardian'] ?? null,
+            'GuardianOccupation' => $validated['guardianoccupation'] ?? null,
+            'Referal'            => $validated['referal'] ?? null,
+            'ReasonForVisit'     => $validated['consultationreason'] ?? null,
+        ];
+
+        // Step 3: Insert to DB
+        DB::table('patient_info')->insert($data);
+
+        return response()->json(['message' => 'Walk-in patient added successfully'], 201);
+    } catch (\Throwable $th) {
+        Log::error('Error adding walk-in patient: ' . $th->getMessage());
+        return response()->json([
+            'message' => 'Failed to add patient',
+            'error' => $th->getMessage(),
+        ], 500);
     }
 }
 

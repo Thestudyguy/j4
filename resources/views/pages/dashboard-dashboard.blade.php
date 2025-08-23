@@ -35,7 +35,7 @@
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="request">Appointment Request</div>
-                                <div><button class="btn btn-link">See all</button></div>
+                                <div><button class="btn btn-link"><a href="{{route('appointments')}}">See all</a></button></div>
                             </div>
                         </div>
                         <div class="card-body">

@@ -1,4 +1,4 @@
-<div class="modal fade" id="patient-services-{{ $first->refID }}" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="patient-services-{{ $patient->id }}" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content rounded-0">
             <div class="modal-header">

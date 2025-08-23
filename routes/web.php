@@ -41,6 +41,9 @@ Route::middleware('authenticated')->group(function(){
     Route::get('/patient-details/{id}', [Controller::class, 'PatientDetails'])->name('patient-details-view');
     Route::post('/patient-appointment-update', [Controller::class, 'UpdatePatientAppointment'])->name('update-appointment-naboangna');
     Route::get('/front-desk-page', [Controller::class, 'FrontDeskBoardingPage'])->name('front-desk');
+    Route::post('/update/patient-basic-info', [Controller::class, 'UpdatePatientBasicInformation']);
+    Route::post('/new/walk-in-patient', [Controller::class, 'AddWalkInPatient']);
+
 });
 Route::get('/patient-appointments', [PatientController::class, 'PatientAppointmentList'])->name('patient-appointments-page');
 Route::post('/appointments/update', [PatientController::class, 'UpdateAppointment']);
