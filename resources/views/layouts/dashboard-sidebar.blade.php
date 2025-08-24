@@ -3,7 +3,29 @@
         <img class="brand-image" src="{{ asset('images/dclogo.png') }}" alt="" style="width: 50%">
     </center>
     <a href="" class="brand-link" style="text-decoration: none;"></a>
-    
+    <div style="
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: #fffbe6;
+    border: 1px solid #ccc;
+    padding: 12px 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    z-index: 9999;">
+    <code class="text-info fw-bold">Current Tasks</code><br>
+    <strong>Manager/Admin</strong>
+    <ol style="margin: 8px 0 0 20px; padding: 0;">
+        <li>View Number of patients</li>
+        <li>Manage dentist appointments and scheudule</li>
+        <li>View Patient basic information and appointment schedule</li>
+        <li>Add New Dentist</li>
+        <li>Update Services offered</li>
+        <li>Manage Inventory Items</li>
+    </ol>
+</div>
     <div class="sidebar">
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column dashboard-nav-link" data-widget="treeview" role="menu" data-accordion="false">
@@ -26,27 +48,7 @@
                             <p class="text-sm">{{ __('Patients') }}</p>
                         </a>
                     </li>
-                    <div style="
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background: #fffbe6;
-    border: 1px solid #ccc;
-    padding: 12px 16px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    z-index: 9999;">
-    <code class="text-info fw-bold">Current Tasks</code><br>
-    <strong>Front Desk Staff</strong>
-    <ol style="margin: 8px 0 0 20px; padding: 0;">
-        <li>Cancel / Reschedule patients appointment<span style="color:green;">&#10004;</span></li>
-        <li>Edit patient basic information<span style="color:green;">&#10004;</span></li>
-        <li>Manage confirm payments and billing transactions<span class="fw-bold text-dark text-lg">?</span></li>
-        <li>Create walk-in patient basic information</li>
-    </ol>
-</div>
+                    
     @else
     <!--  -->
                     @endif

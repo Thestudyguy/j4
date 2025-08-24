@@ -35,7 +35,7 @@ class CreatePatientsTable extends Migration
             $table->string('Guardian')->nullable();
             $table->string('GuardianOccupation')->nullable();
             $table->string('Referal')->nullable();
-
+            $table->boolean('isWalkin')->default(false);
             $table->timestamps();
         });
     }

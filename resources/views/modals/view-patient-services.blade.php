@@ -1,24 +1,34 @@
-<div class="modal fade" id="patient-services-{{ $patient->id }}" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="patient-services-{{ $refID }}" data-bs-backdrop="static" tabindex="-1"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content rounded-0">
             <div class="modal-header">
                 <h5 class="modal-title fw-bold">
-                    Services Availed by 
+                    Services Availed by
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-              <div class="modal-body">
+            <div class="modal-body">
                 <ul class="list-group list-group-flush">
                     @foreach ($appointments as $appt)
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <div>
-                                <strong>Service:</strong> {{ $appt->Service }}<br>
-                                <small class="text-muted">{{ \Carbon\Carbon::parse($appt->date)->format('F j, Y') }} at {{ \Carbon\Carbon::parse($appt->time)->format('g:i A') }}</small>
+                                @if (!empty($appt->Service))
+                                    <strong>Service:</strong> {{ $appt->Service }}<br>
+                                    <small class="text-muted">
+                                        {{ \Carbon\Carbon::parse($appt->date)->format('F j, Y') }}
+                                        at {{ \Carbon\Carbon::parse($appt->time)->format('g:i A') }}
+                                    </small>
+                                @else
+                                    <span class="text-muted fst-italic">No service yet</span><br>
+                                @endif
+
                             </div>
                             <span class="badge bg-primary rounded-pill">{{ ucfirst($appt->status) }}</span>
                         </li>
                     @endforeach
+
                 </ul>
             </div>
 

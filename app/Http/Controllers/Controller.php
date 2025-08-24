@@ -54,27 +54,23 @@ class Controller
     }
 
     public function Patients(){
-    //     $patients = DB::table('appointments')
-    // ->join('patient_info', 'patient_info.patient_id', '=', 'appointments.patient_id')
-    // ->join('users', 'users.id', '=', 'appointments.patient_id')
-    // ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
-    // ->select(
-    //     'users.id as refID',
-    //     'patient_info.FirstName',
-    //     'patient_info.LastName',
-    //     'appointments.date',
-    //     'appointments.time',
-    //     'appointments.status',
-    //     'sub_services.Service',
-    // )
-    // ->get()
-    // ->groupBy('refID');
-        // $patients = DB::table('patient_info')->get();
-        // Log::info(json_encode($patients, JSON_PRETTY_PRINT));
-$patients = Patients::with('user.appointments.service.subServices')->get();
-        // $patients = DB::table('patient_info')
-        // ->join('','','=','')
-        return view('pages.patients', compact('patients'));
+        $patients = DB::table('patient_info')
+        ->leftJoin('appointments','appointments.patient_id', '=', 'patient_info.patient_id')
+        ->leftJoin('sub_services','sub_services.id','=', 'appointments.service_id')
+        ->select(
+            'patient_info.FirstName',
+        'patient_info.LastName',
+        'appointments.date',
+        'appointments.time',
+        'appointments.status',
+        'sub_services.Service',
+        'patient_info.id as refID'
+        )
+        ->get()
+        ->groupBy('refID');
+        // $servicesCount = count($patients);
+        // Log::info(json_encode($servicesCount, JSON_PRETTY_PRINT));
+        return view('pages.patients', compact('patients', ));
     }
 
     public function AllAppointments(){
@@ -101,16 +97,36 @@ $patients = Patients::with('user.appointments.service.subServices')->get();
     }
 
     public function PatientDetails($id){
-        $patient = Patients::where('patient_id', $id)->first();
-    $patientHistory = PatientHistory::where('patient_id', $id)->first();
+        $patient = Patients::where('id', $id)->first();
+    $patientHistory = PatientHistory::where('patient_id', $patient['patient_id'])->first();
     $services = DB::table('appointments')
     ->where('appointments.patient_id', $id)
     ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
     ->select('sub_services.*')
     ->get();
-    Log::info(json_encode($services, JSON_PRETTY_PRINT));
+    $prepAppointment = DB::table('appointments')
+                ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
+                ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
+                ->join('users', 'users.id', '=', 'appointments.patient_id')
+                ->select(
+                    'doctors.FirstName as dfName',
+                    'doctors.ProfessionalTitle as title',
+                    'doctors.LastName as dlname',
+                    'doctors.MiddleName as dmname',
+                    'sub_services.Service as service',
+                    'appointments.Time',
+                    'appointments.Date',
+                    'appointments.status'
+                )
+                ->get();
+                $servicesCount = count($prepAppointment);
+                $completedAppt = DB::table('appointments')
+    ->where('patient_id', $patient['id'])
+    ->where('status', 'completed')
+    ->count();
+    Log::info(json_encode($prepAppointment, JSON_PRETTY_PRINT));
 
-    return view('pages.view-patient-profile', compact('patient', 'patientHistory', 'services'));
+    return view('pages.view-patient-profile', compact('completedAppt','servicesCount','prepAppointment','patient', 'patientHistory', 'services'));
     }
 
     public function ViewPatientDetails(Request $request){
