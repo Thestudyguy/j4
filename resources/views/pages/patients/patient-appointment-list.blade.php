@@ -1,7 +1,7 @@
 @extends('dashboard')
 @section('content')
-    <div class="container bg-light">
-        <div class="container-fluid pt-5 bg-light py-5 mt-3">
+    <div class="container">
+        <div class="container-fluid pt-5 py-5 mt-3">
 
 
             <div class="container py-4">

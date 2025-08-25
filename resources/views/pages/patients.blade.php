@@ -27,10 +27,12 @@
         <div class="col-sm-2 text-end">
             <a href="{{ route('patient-details-view', ['id' => $first->refID]) }}" class="text-muted me-2" title="View"><i class="fas fa-eye"></i></a>
             <a href="#" class="text-muted me-2" title="Edit"><i class="fas fa-pen"></i></a>
+            <a href="" data-bs-target="#schedule-patient-appointment-{{$first->refID}}" data-bs-toggle="modal" class="text-muted me-2" title="schedule appointment for this patient"><i class="fas fa-plus"></i></a>
             <a href="#" class="text-muted me-2" title="View Services" data-bs-toggle="modal" data-bs-target="#patient-services-{{ $first->refID }}"><i class="fas fa-file-invoice"></i></a>
         </div>
     </div>
     @include('modals.view-patient-services')
+    @include('modals.walkin-patient-appointment-modal')
 @endforeach
 
 </div>

@@ -192,7 +192,6 @@ $(document).ready(function () {
     });
 
     $('#confirm-appointment-btn').on('click', function (e) {
-
         e.preventDefault();
         if($('#selected_doctor_id').val() === ''){
             Toast.fire({
@@ -229,6 +228,7 @@ $(document).ready(function () {
                 selected_time: time,
                 selected_doctor_id: doctor,
                 selected_service_id: service,
+                patient_id: $('#patient_id').val()
             },
             success: function (response) {
                 $('.appointment-loader-container').addClass('is-invalid');

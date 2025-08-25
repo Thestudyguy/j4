@@ -5,6 +5,7 @@ use App\Mail\MailDentistAccount;
 use App\Mail\MailPatientAppointmentStatus;
 use App\Models\Appointment;
 use App\Models\Doctors;
+use App\Models\Inventory;
 use App\Models\PatientHistory;
 use App\Models\Patients;
 use App\Models\Services;
@@ -28,12 +29,68 @@ class Controller
     //     $doctors = Doctors::all();
     //     view('pages.client-appointment-form', compact('services', 'doctors'));
     // }
+        public function NewInventoryItem(Request $request) {
+        try {
+            $validated = $request->validate([
+                'item_name' => 'required|string|max:255|unique:inventories,item_name',
+                'category'  => 'required|string|max:255',
+                'stock'     => 'required|integer|min:0'
+            ]);
+
+            $item = new Inventory();
+            $item->item_name = $validated['item_name'];
+            $item->category  = $validated['category'];
+            $item->on_hand = (int) $validated['stock'];
+            $item->save();
+
+            return response()->json([
+                'message' => 'Item added successfully.',
+                'item'    => $item
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Error adding item.',
+                'error'   => $th->getMessage()
+            ], 500);
+        }
+    }
 
     public function Inventory(){
-        return view('pages.inventory');
+        $inventory = Inventory::where('isVisible', true)->get();
+        return view('pages.inventory', compact('inventory'));
     }
     public function FrontDeskBoardingPage(){
         return view('pages.front-desk-boarding-page');
+    }
+
+    public function PatientScheduledAppointment(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'selected_date' => 'required|date',
+                'selected_time' => 'required|string',
+                'selected_doctor_id' => 'required|exists:doctors,id',
+                'selected_service_id' => 'required|exists:sub_services,id',
+                'patient_id' => 'required',
+            ]);
+            Log::info(json_encode($validated, JSON_PRETTY_PRINT));
+            // return;
+            Appointment::create([
+                'patient_id' => $validated['patient_id'],
+                'doctor_id' => $validated['selected_doctor_id'],
+                'service_id' => $validated['selected_service_id'],
+                'date' => $validated['selected_date'],
+                'time' => $validated['selected_time'],
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json(['message'=>__($th->getMessage())],500);
+            // throw $th;
+        }
     }
 
     public function UpdatePatientAppointment(Request $request){
@@ -55,7 +112,7 @@ class Controller
 
     public function Patients(){
         $patients = DB::table('patient_info')
-        ->leftJoin('appointments','appointments.patient_id', '=', 'patient_info.patient_id')
+        ->leftJoin('appointments','appointments.patient_id', '=', 'patient_info.id')
         ->leftJoin('sub_services','sub_services.id','=', 'appointments.service_id')
         ->select(
             'patient_info.FirstName',
@@ -68,15 +125,32 @@ class Controller
         )
         ->get()
         ->groupBy('refID');
+
+        // $test = DB::table('appointments')
+        // ->leftJoin('patient_info','patient_info.patient_id','=', 'appointments.patient_id')
+        // ->leftJoin('sub_services','sub_services.id','=', 'appointments.service_id')
+        // ->select(
+        //     'patient_info.FirstName',
+        // 'patient_info.LastName',
+        // 'appointments.date',
+        // 'appointments.time',
+        // 'appointments.status',
+        // 'sub_services.Service',
+        // 'patient_info.id as refID'
+        // )
+        // ->get()
+        // ->groupBy('refID');
+        $subServices = SubService::all();
+        $doctors = Doctors::where('isRemoved', false)->get();
         // $servicesCount = count($patients);
-        // Log::info(json_encode($servicesCount, JSON_PRETTY_PRINT));
-        return view('pages.patients', compact('patients', ));
+        Log::info(json_encode($patients, JSON_PRETTY_PRINT));
+        return view('pages.patients', compact('patients', 'subServices', 'doctors'));
     }
 
     public function AllAppointments(){
         $appointments = DB::table('appointments')
-        ->join('patient_info', 'patient_info.patient_id', '=', 'appointments.patient_id')
-        ->join('users', 'users.id', '=', 'appointments.patient_id')
+        ->join('patient_info', 'patient_info.id', '=', 'appointments.patient_id')
+        ->leftJoin('users', 'users.id', '=', 'appointments.patient_id')
         ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
         ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
         ->select(
@@ -92,13 +166,15 @@ class Controller
             'appointments.id'
         )
         ->get();
+
         // Log::info($appointments);
         return view('pages.all-appointments', compact('appointments'));
     }
 
     public function PatientDetails($id){
         $patient = Patients::where('id', $id)->first();
-    $patientHistory = PatientHistory::where('patient_id', $patient['patient_id'])->first();
+    $patientHistory = PatientHistory::where('patient_id', $patient->id)->first() ?? new PatientHistory();
+// dd($patientHistory);
     $services = DB::table('appointments')
     ->where('appointments.patient_id', $id)
     ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
@@ -124,7 +200,7 @@ class Controller
     ->where('patient_id', $patient['id'])
     ->where('status', 'completed')
     ->count();
-    Log::info(json_encode($prepAppointment, JSON_PRETTY_PRINT));
+    Log::info(json_encode($patientHistory, JSON_PRETTY_PRINT));
 
     return view('pages.view-patient-profile', compact('completedAppt','servicesCount','prepAppointment','patient', 'patientHistory', 'services'));
     }

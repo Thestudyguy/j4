@@ -67,7 +67,7 @@
                         <div class="col-sm-12">
                             {{-- <p class="goodhealth">{{ $patientHistory->good_health ? 'Yes' : 'No'}}</p> --}}
                             <input type="radio" style="pointer-events: none;"
-                                {{ $patientHistory->good_health === 'yes' ? '' : 'checked' }}> Yes
+                                {{ $patientHistory->good_health === 'yes' ? 'checked' : '' }}> Yes
                             <br>
                             <input type="radio" style="pointer-events: none;"
                                 {{ $patientHistory->good_health === 'no' ? 'checked' : '' }}> No
@@ -88,7 +88,7 @@
                                 {{ $patientHistory->uses_drugs === 'yes' ? 'checked' : '' }}>Yes
                             <br>
                             <input type="radio" style="pointer-events: none;" name=""
-                                id=""{{ $patientHistory->uses_drugs === 'no' ? '' : 'checked' }}>No
+                                id=""{{ $patientHistory->uses_drugs === 'no' ? 'checked' : '' }}>No
                         </div>
                     </div>
                 </div>
@@ -107,7 +107,7 @@
                                 {{ $patientHistory->under_medical_care === 'yes' ? 'checked' : '' }}>Yes
                             <br>
                             <input type="radio" style="pointer-events: none;" name=""
-                                id=""{{ $patientHistory->under_medical_care === 'no' ? '' : 'checked' }}>No
+                                id=""{{ $patientHistory->under_medical_care === 'no' ? 'checked' : '' }}>No
                         </div>
                         @if ($patientHistory->under_medical_care)
                             <div class="mx-3 medicalconditiontext">{{ $patientHistory->medical_condition_text ?? '' }}
@@ -162,10 +162,10 @@
                             {{-- <p class="surgery">{{ $patientHistory->surgery ? 'Yes' : 'No' }}</p> --}}
 
                             <input type="radio" style="pointer-events: none;" name="" id=""
-                                {{ $patientHistory->surgery === 'yes' ? 'checked' : '' }}>Yes
+                                {{ $patientHistory->had_surgery === 'yes' ? 'checked' : '' }}>Yes
                             <br>
                             <input type="radio" style="pointer-events: none;" name=""
-                                id=""{{ $patientHistory->surgery === 'no' ? '' : 'checked' }}>No
+                                id=""{{ $patientHistory->had_surgery === 'no' ? 'checked' : '' }}>No
                             <div class="mx-3 isFieldRequired surgerytextcontainer">
                                 <div class="text-field-required">
                                     <p class="surgerytext">{{ $patientHistory->surgery_text ?? '' }}</p>
@@ -186,7 +186,7 @@
                                 {{ $patientHistory->pregnant === 'yes' ? 'checked' : '' }}>Yes
                             <br>
                             <input type="radio" style="pointer-events: none;" name=""
-                                id=""{{ $patientHistory->pregnant === 'no' ? '' : 'checked' }}>No
+                                id=""{{ $patientHistory->pregnant === 'no' ? 'checked' : '' }}>No
                         </div>
                     </div>
                 </div>
@@ -200,10 +200,10 @@
                         <div class="col-sm-12">
                             {{-- <p class="hospital">{{ $patientHistory->hospitalized ? 'Yes' : 'No' }}</p> --}}
                             <input type="radio" style="pointer-events: none;" name="" id=""
-                                {{ $patientHistory->hospitalization_details === 'yes' ? 'checked' : '' }}>Yes
+                                {{ $patientHistory->hospitalized === 'yes' ? 'checked' : '' }}>Yes
                             <br>
                             <input type="radio" style="pointer-events: none;" name=""
-                                id=""{{ $patientHistory->hospitalization_details === 'no' ? '' : 'checked' }}>No
+                                id=""{{ $patientHistory->hospitalized === 'no' ? 'checked' : '' }}>No
 
                             <div class="mx-3 isFieldRequired hospitaltextcontainer">
                                 <div class="text-field-required">
@@ -229,7 +229,7 @@
                                 {{ $patientHistory->taking_birth_control === 'yes' ? 'checked' : '' }}>Yes
                             <br>
                             <input type="radio" style="pointer-events: none;" name=""
-                                id=""{{ $patientHistory->taking_birth_control === 'no' ? '' : 'checked' }}>No
+                                id=""{{ $patientHistory->taking_birth_control === 'no' ? 'checked' : '' }}>No
                         </div>
                     </div>
                 </div>
@@ -246,7 +246,7 @@
                                 {{ $patientHistory->taking_medications === 'yes' ? 'checked' : '' }}>Yes
                             <br>
                             <input type="radio" style="pointer-events: none;" name=""
-                                id=""{{ $patientHistory->taking_medications === 'no' ? '' : 'checked' }}>No
+                                id=""{{ $patientHistory->taking_medications === 'no' ? 'checked' : '' }}>No
                             <div class="mx-3">
                                 <div class="text-field-required">
                                 </div>
@@ -267,7 +267,7 @@
                                 {{ $patientHistory->using_tobacco === 'yes' ? 'checked' : '' }}>Yes
                             <br>
                             <input type="radio" style="pointer-events: none;" name=""
-                                id=""{{ $patientHistory->using_tobacco === 'no' ? '' : 'checked' }}>No
+                                id=""{{ $patientHistory->using_tobacco === 'no' ? 'checked' : '' }}>No
                             {{-- <p class="isClientASmokeWhack">{{ $patientHistory->using_tobacco ? 'Yes' : 'No' }} --}}
                             </p>
                         </div>
@@ -287,7 +287,7 @@
                                 {{ $patientHistory->nursing === 'yes' ? 'checked' : '' }}>Yes
                             <br>
                             <input type="radio" style="pointer-events: none;" name=""
-                                id=""{{ $patientHistory->nursing === 'no' ? '' : 'checked' }}>No
+                                id=""{{ $patientHistory->nursing === 'no' ? 'checked' : '' }}>No
                             {{-- <p class="isClientNursing">{{ $patientHistory->nursing ? 'Yes' : 'No' }}</p> --}}
                         </div>
                     </div>

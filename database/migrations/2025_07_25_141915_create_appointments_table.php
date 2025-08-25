@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('patient_id')->nullable();
-            $table->foreign('patient_id')->references('id')->on('users')->nullOnDelete();
+            $table->foreign('patient_id')->references('id')->on('patient_info')->nullOnDelete();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
             $table->unsignedBigInteger('doctor_id')->nullable();
             $table->foreign('doctor_id')->references('id')->on('doctors')->nullOnDelete();
             $table->unsignedBigInteger('service_id')->nullable();

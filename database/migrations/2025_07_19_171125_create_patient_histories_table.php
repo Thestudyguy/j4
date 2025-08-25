@@ -10,8 +10,11 @@ class CreatePatientHistoriesTable  extends Migration
     {
         Schema::create('patient_history', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
             $table->unsignedBigInteger('patient_id')->nullable();
-            $table->foreign('patient_id')->references('id')->on('users')->nullOnDelete();
+            $table->foreign('patient_id')->references('id')->on('patient_info')->nullOnDelete();
+            
             $table->string('previous_dentist')->nullable();
             $table->date('last_visit')->nullable();
             

@@ -1,95 +1,74 @@
 @extends('dashboard')
 @section('content')
-<div class="container py-5 mt-5">
-    <h5 class="fw-semibold m-3"><i class="fas fa-boxes-stacked me-2 text-primary"></i>Inventory</h5>
+    <div class="container-fluid py-5 mt-5">
+        <h3 class="fw-semibold m-3">Inventory</h3>
+        <div class="row">
+            <div class="col-sm-4">
+                <input type="search" name="search_inventory" class="form-control form-control-sm rounded-4"
+                    placeholder="search..." id="">
+            </div>
+            <div class="col-sm-4">
+                <button class="btn btn-transparent border border-secondary float-right btn-sm fw-semibold lead text-sm"><i
+                        class="fas fa-upload"></i> Export</button>
+            </div>
+            <div class="col-sm-4">
+                <button data-bs-target='#new-inventory-item' data-bs-toggle='modal' style="background: #20536B;"
+                    class="text-white btn border border-secondary float-left btn-sm fw-semibold lead text-sm"><i
+                        class="fas fa-plus"></i> Add Item</button>
+            </div>
+            <div class="container-fluid rounded-5 bg-light mt-5">
+                <div class="row p-2 rounded-5">
+                    <div class="col-sm-3">
+                        <span class="lead text-muted text-md">Product Name</span>
+                    </div>
+                    <div class="col-sm-3">
+                        <span class="lead text-muted text-md">Category</span>
+                    </div>
+                    <div class="col-sm-3">
+                        <span class="lead text-muted text-md">On Hand</span>
+                    </div>
+                    <div class="col-sm-3">
+                        <span class="lead text-muted text-md">Status</span>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid mt-2 rounded-4 bg-light">
+                <div class="row p-2 rounded-5">
+                    @foreach ($inventory as $items)
+                        @php
+                            $maxStock = $items->max_stock ?? 100; // fallback if no max_stock column
+                            $lowStockThreshold = $maxStock * 0.15;
+                            $isOutOfStock = $items->on_hand == 0;
+                            $isLowStock = !$isOutOfStock && $items->on_hand <= $lowStockThreshold;
+                        @endphp
 
-    <div class="table-responsive shadow rounded">
-        <table class="table table-hover table-bordered align-middle small">
-            <thead class="text-center table-light">
-                <tr>
-                    <th>#</th>
-                    <th>Item Name</th>
-                    <th>Category</th>
-                    <th>Qty</th>
-                    <th>Unit</th>
-                    <th>Status</th>
-                    <th>Last Updated</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody class="text-center">
-                <tr>
-                    <th>1</th>
-                    <td class="text-start">Dental Gloves</td>
-                    <td>Protective Gear</td>
-                    <td>200</td>
-                    <td>Boxes</td>
-                    <td><span class="badge bg-success"><i class="fas fa-circle me-1 small"></i>In Stock</span></td>
-                    <td>July 28, 2025</td>
-                    <td>
-                        <a href="#" class="text-primary me-2" title="View"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="text-warning me-2" title="Edit"><i class="fas fa-pen"></i></a>
-                        <a href="#" class="text-danger" title="Delete"><i class="fas fa-trash"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <th>2</th>
-                    <td class="text-start">Face Masks</td>
-                    <td>Protective Gear</td>
-                    <td>50</td>
-                    <td>Boxes</td>
-                    <td><span class="badge bg-warning text-dark"><i class="fas fa-circle me-1 small"></i>Low</span></td>
-                    <td>July 25, 2025</td>
-                    <td>
-                        <a href="#" class="text-primary me-2"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="text-warning me-2"><i class="fas fa-pen"></i></a>
-                        <a href="#" class="text-danger"><i class="fas fa-trash"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <th>3</th>
-                    <td class="text-start">Dental Mirror</td>
-                    <td>Instruments</td>
-                    <td>30</td>
-                    <td>Pieces</td>
-                    <td><span class="badge bg-success"><i class="fas fa-circle me-1 small"></i>In Stock</span></td>
-                    <td>July 26, 2025</td>
-                    <td>
-                        <a href="#" class="text-primary me-2"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="text-warning me-2"><i class="fas fa-pen"></i></a>
-                        <a href="#" class="text-danger"><i class="fas fa-trash"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <th>4</th>
-                    <td class="text-start">Composite Resin</td>
-                    <td>Restorative</td>
-                    <td>10</td>
-                    <td>Syringes</td>
-                    <td><span class="badge bg-danger"><i class="fas fa-circle me-1 small"></i>Out</span></td>
-                    <td>July 23, 2025</td>
-                    <td>
-                        <a href="#" class="text-primary me-2"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="text-warning me-2"><i class="fas fa-pen"></i></a>
-                        <a href="#" class="text-danger"><i class="fas fa-trash"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <th>5</th>
-                    <td class="text-start">Dental Floss</td>
-                    <td>Consumables</td>
-                    <td>120</td>
-                    <td>Rolls</td>
-                    <td><span class="badge bg-success"><i class="fas fa-circle me-1 small"></i>In Stock</span></td>
-                    <td>July 28, 2025</td>
-                    <td>
-                        <a href="#" class="text-primary me-2"><i class="fas fa-eye"></i></a>
-                        <a href="#" class="text-warning me-2"><i class="fas fa-pen"></i></a>
-                        <a href="#" class="text-danger"><i class="fas fa-trash"></i></a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                        <div class="col-sm-3">
+                            <span class="lead text-muted text-md">{{ $items->item_name }}</span>
+                        </div>
+                        <div class="col-sm-3">
+                            <span class="lead text-muted text-md">{{ $items->category }}</span>
+                        </div>
+                        <div class="col-sm-3">
+                            <span
+                                class="lead text-md {{ $isOutOfStock ? 'text-danger fw-bold' : ($isLowStock ? 'text-warning fw-semibold' : 'text-muted') }}">
+                                {{ $items->on_hand }}
+                            </span>
+                        </div>
+                        <div class="col-sm-3">
+                            @if ($isOutOfStock)
+                                <small class="text-danger fw-bold">Out of Stock</small>
+                            @elseif($isLowStock)
+                                <small class="text-warning fw-semibold">Low</small>
+                            @else
+                                <small class="text-info fw-semibold">In Stock</small>
+                            @endif
+                        </div>
+                    @endforeach
+
+
+                </div>
+            </div>
+        </div>
+        @include('modals.new-inventory-item-modal')
     </div>
-</div>
 @endsection

@@ -7,3 +7,5 @@ import './app-scripts/patient-account-creation';
 import './app-scripts/patient-setup';
 import './app-scripts/patient-appointment';
 import './app-scripts/update-patient-appointment';
+import './app-scripts/shceduled-patient-appointment';
+import './app-scripts/inventory';

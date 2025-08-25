@@ -44,15 +44,16 @@ class PatientHistory extends Model
 
     protected $casts = [
         'known_illnesses' => 'array', // JSON field
-        'good_health' => 'boolean',
-        'uses_drugs' => 'boolean',
-        'under_medical_care' => 'boolean',
-        'pregnant' => 'boolean',
-        'hospitalized' => 'boolean',
-        'taking_birth_control' => 'boolean',
-        'taking_medications' => 'boolean',
-        'using_tobacco' => 'boolean',
-        'nursing' => 'boolean',
-        'allergy' => 'boolean',
+        'good_health',
+        'uses_drugs',
+        'under_medical_care',
+        'pregnant',
+        'hospitalized',
+        'had_surgery',
+        'taking_birth_control',
+        'taking_medications',
+        'using_tobacco',
+        'nursing',
+        'allergy',
     ];
 }

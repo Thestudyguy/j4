@@ -100,8 +100,10 @@ class PatientController extends Controller
                 'selected_time' => 'required|string',
                 'selected_doctor_id' => 'required|exists:doctors,id',
                 'selected_service_id' => 'required|exists:sub_services,id',
+                'patient_id' => 'required',
             ]);
-
+            Log::info(json_encode($validated, JSON_PRETTY_PRINT));
+            // return;
             Appointment::create([
                 'patient_id' => auth()->id(),
                 'doctor_id' => $validated['selected_doctor_id'],
@@ -152,7 +154,7 @@ class PatientController extends Controller
         try {
             $patientID = Auth::user()->id;
             $patient = Patients::where('patient_id', $patientID)->first();
-            $patientHistory = PatientHistory::where('patient_id', $patientID)->first();
+            $patientHistory = PatientHistory::where('patient_id', $patient->id)->first();
             $prepAppointment = DB::table('appointments')
                 ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
                 ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
@@ -170,6 +172,7 @@ class PatientController extends Controller
                     'appointments.id'
                 )
                 ->get();
+                Log::info(json_encode($patientHistory, JSON_PRETTY_PRINT));
             $patientForecastPayment = $prepAppointment->sum('price');
             $patientDuePayments = $prepAppointment->where('status', 'completed')->sum('price');
             return view('pages.patients.patient-appointment-list', compact('prepAppointment', 'patientForecastPayment', 'patient', 'patientHistory', 'patientDuePayments'));
@@ -228,7 +231,7 @@ class PatientController extends Controller
 
             // Save Patient History
             $history = PatientHistory::create([
-                'patient_id' => $patient_id, // Use patient table's ID (not auth user)
+                'patient_id' => $patient['id'], // Use patient table's ID (not auth user)
                 'previous_dentist' => $medData['previousdentist'] ?? null,
                 'last_visit' => $medData['lastvisit'] ?? null,
                 'physician_name' => $medData['physician'] ?? null,

@@ -43,7 +43,8 @@ Route::middleware('authenticated')->group(function(){
     Route::get('/front-desk-page', [Controller::class, 'FrontDeskBoardingPage'])->name('front-desk');
     Route::post('/update/patient-basic-info', [Controller::class, 'UpdatePatientBasicInformation']);
     Route::post('/new/walk-in-patient', [Controller::class, 'AddWalkInPatient']);
-
+    Route::post('patient/appointment/scheduled-appointment', [Controller::class,'PatientScheduledAppointment']);
+    Route::post('inventory/new-item', [Controller::class,'NewInventoryItem']);
 });
 Route::get('/patient-appointments', [PatientController::class, 'PatientAppointmentList'])->name('patient-appointments-page');
 Route::post('/appointments/update', [PatientController::class, 'UpdateAppointment']);
