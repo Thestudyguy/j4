@@ -209,7 +209,7 @@ class Controller
         $patientID = Auth::user()->id;
         $patient = Patients::where('patient_id', $patientID)->first();
         $patientHistory = PatientHistory::where('patient_id', $patientID)->first();
-        Log::info($patientID);
+    Log::info(json_encode($patientHistory, JSON_PRETTY_PRINT));
         return view('pages.view-patient-profile', compact('patient', 'patientHistory'));
         
     }

@@ -16,14 +16,14 @@
     font-size: 14px;
     z-index: 9999;">
     <code class="text-info fw-bold">Current Tasks</code><br>
-    <strong>Manager/Admin</strong>
+    <strong>Dentist</strong>
     <ol style="margin: 8px 0 0 20px; padding: 0;">
-        <li>View Number of patients</li>
-        <li>Manage dentist appointments and scheudule</li>
-        <li>View Patient basic information and appointment schedule</li>
-        <li>Add New Dentist</li>
-        <li>Update Services offered</li>
-        <li>Manage Inventory Items</li>
+        <li>View Patient Record Information and appointment </li>
+        <li>Number of appointments.</li>
+        <li>Add and edit patient medical records.</li>
+        <li>Monitor completed, ongoing, and upcoming procedures.</li>
+        <li>Add follow-up checkups.</li>
+        {{-- <li>Manage Inventory Items</li> --}}
     </ol>
 </div>
     <div class="sidebar">

@@ -95,17 +95,19 @@ class PatientController extends Controller
     public function AppointmentConfirmation(Request $request)
     {
         try {
+            $patientID = DB::table('patient_info')->where('patient_id', Auth::user()->id)->first();
             $validated = $request->validate([
                 'selected_date' => 'required|date',
                 'selected_time' => 'required|string',
                 'selected_doctor_id' => 'required|exists:doctors,id',
                 'selected_service_id' => 'required|exists:sub_services,id',
-                'patient_id' => 'required',
+                // 'patient_id' => 'required',
             ]);
             Log::info(json_encode($validated, JSON_PRETTY_PRINT));
             // return;
             Appointment::create([
-                'patient_id' => auth()->id(),
+                'user_id' => Auth::user()->id,
+                'patient_id' => $patientID->id,
                 'doctor_id' => $validated['selected_doctor_id'],
                 'service_id' => $validated['selected_service_id'],
                 'date' => $validated['selected_date'],

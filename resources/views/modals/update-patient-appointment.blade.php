@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-center">
         <div class="modal-content rounded-0">
             <div class="modal-header">
-                <h4 class="fw-bold">Update Appointment</h4>
+                <h4 class="fw-bold">Update Appointmenssst</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -22,7 +22,7 @@
                     <select name="appointment_update" class="form-control rounded-0 patient-appointment-update">
                         <option value="" selected hidden value="{{ $appt->status }}">{{ $appt->status }}</option>
                         <option value="Cancel" class="fw-semibold text-danger">Cancel</option>
-                        <option value="Reschedule" class="fw-semibold text-info">Reschedule</option>
+                        <option value="re-schedule" class="fw-semibold text-info">Reschedule</option>
                         <option value="Confirm" class="fw-semibold text-primary">Confirm</option>
                         <option value="Completed" class="fw-semibold text-success">Completed</option>
                     </select>

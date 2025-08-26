@@ -210,7 +210,7 @@ $(document).ready(function () {
         if (!date || !time || !doctor || !service) {
             // alert('Please select date, time, doctor, and service first.');
             Swal.fire({
-                icon: 'info',
+            icon: 'info',
                 title: 'Please select all necesarry data'
             });
             return;
@@ -228,7 +228,6 @@ $(document).ready(function () {
                 selected_time: time,
                 selected_doctor_id: doctor,
                 selected_service_id: service,
-                patient_id: $('#patient_id').val()
             },
             success: function (response) {
                 $('.appointment-loader-container').addClass('is-invalid');

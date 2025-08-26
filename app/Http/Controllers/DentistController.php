@@ -21,36 +21,58 @@ class DentistController extends Controller
         $doctorID = Auth::user()->id;
         Log::info($doctorID);
         $appointments = Appointment::where('appointments.doctor_id', $doctorID)
-            ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
-            ->join('users', 'users.id', '=', 'appointments.patient_id')
-            ->join('doctors', 'doctors.user_id', '=', 'users.id')
+        ->join('doctors', 'doctors.user_id', '=', 'appointments.doctor_id')    
+        ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
+            ->join('patient_info','patient_info.id','=','appointments.patient_id')
+            ->join('users','users.id','=','doctors.user_id')
             ->select(
                 'appointments.id as appointment_id',
                 'appointments.date',
                 'appointments.time',
                 'appointments.status',
-                'users.FirstName',
-                'users.LastName',
+                'patient_info.FirstName',
+                'patient_info.LastName',
                 'sub_services.Service'
             )
             ->get();
             $test = DB::table('doctors')
             ->join('users', 'users.id', '=', 'doctors.user_id')
             ->join('appointments', 'appointments.doctor_id', '=', 'doctors.id')
-            // ->join('patient_info', 'patient_info.id', '=', 'appointments.patient_id')
+            ->get();
+            // $doctorsAppointments = DB::table('doctors')
+            // ->where('doctors.user_id', $doctorID)
+            // ->join('appointments', 'appointments.doctor_id', '=', 'doctors.id')
+            // ->join('patient_info', 'patient_info.patient_id', '=', 'appointments.patient_id')
             // ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
-            ->get();
-            $doctorsAppointments = DB::table('doctors')
-            ->where('doctors.user_id', $doctorID)
-            ->join('appointments', 'appointments.doctor_id', '=', 'doctors.id')
-            ->join('patient_info', 'patient_info.patient_id', '=', 'appointments.patient_id')
-            ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
-            ->get();
+            // ->get();
             $count = count($appointments);
             $testCount = count($test);
-            Log::info(json_encode($doctorsAppointments, JSON_PRETTY_PRINT));
+            
+            
+            $dentistAppointments = DB::table('doctors')
+            ->where('doctors.user_id', $doctorID)
+            ->join('appointments', 'appointments.doctor_id','=','doctors.id')
+            ->join('patient_info', 'patient_info.id','=','appointments.patient_id')
+            ->join('sub_services', 'sub_services.id','=','appointments.service_id')
+            ->select(
+                'doctors.ProfessionalTitle as title', 'doctors.Firstname as dfName', 'doctors.LastName as dlname',
+                'appointments.id',
+                'appointments.date as Date',
+                'appointments.time as Time',
+                'appointments.status',
+                'appointments.patient_id',
+                'patient_info.FirstName',
+                'patient_info.Email',
+                'patient_info.LastName',
+                'patient_info.id as refID',
+                'sub_services.Service as service'
+            )
+            ->where('appointments.status', '!=', 'archive')
+            ->get();
+            Log::info(json_encode($dentistAppointments, JSON_PRETTY_PRINT));
 
-        return view('pages.dentist.dentist-interface', compact('appointments', 'count', 'test', 'testCount', 'doctorsAppointments'));
+
+        return view('pages.dentist.dentist-interface', compact('appointments', 'count', 'test', 'testCount', 'dentistAppointments'));
 
     } catch (\Throwable $th) {
         throw $th;
