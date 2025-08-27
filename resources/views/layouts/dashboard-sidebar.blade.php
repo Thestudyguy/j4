@@ -16,6 +16,7 @@
     font-size: 14px;
     z-index: 9999;">
     <code class="text-info fw-bold">Current Tasks</code><br>
+    <code class="text-dark fw-bold">Login: Edwards, FBgmMh2B6n</code><br>
     <strong>Dentist</strong>
     <ol style="margin: 8px 0 0 20px; padding: 0;">
         <li>View Patient Record Information and appointment </li>

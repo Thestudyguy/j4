@@ -5,13 +5,13 @@
             <div class="row">
                 <div class="col-sm-6">
                     <label for="previousdentist" class="form-label fw-semibold">Previous Dentist</label>
-                    <input type="text" name="" {{Auth::user()->Role === 'Dentist' ? '' : 'disabled'}} class="form-control" id=""
+                    <input type="text" name="updateorcreate_previous_dentist" {{Auth::user()->Role !== 'Dentist' ? 'disabled' : ''}} class="form-control" id=""
                         value="{{ $patientHistory->previous_dentist ?? 'N/A' }}">
                     {{-- <p class="previousdentist">{{ $patientHistory->previous_dentist ?? 'N/A' }}</p> --}}
                 </div>
                 <div class="col-sm-6">
                     <label for="allergies" class="form-label fw-semibold">Last Visit</label>
-                    <input type="text" name="" disabled class="form-control" id=""
+                    <input type="date" name="updateorcreate_last_visit" class="form-control" id=""
                         value="{{ $patientHistory->last_visit ?? 'N/A' }}">
                     {{-- <p class="lastvisit">{{ $patientHistory->last_visit ?? 'N/A' }}</p> --}}
                 </div>
@@ -23,13 +23,15 @@
                 <p class="fw-semibold h4 my-3">Medical History</p>
                 <div class="col-4">
                     <label for="physician" class="fw-semibold">Name of Physician</label>
-                    <input type="text" name="" disabled class="form-control" id=""
+                    <input type="text" name="updateorcreate_physician_name" class="form-control" id=""
+                    {{Auth::user()->Role !== 'Dentist' ? 'disabled' : ''}}
                         value="{{ $patientHistory->physician_name ?? 'N/A' }}">
                     {{-- <p class="physician">{{ $patientHistory->physician_name ?? 'N/A' }}</p> --}}
                 </div>
                 <div class="col-4">
                     <label for="specialty" class="fw-semibold">Specialty</label>
-                    <input type="text" name="" disabled class="form-control" id=""
+                    <input type="text" name="updateorcreate_physician_specialty" class="form-control" id=""
+                    {{Auth::user()->Role !== 'Dentist' ? 'disabled' : ''}}
                         value="{{ $patientHistory->physician_specialty ?? 'N/A' }}">
                     {{-- <p class="specialty">{{ $patientHistory->physician_specialty ?? 'N/A' }}</p> --}}
                 </div>
@@ -41,13 +43,15 @@
             <div class="row my-4 mt-5">
                 <div class="col-4">
                     <label for="officeaddress" class="fw-semibold">Office Address</label>
-                    <input type="text" name="" disabled class="form-control" id=""
+                    <input type="text" name="updateorcreate_physician_office_address" class="form-control" id=""
+                    {{Auth::user()->Role !== 'Dentist' ? 'disabled' : ''}}
                         value="{{ $patientHistory->physician_office_address ?? 'N/A' }}">
                     {{-- <p class="officeaddress">{{ $patientHistory->physician_office_address ?? 'N/A' }}</p> --}}
                 </div>
                 <div class="col-4">
                     <label for="officeno" class="fw-semibold">Office No.</label>
-                    <input type="text" name="" disabled class="form-control" id=""
+                    <input type="text" name="updateorcreate_physician_office_no" class="form-control" id=""
+                    {{Auth::user()->Role !== 'Dentist' ? 'disabled' : ''}}
                         value="{{ $patientHistory->physician_office_no ?? 'N/A' }}">
                     {{-- <p class="officeno">{{ $patientHistory->physician_office_no ?? 'N/A' }}</p> --}}
                 </div>
@@ -62,14 +66,14 @@
                 <div class="col-sm-6">
                     <div class="row">
                         <div class="col-sm-12">
-                            <label style="font-weight: 500" for="goodhealth">Are you in good health?</label>
+                            <label style="font-weight: 500" for="goodhealth">Are you in good health?<sup class="text-danger">*</sup></label>
                         </div>
                         <div class="col-sm-12">
                             {{-- <p class="goodhealth">{{ $patientHistory->good_health ? 'Yes' : 'No'}}</p> --}}
-                            <input type="radio" style="pointer-events: none;"
+                            <input type="radio"  style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}" value="yes"  name="good_health"
                                 {{ $patientHistory->good_health === 'yes' ? 'checked' : '' }}> Yes
                             <br>
-                            <input type="radio" style="pointer-events: none;"
+                            <input type="radio" style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}" value="no" name="good_health"
                                 {{ $patientHistory->good_health === 'no' ? 'checked' : '' }}> No
 
                         </div>
@@ -80,15 +84,21 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <label style="font-weight: 500" for="alcohol">Do you use alcohol, cocaine, or other
-                                dangerous drugs?</label>
+                                dangerous drugs?<sup class="text-danger">*</sup></label>
                         </div>
                         <div class="col-sm-12">
                             {{-- <p class="alcohol">{{ $patientHistory->uses_drugs ? 'Yes' : 'No'}}</p> --}}
-                            <input type="radio" style="pointer-events: none;" name="" id=""
-                                {{ $patientHistory->uses_drugs === 'yes' ? 'checked' : '' }}>Yes
-                            <br>
-                            <input type="radio" style="pointer-events: none;" name=""
-                                id=""{{ $patientHistory->uses_drugs === 'no' ? 'checked' : '' }}>No
+                           <input type="radio" 
+       style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}" 
+       name="uses_drugs" 
+       value="yes"
+       {{ $patientHistory->uses_drugs === 'yes' ? 'checked' : '' }}> Yes
+<br>
+<input type="radio" 
+       style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}" 
+       name="uses_drugs" 
+       value="no"
+       {{ $patientHistory->uses_drugs === 'no' ? 'checked' : '' }}> No
                         </div>
                     </div>
                 </div>
@@ -98,21 +108,28 @@
                         <div class="col-sm-12">
                             <label style="font-weight: 500" for="medicalcondition">Are you under medical
                                 treatment
-                                now?</label>
+                                now?<sup class="text-danger">*</sup></label>
                         </div>
                         <div class="col-sm-12">
                             {{-- <p class="medicalcondition">{{ $patientHistory->under_medical_care ? 'Yes' : 'No'}}
                                         </p> --}}
-                            <input type="radio" style="pointer-events: none;" name="" id=""
+                            <input type="radio" class="updateorcreate_under_medical_care" style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}"  value="yes" name="update_under_medical_care" id=""
                                 {{ $patientHistory->under_medical_care === 'yes' ? 'checked' : '' }}>Yes
                             <br>
-                            <input type="radio" style="pointer-events: none;" name=""
+                            <input type="radio" class="updateorcreate_under_medical_care" style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}"  value="no" name="update_under_medical_care"
                                 id=""{{ $patientHistory->under_medical_care === 'no' ? 'checked' : '' }}>No
                         </div>
-                        @if ($patientHistory->under_medical_care)
-                            <div class="mx-3 medicalconditiontext">{{ $patientHistory->medical_condition_text ?? '' }}
+                        <div class="mx-3 isFieldRequired undermedicalcaredetails {{ $patientHistory->under_medical_care === 'yes' ? '' : 'd-none' }}">
+                                <div class="text-field-required">
+                                <span class="">If so what Illness or Operation?</span>
+                                    {{-- <p class="surgerytext">{{ $patientHistory->surgery_text ?? '' }}</p> --}}
+                                </div>
+                                <input type="text" style="border: none; border-bottom: 1px solid black; border-radius: 0;" 
+                                class="form-control" 
+                                name="updateorcreate_under_medical_care_text" 
+                                value="{{ $patientHistory->medical_condition_text ?? '' }}" 
+                                id=""><sup class="text-danger">*</sup>
                             </div>
-                        @endif
                     </div>
                 </div>
 
@@ -120,7 +137,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <label style="font-weight: 500" for="isAllergicTo">Are you allergic to any of the
-                                following?</label>
+                                following?<sup class="text-danger">*</sup></label>
                         </div>
                         <div class="col-sm-12">
                             @php
@@ -134,7 +151,7 @@
                                         </div> --}}
                             <div class="col-sm-12">
                             <ul class="allergies">
-                                @if (is_array($allergies) && count($allergies) > 0)
+                                @if (is_array($allergies))
                                     <input type="checkbox" name="isAllergicTo[]" id="allergy_LocalAnesthetic" 
                                         value="LocalAnesthetic" 
                                         {{ in_array('LocalAnesthetic', $allergies) ? 'checked' : '' }}>
@@ -150,7 +167,7 @@
                                         {{ in_array('Aspirin', $allergies) ? 'checked' : '' }}>
                                     Aspirin<br>
 
-                                    <input type="checkbox" name="isAllergicTo[]" id="allergy_Latex" 
+                                    <input type="checkbox" name="isAllergicTo[]" id="allergy_Latex"  class="text-danger border border-danger"
                                         value="Latex" 
                                         {{ in_array('Latex', $allergies) ? 'checked' : '' }}>
                                     Latex<br>
@@ -174,7 +191,44 @@
                                             value="{{ $patientHistory->allergy_others ?? '' }}">
                                     </div>
                                 @else
-                                    <li>No known allergies</li>
+                                    <input type="checkbox" name="isAllergicTo[]" id="allergy_LocalAnesthetic" 
+                                        value="LocalAnesthetic" 
+                                        >
+                                    Local Anesthetic (ex Lidocaine)<br>
+
+                                    <input type="checkbox" name="isAllergicTo[]" id="allergy_SulfaDrugs" 
+                                        value="SulfaDrugs" 
+                                        >
+                                    Sulfa Drugs<br>
+
+                                    <input type="checkbox" name="isAllergicTo[]" id="allergy_Aspirin" 
+                                        value="Aspirin" 
+                                        >
+                                    Aspirin<br>
+
+                                    <input type="checkbox" name="isAllergicTo[]" id="allergy_Latex"  class="text-danger border border-danger"
+                                        value="Latex" 
+                                       >
+                                    Latex<br>
+
+                                    <input type="checkbox" name="isAllergicTo[]" id="allergy_Penicilin" 
+                                        value="Penicilin-Antibiotics" 
+                                        >
+                                    Penicilin, Antibiotics<br>
+
+                                    <input type="checkbox" name="isAllergicTo[]" id="allergy_None" 
+                                        value="None" 
+                                        >
+                                    None<br>
+
+                                    <div class="mx-3 isFieldRequired">
+                                        <div class="text-field-required mt-2">
+                                            <span>Others, Specify</span>
+                                        </div>
+                                        <input type="text" name="isAllergicToTextInput" 
+                                            class="medical-history-extra-field form-control form-control-sm bg-transparent" 
+                                            value="">
+                                    </div>
                                 @endif
 
                                 @if (!empty($patientHistory->allergy_others))
@@ -192,20 +246,26 @@
                         <div class="col-sm-12">
                             <label style="font-weight: 500" for="surgery">Have you ever had serious illness or
                                 surgical
-                                operation?</label>
+                                operation?<sup class="text-danger">*</sup></label>
                         </div>
                         <div class="col-sm-12">
                             {{-- <p class="surgery">{{ $patientHistory->surgery ? 'Yes' : 'No' }}</p> --}}
 
-                            <input type="radio" style="pointer-events: none;" name="" id=""
+                            <input type="radio" class="updateorcreate_had_surgery" style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}"  value="yes" name="update_surgery" id=""
                                 {{ $patientHistory->had_surgery === 'yes' ? 'checked' : '' }}>Yes
                             <br>
-                            <input type="radio" style="pointer-events: none;" name=""
+                            <input type="radio" class="updateorcreate_had_surgery" style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}"  value="no" name="update_surgery"
                                 id=""{{ $patientHistory->had_surgery === 'no' ? 'checked' : '' }}>No
-                            <div class="mx-3 isFieldRequired surgerytextcontainer">
+                            <div class="mx-3 isFieldRequired surgerytextcontainer {{$patientHistory->had_surgery ?? 'd-none'}}">
                                 <div class="text-field-required">
-                                    <p class="surgerytext">{{ $patientHistory->surgery_text ?? '' }}</p>
+                                <span class="">If so what Illness or Operation?</span>
+                                    {{-- <p class="surgerytext">{{ $patientHistory->surgery_text ?? '' }}</p> --}}
                                 </div>
+                                <input type="text" style="border: none; border-bottom: 1px solid black; border-radius: 0;" 
+                                class="form-control updateorcreate_surgery_text" 
+                                name="updateorcreate_surgery_text" 
+                                value="{{ $patientHistory->surgery_text ?? '' }}" 
+                                id=""><sup class="text-danger">*</sup>
                             </div>
                         </div>
                     </div>
@@ -218,10 +278,10 @@
                                     class="text-warning">(for women)</sup></label>
                         </div>
                         <div class="col-sm-12">
-                            <input type="radio" style="pointer-events: none;" name="" id=""
+                            <input type="radio" style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}"  value="yes" name="pregnant" id=""
                                 {{ $patientHistory->pregnant === 'yes' ? 'checked' : '' }}>Yes
                             <br>
-                            <input type="radio" style="pointer-events: none;" name=""
+                            <input type="radio" style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}"  value="no" name="pregnant"
                                 id=""{{ $patientHistory->pregnant === 'no' ? 'checked' : '' }}>No
                         </div>
                     </div>
@@ -231,21 +291,26 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <label style="font-weight: 500" for="hospital">Have you ever been
-                                hospitalized?</label>
+                                hospitalized?<sup class="text-danger">*</sup></label>
                         </div>
                         <div class="col-sm-12">
                             {{-- <p class="hospital">{{ $patientHistory->hospitalized ? 'Yes' : 'No' }}</p> --}}
-                            <input type="radio" style="pointer-events: none;" name="" id=""
+                            <input type="radio" class="updateorcreate_hospitalized" style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}"  value="yes" name="update_hospitalized" id=""
                                 {{ $patientHistory->hospitalized === 'yes' ? 'checked' : '' }}>Yes
                             <br>
-                            <input type="radio" style="pointer-events: none;" name=""
+                            <input type="radio" class="updateorcreate_hospitalized" style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}"  value="no" name="update_hospitalized"
                                 id=""{{ $patientHistory->hospitalized === 'no' ? 'checked' : '' }}>No
 
-                            <div class="mx-3 isFieldRequired hospitaltextcontainer">
+                            <div class="mx-3 isFieldRequired hostpitalizationtextcontainer {{ $patientHistory->hospitalized === 'yes' ? '' : 'd-none' }}">
                                 <div class="text-field-required">
-                                    <p class="hospitaltext">{{ $patientHistory->hospitalization_details ?? '' }}
-                                    </p>
+                                <span class="">If so why?</span>
+                                    {{-- <p class="surgerytext">{{ $patientHistory->surgery_text ?? '' }}</p> --}}
                                 </div>
+                                <input type="text" style="border: none; border-bottom: 1px solid black; border-radius: 0;" 
+                                class="form-control" 
+                                name="updateorcreate_hospitalization_details" 
+                                value="{{ $patientHistory->hospitalization_details ?? '' }}" 
+                                id=""><sup class="text-danger">*</sup>
                             </div>
                         </div>
                     </div>
@@ -261,10 +326,10 @@
                         <div class="col-sm-12">
                             {{-- <p class="isOnBithControl">
                                             {{ $patientHistory->taking_birth_control ? 'Yes' : 'No' }}</p> --}}
-                            <input type="radio" style="pointer-events: none;" name="" id=""
+                            <input type="radio" style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}"  value="yes" name="taking_birth_control" id=""
                                 {{ $patientHistory->taking_birth_control === 'yes' ? 'checked' : '' }}>Yes
                             <br>
-                            <input type="radio" style="pointer-events: none;" name=""
+                            <input type="radio" style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}"  value="no" name="taking_birth_control"
                                 id=""{{ $patientHistory->taking_birth_control === 'no' ? 'checked' : '' }}>No
                         </div>
                     </div>
@@ -274,19 +339,25 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <label style="font-weight: 500" for="prescription">Are you taking any
-                                prescription/non-prescription medication?</label>
+                                prescription/non-prescription medication?<sup class="text-danger">*</sup></label>
                         </div>
                         <div class="col-sm-12">
                             {{-- <p class="prescription">{{ $patientHistory->taking_medications ? 'Yes' : 'No' }}</p> --}}
-                            <input type="radio" style="pointer-events: none;" name="" id=""
+                            <input type="radio" class="updateorcreate_taking_medications" style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}"  value="yes" name="update_taking_medications" id=""
                                 {{ $patientHistory->taking_medications === 'yes' ? 'checked' : '' }}>Yes
                             <br>
-                            <input type="radio" style="pointer-events: none;" name=""
+                            <input type="radio" class="updateorcreate_taking_medications" style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}"  value="no" name="update_taking_medications"
                                 id=""{{ $patientHistory->taking_medications === 'no' ? 'checked' : '' }}>No
-                            <div class="mx-3">
+                            <div class="mx-3 isFieldRequired medicationsdetailscontainer {{ $patientHistory->taking_medications === 'yes' ? '' : 'd-none' }}">
                                 <div class="text-field-required">
+                                <span class="">If so what medications?</span>
+                                    {{-- <p class="surgerytext">{{ $patientHistory->surgery_text ?? '' }}</p> --}}
                                 </div>
-                                <p class="prescriptiontext">{{ $patientHistory->medications_details ?? '' }}</p>
+                                <input type="text" style="border: none; border-bottom: 1px solid black; border-radius: 0;" 
+                                class="form-control" 
+                                name="updateorcreate_medications_details" 
+                                value="{{ $patientHistory->medications_details ?? '' }}" 
+                                id=""><sup class="text-danger">*</sup>
                             </div>
                         </div>
                     </div>
@@ -296,13 +367,13 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <label style="font-weight: 500" for="isClientASmokeWhack">Do you use tobacco
-                                products?</label>
+                                products?<sup class="text-danger">*</sup></label>
                         </div>
                         <div class="col-sm-12">
-                            <input type="radio" style="pointer-events: none;" name="" id=""
+                            <input type="radio" value="yes" style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}"  name="using_tobacco" id=""
                                 {{ $patientHistory->using_tobacco === 'yes' ? 'checked' : '' }}>Yes
                             <br>
-                            <input type="radio" style="pointer-events: none;" name=""
+                            <input type="radio" value="no" style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}"  name="using_tobacco"
                                 id=""{{ $patientHistory->using_tobacco === 'no' ? 'checked' : '' }}>No
                             {{-- <p class="isClientASmokeWhack">{{ $patientHistory->using_tobacco ? 'Yes' : 'No' }} --}}
                             </p>
@@ -319,10 +390,10 @@
                                     women)</sup></label>
                         </div>
                         <div class="col-sm-12">
-                            <input type="radio" style="pointer-events: none;" name="" id=""
+                            <input type="radio" value="yes" style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}"  name="nursing" id=""
                                 {{ $patientHistory->nursing === 'yes' ? 'checked' : '' }}>Yes
                             <br>
-                            <input type="radio" style="pointer-events: none;" name=""
+                            <input type="radio" value="no" style="pointer-events: {{ Auth::user()->Role !== 'Dentist' ? 'none' : 'auto' }}"  name="nursing"
                                 id=""{{ $patientHistory->nursing === 'no' ? 'checked' : '' }}>No
                             {{-- <p class="isClientNursing">{{ $patientHistory->nursing ? 'Yes' : 'No' }}</p> --}}
                         </div>
@@ -332,24 +403,34 @@
                 <div class="col-sm-6 mt-4">
                     <div class="row">
                         <div class="col-sm-12">
-                            <label style="font-weight: 500" for="bloodType">Blood Type</label>
+                            <label style="font-weight: 500" for="bloodType">Blood Type<sup class="text-danger">*</sup></label>
+                        </div>
+                        {{-- <div class="col-sm-12">
+                            <p class="bloodType">{{ $patientHistory->blood_type ?? '' }}</p>
+                        </div> --}}
+                        <select name="createorupdate_bloodType" id="bloodType" class="form-select form-select-sm">
+                            <option value="{{ $patientHistory->blood_type ?? '' }}" selected hidden>{{ $patientHistory->blood_type ?? '' }}</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="Unknown">Unknown</option>
+                        </select>
+                        <div class="col-sm-12">
+                            <label style="font-weight: 500" for="createorupdate_bloodPressure">Blood Pressure<sup class="text-danger">*</sup></label>
                         </div>
                         <div class="col-sm-12">
-                            <p class="bloodType">{{ $patientHistory->blood_type ?? '' }}</p>
+                            <input type="text" value="{{ $patientHistory->blood_pressure ?? '' }}" class="form-control form-control-sm" id="bloodPressure" name="createorupdate_bloodPressure" placeholder="e.g., 120/80 mmHg or n/a if unknown">
+                            {{-- <p class="bloodPressure">{{ $patientHistory->blood_pressure ?? '' }}</p> --}}
                         </div>
                     </div>
                 </div>
 
-                <div class="col-sm-6 mt-4">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <label style="font-weight: 500" for="bloodPressure">Blood Pressure</label>
-                        </div>
-                        <div class="col-sm-12">
-                            <p class="bloodPressure">{{ $patientHistory->blood_pressure ?? '' }}</p>
-                        </div>
-                    </div>
-                </div>
+               
                  @php
     $knownConditions = json_decode($patientHistory->known_conditions, true); // Decode as array
     
@@ -358,7 +439,7 @@
 <div class="col-sm-12 my-4">
     <div class="row">
         <div class="col-sm-12">
-            <label style="font-weight: 500">Do you have any known medical conditions?</label>
+            <label style="font-weight: 500">Do you have any known medical conditions?<sup class="text-danger">*</sup></label>
         </div>
         <div class="col-sm-12">
             <ul class="known-conditions">
@@ -427,7 +508,7 @@
         <div class="form-check">
             <input class="form-check-input bg-secondary" type="checkbox" name="illnesses[]" value="Heart Attack" id="heartAttack"
                 {{ in_array('Heart Attack', $knownConditions ?? []) ? 'checked' : '' }}>
-            <label class="form-check-label" for="heartAttack">Heart Attack</label>{{ in_array('Heart Attack', $knownConditions ?? []) ? 'Heart Attack' : '' }}
+            <label class="form-check-label" for="heartAttack">Heart Attack</label>
         </div>
         <div class="form-check">
             <input class="form-check-input" type="checkbox" name="illnesses[]" value="Thyroid Problem" id="thyroid"
@@ -576,5 +657,10 @@
             </div>
             <hr class="my-4" style="border-top: 1px solid black; height: 1px;">
         </form>
+        <div class="row">
+            @if (Auth::user()->Role ==='Dentist')
+            <div class="col-sm-12"><button class="btn btn-primary btn-sm fw-bold lead update-pt-md-history-btn">Update</button></div>
+            @endif
+        </div>
     </div>
 </div>

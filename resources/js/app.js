@@ -10,3 +10,4 @@ import './app-scripts/update-patient-appointment';
 import './app-scripts/shceduled-patient-appointment';
 import './app-scripts/inventory';
 import './app-scripts/edit-patient-medical-history';
+import './app-scripts/patient-appointment-note';

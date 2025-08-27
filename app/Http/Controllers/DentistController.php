@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\Inventory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -69,10 +70,11 @@ class DentistController extends Controller
             )
             ->where('appointments.status', '!=', 'archive')
             ->get();
+            $inventoryItems = Inventory::where('isVisible', true)->get();
             Log::info(json_encode($dentistAppointments, JSON_PRETTY_PRINT));
 
 
-        return view('pages.dentist.dentist-interface', compact('appointments', 'count', 'test', 'testCount', 'dentistAppointments'));
+        return view('pages.dentist.dentist-interface', compact('appointments', 'count', 'test', 'testCount', 'dentistAppointments', 'inventoryItems'));
 
     } catch (\Throwable $th) {
         throw $th;

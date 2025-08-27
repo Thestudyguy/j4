@@ -8,18 +8,18 @@
                             <label for="lastname" class="form-label fw-semibold">Last Name</label>
                             {{-- <p class='lastname'>{{ $patient->LastName }}</p> --}}
                             <input type="text" class="form-control" name="patient-lastname" id=""
-                                value="{{ $patient->LastName }}"{{Auth::user()->Role === 'Admin' ? 'disabled' : ''}}>
+                                value="{{ $patient->LastName }}"{{Auth::user()->Role !== 'Front Desk' ? 'disabled' : ''}}>
                         </div>
                         <div class="col-sm-4">
                             <label for="firstname" class="form-label fw-semibold">First Name</label>
                             <input type="text" class="form-control" name="patient-firstname" id=""
-                                value="{{ $patient->FirstName }}"{{Auth::user()->Role === 'Admin' ? 'disabled' : ''}}>
+                                value="{{ $patient->FirstName }}"{{Auth::user()->Role !== 'Front Desk' ? 'disabled' : ''}}>
                             {{-- <p class='firstname'>{{ $patient->FirstName }}</p> --}}
                         </div>
                         <div class="col-sm-4">
                             <label for="middlename" class="form-label fw-semibold">Middle Name</label>
                             <input type="text" class="form-control" name="patient-middlename" id=""
-                                value="{{ $patient->MiddleName }}"{{Auth::user()->Role === 'Admin' ? 'disabled' : ''}}>
+                                value="{{ $patient->MiddleName }}"{{Auth::user()->Role !== 'Front Desk' ? 'disabled' : ''}}>
                             {{-- <p class='middlename'>{{ $patient->MiddleName ?? '--\--' }}</p> --}}
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                             <label for="birthdate" class="form-label fw-semibold">Birthdate</label>
                             {{-- <p class='birthdate'>{{ $patient->Birthdate ?? '--\--' }}</p> --}}
                             <input type="date" class="form-control birthdate-field-update" name="birthdate"
-                                id="" value="{{ $patient->BirthDate }}"{{Auth::user()->Role === 'Admin' ? 'disabled' : ''}}>
+                                id="" value="{{ $patient->BirthDate }}"{{Auth::user()->Role !== 'Front Desk' ? 'disabled' : ''}}>
                         </div>
                         <div class="col-sm-4 client-sex-field-preview">
                             <label for="sex" class="form-label fw-semibold">Sex</label>
@@ -49,7 +49,7 @@
                             <label for="age" class="form-label fw-semibold">Age</label>
                             {{-- <p class='age'>{{ $patient->Age }}</p> --}}
                             <input type="text" class="form-control age-field-update" name="age" id=""
-                                style="pointer-events: none;" value="{{ $patient->Age }}"{{Auth::user()->Role === 'Admin' ? 'disabled' : ''}}>
+                                style="pointer-events: none;" value="{{ $patient->Age }}"{{Auth::user()->Role !== 'Front Desk' ? 'disabled' : ''}}>
                         </div>
                     </div>
                 </div>
@@ -60,12 +60,12 @@
                             <label for="religion" class="form-label fw-semibold">Religion</label>
                             {{-- <p class="religion">{{ $patient->Religion ?? '--\--'  }}</p> --}}
                             <input type="text" name="religion" value="{{ $patient->Religion }}" class="form-control"
-                                id=""{{Auth::user()->Role === 'Admin' ? 'disabled' : ''}}>
+                                id=""{{Auth::user()->Role !== 'Front Desk' ? 'disabled' : ''}}>
                         </div>
                         <div class="col-sm-4">
                             <label for="nationality" class="form-label fw-semibold">Nationality</label>
                             {{-- <p class='nationality'>{{ $patient->Nationality }}</p> --}}
-                            <select name="nationality" class="form-control" id="" style="pointer-events: {{Auth::user()->Role === 'Admin' ? 'none' : ''}}">
+                            <select name="nationality" class="form-control" id="" style="pointer-events: {{Auth::user()->Role !== 'Staff' ? 'none' : ''}}">
                                 <option value="{{ $patient->Nationality }}" selected hidden>{{ $patient->Nationality }}
                                 </option>
                                 <option value="Afghan">Afghan</option>
@@ -269,7 +269,7 @@
                             <label for="nickname" class="form-label fw-semibold">Nickname</label>
                             {{-- <p class='nickname'>{{ $patient->NickName }}</p> --}}
                             <input type="text" name="nickname" class="form-control" value='{{ $patient->NickName }}'
-                                id=""{{Auth::user()->Role === 'Admin' ? 'disabled' : ''}}>
+                                id=""{{Auth::user()->Role !== 'Front Desk' ? 'disabled' : ''}}>
                         </div>
                     </div>
                 </div>
@@ -279,13 +279,13 @@
                         <div class="col-sm-6">
                             <label for="address" class="form-label fw-semibold">Address</label>
                             <input type="text" name="address" class="form-control" value='{{ $patient->Address }}'
-                                id=""{{Auth::user()->Role === 'Admin' ? 'disabled' : ''}}>
+                                id=""{{Auth::user()->Role !== 'Front Desk' ? 'disabled' : ''}}>
                             {{-- <p class='address'>{{ $patient->Address }}</p> --}}
                         </div>
                         <div class="col-sm-6">
                             <label for="homeno" class="form-label fw-semibold">Home No.</label>
                             <input type="text" name="homeno" class="form-control" value='{{ $patient->HomeNo }}'
-                                id=""{{Auth::user()->Role === 'Admin' ? 'disabled' : ''}}>
+                                id=""{{Auth::user()->Role !== 'Front Desk' ? 'disabled' : ''}}>
                             {{-- <p class='homeno'>{{ $patient->HomeNo }}</p> --}}
                         </div>
                     </div>
@@ -296,25 +296,25 @@
                         <div class="col-sm-3">
                             <label for="occupation" class="form-label fw-semibold">Occupation</label>
                             <input type="text" name="occupation" class="form-control"
-                                value='{{ $patient->Occupation }}' id=""{{Auth::user()->Role === 'Admin' ? 'disabled' : ''}}>
+                                value='{{ $patient->Occupation }}' id=""{{Auth::user()->Role !== 'Front Desk' ? 'disabled' : ''}}>
                             {{-- <p class='occupation'>{{ $patient->Occupation }}</p> --}}
                         </div>
                         <div class="col-sm-3">
                             <label for="officeno" class="form-label fw-semibold">Office No.</label>
                             <input type="text" name="officeno" class="form-control" value='{{ $patient->OfficeNo }}'
-                                id=""{{Auth::user()->Role === 'Admin' ? 'disabled' : ''}}>
+                                id=""{{Auth::user()->Role !== 'Front Desk' ? 'disabled' : ''}}>
                             {{-- <p class='officeno'>{{ $patient->OfficeNo ?? '--\--'  }}</p> --}}
                         </div>
                         <div class="col-sm-3">
                             <label for="effectivedate" class="form-label fw-semibold">Effective Date</label>
                             <input type="text" name="effectivedate" class="form-control"
-                                value='{{ $patient->EffectiveDate }}' id=""{{Auth::user()->Role === 'Admin' ? 'disabled' : ''}}>
+                                value='{{ $patient->EffectiveDate }}' id=""{{Auth::user()->Role !== 'Front Desk' ? 'disabled' : ''}}>
                             {{-- <p class='effectivedate'>{{ $patient->EffectiveDate ?? '--\--'  }}</p> --}}
                         </div>
                         <div class="col-sm-3">
                             <label for="faxno" class="form-label fw-semibold">Fax No.</label>
                             <input type="text" name="faxno" class="form-control" value='{{ $patient->FaxNo }}'
-                                id=""{{Auth::user()->Role === 'Admin' ? 'disabled' : ''}}>
+                                id=""{{Auth::user()->Role !== 'Front Desk' ? 'disabled' : ''}}>
                             {{-- <p class='faxno'>{{ $patient->FaxNo ?? '--\--'  }}</p> --}}
                         </div>
                     </div>
@@ -324,14 +324,14 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <label for="email" class="form-label fw-semibold">Email</label>
-                            <input type="text" name="email" class="form-control" value='{{ $patient->Email }}'
+                            <input type="text" name="email" {{Auth::user()->Role === 'Dentist' ? 'disabled' : ''}} class="form-control" value='{{ $patient->Email }}'
                                 id="" {{ Auth::user()->Role === 'Admin' ? 'disabled' : '' }}>
                             {{-- <p class='email'>{{ $patient->Email ?? '--\--'  }}</p> --}}
                         </div>
                         <div class="col-sm-6">
                             <label for="mobileno" class="form-label fw-semibold">Mobile No.</label>
-                            <input type="text" name="mobileno" class="form-control" value='{{ $patient->MobileNo }}'
-                                id=""{{Auth::user()->Role === 'Admin' ? 'disabled' : ''}}>
+                            <input type="text" name="mobileno" {{Auth::user()->Role === 'Dentist' ? 'disabled' : ''}} class="form-control" value='{{ $patient->MobileNo }}'
+                                id=""{{Auth::user()->Role !== 'Front Desk' ? 'disabled' : ''}}>
                             {{-- <p class='mobileno'>{{ $patient->MobileNo ?? '--\--'  }}</p> --}}
                         </div>
                     </div>
@@ -344,30 +344,32 @@
                         <div class="col-sm-6">
                             <label for="guardian" class="form-label fw-semibold">Parent/Guardian Name</label>
                             <input type="text" name="guardian" class="form-control" value='{{ $patient->Guardian }}'
-                                id=""{{Auth::user()->Role === 'Admin' ? 'disabled' : ''}}>
+                                id=""{{Auth::user()->Role !== 'Front Desk' ? 'disabled' : ''}}>
                             {{-- <p class='guardian'>{{ $patient->Guardian ?? '--\--'  }}</p> --}}
                         </div>
                         <div class="col-sm-6">
                             <label for="guardianoccupation" class="form-label fw-semibold">Occupation</label>
                             <input type="text" name="guardianoccupation" class="form-control"
-                                value='{{ $patient->GuardianOccupation }}' id=""{{Auth::user()->Role === 'Admin' ? 'disabled' : ''}}>
+                                value='{{ $patient->GuardianOccupation }}' id=""{{Auth::user()->Role !== 'Front Desk' ? 'disabled' : ''}}>
                             {{-- <p class='guardianoccupation'></p> --}}
                         </div>
                         <div class="col-sm-12 my-5">
                             <label for="referal" class="form-label fw-semibold">Who may we thank for referring
                                 you?</label>
                             <input type="text" name="referal" class="form-control" value='{{ $patient->Referal }}'
-                                id=""{{Auth::user()->Role === 'Admin' ? 'disabled' : ''}}>
+                                id=""{{Auth::user()->Role !== 'Front Desk' ? 'disabled' : ''}}>
                             {{-- <p class="referal">{{ $patient->Referal ?? '--\--'  }}</p> --}}
                         </div>
                         <div class="col-sm-12">
                             <label for="consultation" class="form-label fw-semibold">Reason for Consultation</label>
-                            <textarea name="consultationreason" id="Reason_For_Consultation" value="{{ $patient->ReasonForVisit }}"{{Auth::user()->Role === 'Admin' ? 'disabled' : ''}}
+                            <textarea name="consultationreason" id="Reason_For_Consultation" value="{{ $patient->ReasonForVisit }}"{{Auth::user()->Role !== 'Front Desk' ? 'disabled' : ''}}
                                 cols="30" rows="10" class="form-control form-control-sm" style="resize: none;">{{ $patient->ReasonForVisit }}</textarea>
                             {{-- <p class="consultationreason">{{ $patient->ReasonForVisit ?? '--\--'  }}</p> --}}
                         </div>
                     </div>
                 </div>
             </div>
+            @if (Auth::user()->Role !== 'Dentist')
             <button class="submit btn-primary btn-sm form-control fw-bold update-patient-basic-info">Update</button>
+            @endif
         </form>
