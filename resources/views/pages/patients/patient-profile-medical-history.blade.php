@@ -2,6 +2,7 @@
     <div class="medical-history-details">
         <p class="fw-bold">Patient History</p>
         <form action="" class="client-medical-preview-history-form">
+            <input type="hidden" name="patient_id" value="{{$patient->id}}">
             <div class="row">
                 <div class="col-sm-6">
                     <label for="previousdentist" class="form-label fw-semibold">Previous Dentist</label>
@@ -634,7 +635,7 @@
             <label class="form-check-label" for="arthritis">Arthritis/Rheumatism</label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="illnesses[]" value="none" id="none"
+            <input class="form-check-input" type="checkbox" name="illnesses[]" value="None" id="none"
                 {{ in_array('None', $knownConditions ?? []) ? 'checked' : '' }}>
             <label class="form-check-label" for="none">None</label>
         </div>

@@ -45,6 +45,7 @@ Route::middleware('authenticated')->group(function(){
     Route::post('/new/walk-in-patient', [Controller::class, 'AddWalkInPatient']);
     Route::post('patient/appointment/scheduled-appointment', [Controller::class,'PatientScheduledAppointment']);
     Route::post('inventory/new-item', [Controller::class,'NewInventoryItem']);
+    Route::post('patient/update-history', [Controller::class,'UpdateOrCreatePatientHistory'])->name('patient/update-history');
 });
 Route::get('/patient-appointments', [PatientController::class, 'PatientAppointmentList'])->name('patient-appointments-page');
 Route::post('/appointments/update', [PatientController::class, 'UpdateAppointment']);

@@ -619,4 +619,52 @@ public function AddWalkInPatient(Request $request)
     }
 }
 
+
+public function UpdateOrCreatePatientHistory(Request $request)
+{
+    try {
+        Log::info($request->all());
+        $history = PatientHistory::updateOrCreate(
+            ['patient_id' => $request->input('patient_id')],
+            [
+                'previous_dentist'        => $request->input('updateorcreate_previous_dentist'),
+                'last_visit'              => $request->input('updateorcreate_last_visit'),
+                'physician_name'          => $request->input('updateorcreate_physician_name'),
+                'physician_specialty'     => $request->input('updateorcreate_physician_specialty'),
+                'physician_office_address'=> $request->input('updateorcreate_physician_office_address'),
+                'physician_office_no'     => $request->input('updateorcreate_physician_office_no'),
+                'good_health'             => $request->input('good_health'),
+                'uses_drugs'              => $request->input('uses_drugs'),
+                'under_medical_care'      => $request->input('update_under_medical_care'),
+                'medical_condition_text' => $request->input('updateorcreate_under_medical_care_text'),
+                'allergy'               => json_encode($request->input('isAllergicTo')), // array → JSON
+                'allergy_others'          => $request->input('isAllergicToTextInput'),
+                'surgery'                 => $request->input('update_surgery'),
+                'surgery_text'            => $request->input('updateorcreate_surgery_text'),
+                'pregnant'                => $request->input('pregnant'),
+                'hospitalized'            => $request->input('update_hospitalized'),
+                'hospitalization_details' => $request->input('updateorcreate_hospitalization_details'),
+                'taking_birth_control'    => $request->input('taking_birth_control'),
+                'taking_medications'      => $request->input('update_taking_medications'),
+                'medications_details'     => $request->input('updateorcreate_medications_details'),
+                'using_tobacco'           => $request->input('using_tobacco'),
+                'nursing'                 => $request->input('nursing'),
+                'blood_type'              => $request->input('createorupdate_bloodType'),
+                'blood_pressure'          => $request->input('createorupdate_bloodPressure'),
+                'known_conditions'               => json_encode($request->input('illnesses')), // array → JSON
+                'other_illness_details'   => $request->input('otherIllnessDetails'),
+            ]
+        );
+
+        return response()->json([
+            'message' => 'Patient history updated or created successfully.',
+            'data' => $history
+        ], 200);
+
+    } catch (\Throwable $th) {
+        return response()->json(['message'=> $th->getMessage()], 500);
+    }
+}
+
+
 }
