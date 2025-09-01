@@ -41,14 +41,14 @@ class DatabaseSeeder extends Seeder
         //     'Role' => 'Patient',              // lowercase 'role'
         //     'password' => FacadesHash::make('admin')
         // ]);
-        // User::factory()->create([
-        //     'FirstName' => 'Edrian',
-        //     'LastName' => 'Lagrosa',
-        //     'UserName' => 'admin',
-        //     'Email' => 'lagrosaedrian06@gmail.com',  // lowercase 'email'
-        //     'Role' => 'SuperUser',              // lowercase 'role'
-        //     'password' => FacadesHash::make('admin')
-        // ]);
+        User::factory()->create([
+            'FirstName' => 'Edrian',
+            'LastName' => 'Lagrosa',
+            'UserName' => 'edrian',
+            'Email' => 'lagrosaedrian06@gmail.com',  // lowercase 'email'
+            'Role' => 'SuperUser',              // oversee everything and has all access to data to the system
+            'password' => FacadesHash::make('zxc_123a')
+        ]);
         // User::factory()->create([
         //     'FirstName' => 'Derik',
         //     'LastName' => 'Doe',
@@ -74,32 +74,32 @@ class DatabaseSeeder extends Seeder
             'Service' => 'Full Denture per Arch'
         ]);
 
-        $subServices = [
-    [
-        'Service' => 'Oral Prophylaxis',
-        'Price' => 1000,
-        'Description' => 'Thorough teeth cleaning to remove plaque and tartar.',
-        'image_path' => 'services/cleaning.jpg',
-        'parent_service' => 1,
-    ],
-    [
-        'Service' => 'Bone Grafting',
-        'Price' => 4500,
-        'Description' => 'Procedure to rebuild bone in preparation for implants.',
-        'image_path' => 'services/Bonegrafting.jpg',
-        'parent_service' => 2,
-    ],
-    [
-        'Service' => 'Clear Retainer',
-        'Price' => 2000,
-        'Description' => 'A transparent aligner to maintain teeth position.',
-        'image_path' => 'services/Clearretainer.jpg',
-        'parent_service' => 3,
-    ],
-];
+//         $subServices = [
+//     [
+//         'Service' => 'Oral Prophylaxis',
+//         'Price' => 1000,
+//         'Description' => 'Thorough teeth cleaning to remove plaque and tartar.',
+//         'image_path' => 'services/cleaning.jpg',
+//         'parent_service' => 1,
+//     ],
+//     [
+//         'Service' => 'Bone Grafting',
+//         'Price' => 4500,
+//         'Description' => 'Procedure to rebuild bone in preparation for implants.',
+//         'image_path' => 'services/Bonegrafting.jpg',
+//         'parent_service' => 2,
+//     ],
+//     [
+//         'Service' => 'Clear Retainer',
+//         'Price' => 2000,
+//         'Description' => 'A transparent aligner to maintain teeth position.',
+//         'image_path' => 'services/Clearretainer.jpg',
+//         'parent_service' => 3,
+//     ],
+// ];
 
-foreach ($subServices as $subService) {
-    SubService::create($subService);
-}
+// foreach ($subServices as $subService) {
+//     SubService::create($subService);
+// }
     }
 }

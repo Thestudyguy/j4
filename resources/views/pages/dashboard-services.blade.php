@@ -54,12 +54,15 @@
                                         data-bs-target='#remove-service-{{$service->id}}' data-bs-toggle='modal'><i
                                             class="fas fa-trash text-danger text-sm"></i></button>
                                     <button class="btn btn-transparent p-0"><i
-                                            class="fas fa-pen text-success text-sm"></i></button>
+                                            class="fas fa-pen text-success text-sm" data-bs-target='#update-service-{{$service->id}}'
+                                        data-bs-toggle='modal'></i></button>
                                     <button class="btn btn-transparent p-0" data-bs-target='#new-sub-service-{{$service->id}}'
                                         data-bs-toggle='modal'><i class="fas fa-plus text-dark text-sm"></i></button>
                                 </div>
                             </div>
+                            @include('modals.update-service-modal')
                             @include('modals.remove-service-modal')
+                            @include('modals.remove-sub-service-modal')
                             @include('modals.new-sub-service-modal')
                         @endforeach
                     </div>
@@ -87,5 +90,6 @@
             </div>
         </div>
         @include('modals.new-service-modal')
+        @include('modals.update-sub-services-modal')
     </div>
 @endsection

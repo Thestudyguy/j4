@@ -15,6 +15,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -666,5 +667,72 @@ public function UpdateOrCreatePatientHistory(Request $request)
     }
 }
 
+    public function UpdateService(Request $request)
+{
+    try {
+        $request->validate([
+            'service' => 'required|string|max:255|unique:services,Service,' . $request->service_id,
+        ]);
 
+        Services::where('id', $request->service_id)
+                ->update(['Service' => $request->service]);
+
+        return response()->json(['message' => 'Service updated successfully'], 200);
+    } catch (\Throwable $th) {
+        Log::info($th);
+        return response()->json(['message' => $th->getMessage()], 500);
+    }
+}
+public function UpdateSubServices(Request $request)
+{
+    try {
+        $validated = $request->validate([
+        'id'          => 'required|exists:sub_services,id',
+        'service' => 'required|string|max:255|unique:sub_services,service,' . $request->id,
+        'description' => 'nullable|string',
+        'price'       => 'required|numeric|min:0',
+        'image'       => 'nullable|image|mimes:jpg,jpeg,png,gif,bmp,tiff,svg|max:2048'
+    ]);
+
+    $subService = SubService::findOrFail($validated['id']);
+
+    $subService->Service     = $validated['service'];
+    $subService->Description = $validated['description'] ?? '';
+    $subService->Price       = $validated['price'];
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        // Optional: delete old image if it exists
+        if ($subService->image_path && Storage::disk('public')->exists($subService->image_path)) {
+            Storage::disk('public')->delete($subService->image_path);
+        }
+
+        $fileName  = 'sub_service_' . time() . '.' . $image->getClientOriginalExtension();
+        $imagePath = $image->storeAs('services', $fileName, 'public');
+
+        $subService->image_path = $imagePath;
+    }
+
+    $subService->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Sub-service updated successfully',
+        'data'    => $subService
+    ]);
+    } catch (\Throwable $th) {
+        return response()->json(['message' => $th->getMessage()]);
+        //throw $th;
+    }
+}
+
+
+    public function RemoveSubService(Request $request){
+        try {
+            Log::info($request->all());
+            SubService::where('id', $request->id)->update(['isVisible' => false]);
+        } catch (\Throwable $th) {
+            return response()->json(['message'=> $th->getMessage()]);
+            //throw $th;
+        }
+    }
 }
