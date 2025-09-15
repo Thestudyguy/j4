@@ -49,6 +49,7 @@ Route::middleware('authenticated')->group(function(){
     Route::post('service/update-service', [Controller::class,'UpdateService'])->name('service/update-service');
     Route::post('services/update-sub-service', [Controller::class,'UpdateSubServices'])->name('services/update-sub-service');
     Route::post('services/remove-sub-service', [Controller::class,'RemoveSubService'])->name('services/remove-sub-service');
+    Route::post('doctors/get-doctors-appointment/{id}', [Controller::class,'GetDoctorsAppointments'])->name('services/remove-sub-service');
 });
 Route::get('/patient-appointments', [PatientController::class, 'PatientAppointmentList'])->name('patient-appointments-page');
 Route::post('/appointments/update', [PatientController::class, 'UpdateAppointment']);

@@ -14,7 +14,7 @@
                             <small class="text-muted">{{ ucwords(strtolower($patient->MiddleName)) }}</small>
                         @endif
                     </h5>
-                    <p class="card-text text-muted mb-0">Patient Information Overview{{$patient->id}}</p>
+                    <p class="card-text text-muted mb-0">Patient Information Overview</p>
                 </div>
             </div>
         </div>

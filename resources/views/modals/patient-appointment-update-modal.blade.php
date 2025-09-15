@@ -27,6 +27,7 @@
                             <span class="fw-semibold">Time:</span> 
                             <span>{{ $appt->Time }}</span>
                         </div>
+                        {{-- https://ph.smartapply.indeed.com/beta/indeedapply/form/questions-module/questions/2 --}}
                         <div class="col-md-6 mb-2">
                             <span class="fw-semibold">Service:</span> 
                             <span>{{ $appt->service }}</span>

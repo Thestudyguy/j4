@@ -22,7 +22,7 @@
                     <select name="appointment_update" class="form-control rounded-0 patient-appointment-update">
                         <option value="" selected hidden value="{{ $appt->status }}">{{ $appt->status }}</option>
                         <option value="Cancel" class="fw-semibold text-danger">Cancel</option>
-                        <option value="re-schedule" class="fw-semibold text-info">Reschedule</option>
+                        <option value="Reschedule" class="fw-semibold text-info">Reschedule</option>
                         <option value="Confirm" class="fw-semibold text-primary">Confirm</option>
                         <option value="Completed" class="fw-semibold text-success">Completed</option>
                     </select>

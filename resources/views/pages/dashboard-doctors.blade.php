@@ -1,14 +1,14 @@
 @extends('dashboard')
 @section('content')
     <div class="container-fluid p-2 pt-5 vh-100" style="overflow-y: hide;">
-    <div class="loader-container doctors-page visually-hidden">
-        <div class="loader"></div>
-    </div>    
-    <h1 class="h1 mt-2 p-3">Doctors/Dentists</h1>
+        <div class="loader-container doctors-page visually-hidden">
+            <div class="loader"></div>
+        </div>
+        <h1 class="h1 mt-2 p-3">Doctors/Dentists</h1>
         <div class="row bg-white p-3 m-2 border rounded-2">
             <div class="col-sm-3">
-                <input type="search" class="form-control rounded-5 form-control-sm" name="search-doctors"
-                    id="search-doctors" placeholder="search...">
+                <input type="search" class="form-control rounded-5 form-control-sm" name="search-doctors" id="search-doctors"
+                    placeholder="search...">
             </div>
             <div class="col-sm-3"></div>
             <div class="col-sm-2">
@@ -32,14 +32,16 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <div class="row bg-white p-3 m-2 border rounded-2">
                     <div class="col-sm-12">
                         @foreach ($doctors as $doctor)
-                            <div class="row p-2 m-2 border doctor-list text-sm rounded-5 doctor-row-container"  style="cursor: pointer;"
-                                id="doctor-{{$doctor->id}}">
+                            <div class="row p-2 m-2 border doctor-list text-sm rounded-5 doctor-row-container"
+                                style="cursor: pointer;" id="doctor-{{ $doctor->id }}"
+                                data-doc='{{ $doctor->FirstName }}, {{ $doctor->LastName }}'>
                                 <div class="col-sm-4">
-                                   {{$doctor->ProfessionalTitle ?? ''}} {{$doctor->LastName}}, {{$doctor->FirstName}} {{ $doctor->MiddleName && $doctor->Suffix ? $doctor->MiddleName . ' - ' . $doctor->Suffix : ($doctor->MiddleName ?? $doctor->Suffix) }}
+                                    {{ $doctor->ProfessionalTitle ?? '' }} {{ $doctor->LastName }}, {{ $doctor->FirstName }}
+                                    {{ $doctor->MiddleName && $doctor->Suffix ? $doctor->MiddleName . ' - ' . $doctor->Suffix : $doctor->MiddleName ?? $doctor->Suffix }}
                                 </div>
                                 <div class="col-sm-4">
 
@@ -47,39 +49,56 @@
                                 <!-- <img width="50" src="{{ asset($doctor->image_path) }}" alt=""> -->
 
                                 <div class="col-sm-4 pl-2 d-flex align-items-center justify-content-center">
-                                    <button class="btn btn-transparent p-0 ml-3"
-                                        data-bs-target='' data-bs-toggle='modal'><i
+                                    <button class="btn btn-transparent p-0 ml-3" data-bs-target='' data-bs-toggle='modal'><i
                                             class="fas fa-trash text-danger text-sm"></i></button>
                                     <button class="btn btn-transparent p-0"><i
                                             class="fas fa-pen text-success text-sm"></i></button>
-                                    <button class="btn btn-transparent p-0" data-bs-target=''
-                                        data-bs-toggle='modal'><i class="fas fa-plus text-dark text-sm"></i></button>
+                                    <button class="btn btn-transparent p-0" data-bs-target='' data-bs-toggle='modal'><i
+                                            class="fas fa-plus text-dark text-sm"></i></button>
                                 </div>
                             </div>
                         @endforeach
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6" style="max-height: 500px; overflow: hidden;">
-                <div class="row bg-white p-3 m-2 border rounded-2 doctor-info-container" style="max-height: 500px; overflow-y: auto">
+            <div class="col-sm-8" style="max-height: 500px; overflow: hidden;">
+                <div class="row bg-white p-3 m-2 border rounded-2 doctor-info-container"
+                    style="max-height: 500px; overflow-y: auto">
                     <div class="doctor-loader-container visually-hidden">
-                        <div class="doctor-container-loader"></div>
-                        Searching services for: <p class="do-this fw-semibold text-sm"></p>
+                        <div class="doc-container-loader"></div>
+                        Searching services for: <p class="clicked-doc fw-semibold text-sm"></p>
                     </div>
                     <center>
-                        
-                        <div class="col-sm-12 service-info-container">
+                        {{-- <div class="row d-flex justify-content-center align-items-center">
+                            <div class="row doc-appt-data-header">
+                                <div class="col-sm-2 text-sm lead fw-semibold">Time</div>
+                                <div class="col-sm-2 text-sm lead fw-semibold">Date</div>
+                                <div class="col-sm-2 text-sm lead fw-semibold">Status</div>
+                                <div class="col-sm-2 text-sm lead fw-semibold">Patient</div>
+                                <div class="col-sm-2 text-sm lead fw-semibold">Procedure</div>
+                            </div>
+                            <div class="row patient-data mt-2 bg-light rounded-3">
+                                <div class="col-sm-2 text-sm">Time</div>
+                                <div class="col-sm-2 text-sm">Date</div>
+                                <div class="col-sm-2 text-sm">Status</div>
+                                <div class="col-sm-2 text-sm">Patient</div>
+                                <div class="col-sm-2 text-sm">Procedure</div>
+                            </div>
+                        </div> --}}
+                        <div class="col-sm-12 doc-info-container">
                             <div class="text-center text-muted">
                                 <i class="bi bi-info-circle doctor-card-icon" style="font-size: 2rem;"></i>
                                 <p class="mt-2 mb-0 fw-semibold doctor-card-title">No doctor selected</p>
-                                <small class="doctor-card-text">Click a doctor on the left to view its scheduled appointments
+                                <small class="doctor-card-text">Click a doctor on the left to view its scheduled
+                                    appointments
                                     and details here.</small>
                             </div>
                         </div>
                     </center>
                 </div>
-                
+
             </div>
+
         </div>
         @include('modals.new-doctor')
     </div>

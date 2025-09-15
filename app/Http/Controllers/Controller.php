@@ -735,4 +735,25 @@ public function UpdateSubServices(Request $request)
             //throw $th;
         }
     }
+
+    public function GetDoctorsAppointments($id){
+        try {
+           $doc = Doctors::where('id', $id)->get();
+           $appts = Appointment::where('doctor_id', $id)->get();
+           $appt = DB::table('appointments')->where('appointments.doctor_id', $id)
+           ->join('patient_info','patient_info.id','=','appointments.patient_id')
+           ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
+           ->select(
+            'appointments.id as ApptID', 'appointments.*',
+            'patient_info.id as ptID', 'patient_info.*',
+            'sub_services.id as serviceID', 'sub_services.*'
+           )
+           ->get();
+            
+           return response()->json(['appointments'=> $appt]);
+        } catch (\Throwable $th) {
+            return response()->json(['message'=> $th->getMessage()]);
+            //throw $th;
+        }
+    }
 }

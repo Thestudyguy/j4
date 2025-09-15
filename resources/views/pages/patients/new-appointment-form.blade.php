@@ -8,6 +8,7 @@
                 <input type="hidden" name="selected_time" id="selected_time">
                 <input type="hidden" name="selected_doctor_id" id="selected_doctor_id">
                 <input type="hidden" name="selected_service_id" id="selected_service_id">
+                <input type="hidden" name="selected_service_id" id="selected_service_id">
                 @if (Auth::user()->Role !== 'patient')
                     schedule an appointment for this patient
                 @endif

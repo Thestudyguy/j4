@@ -259,17 +259,14 @@ $(document).ready(function () {
             });
             formData = medicalHistory;
 
-            // Preview all standard fields except arrays
             $.each(previewObj, function (name, value) {
-                // Skip array fields handled separately
                 if (name.includes('[]') || name === 'otherIllnessDetails' || name === 'isAllergicToTextInput') return;
 
-                // Escape square brackets if ever present (defensive)
                 const safeName = name.replace(/\[/g, '\\[').replace(/\]/g, '\\]');
                 $(`.preview-${safeName}`).text(value);
             });
 
-            // ✅ Allergies Preview using `grouped`
+            //  Allergies Preview using `grouped`
             const $allergyPreview = $('.preview-allergies');
             $allergyPreview.empty();
 

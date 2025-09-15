@@ -24,6 +24,8 @@ return new class extends Migration
             $table->string('status')->default('Pending');
             $table->date('date');
             $table->string('time');
+            $table->date('resched_date')->nullable();
+            $table->string('resched_time')->nullable();
             $table->timestamps();
         });
     }
