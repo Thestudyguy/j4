@@ -123,12 +123,35 @@ $(document).ready(function () {
                 // $('.doc-info-container').addClass('visually-hidden');
                 $.each(response.appointments, (index, data) => {
                     htx += `
-                    <div class="row patient-data mt-2 bg-light rounded-3">
-                                <div class="col-sm-2 text-sm">${data.time}</div>
-                                <div class="col-sm-2 text-sm">${data.date}</div>
-                                <div class="col-sm-2 text-sm">${data.status}</div>
-                                <div class="col-sm-2 text-sm">${data.LastName}, ${data.FirstName}</div>
-                                <div class="col-sm-2 text-sm">${data.Service}</div>
+                    <div class="row patient-data mt-2 bg-light rounded-3" ${data.status === 'cancel' ? "style='pointer-events: none;'" : ''}>
+                                <div class="col-sm-2 small">${data.time}</div>
+                                <div class="col-sm-2 small">${data.date}</div>
+                                <div class="col-sm-2 small">
+                                <span
+                                style='cursor: pointer;'
+                                class='prep-appt-doc-admin'
+                                data-time='${data.time}'
+                                data-date='${data.date}'
+                                data-status='${data.status}'
+                                data-dentist='${data.LastName}, ${data.FirstName}'
+                                data-service='${data.Service}'
+                                data-id='${data.ApptID}'
+                                data-bs-target=".patient-update-appt-modal" data-bs-toggle="modal"
+                                >
+                                <i class="fw-semibold small rounded-2 p-1
+                                    ${data.status === 're-sched' ? 'bg-info text-dark' : ''}
+                                    ${data.status === 'Pending' ? 'bg-warning text-dark' : ''}
+                                    ${data.status === 'completed' ? 'disable bg-success text-white' : ''}
+                                    ${data.status === 'cancel' ? 'bg-secondary text-white' : ''}
+                                    ${data.status === 'overdue' ? 'bg-danger text-white' : ''}">
+                                    ${data.status}
+                                </i>
+                                </span>
+                                </div>
+                                <div class="col-sm-2 small">${data.LastName}, ${data.FirstName}</div>
+                                <div class="col-sm-2 small">${data.Service}</div>
+                                <div class="col-sm-2 small">
+                                </div>
                             </div>
                     `;
                 });
@@ -159,6 +182,25 @@ $(document).ready(function () {
                 }
             }
         });
+    });
+
+    $(document).on('click', '.prep-appt-doc-admin', function(){
+        let apptData = $(this).data();
+        $('[name="appt_id_update"]').val(apptData.id);
+        $('[name="update_selected_date"]').val(apptData.date);
+        $('[name="update_selected_time"]').val(apptData.time);
+        $('.stat-opt').val(apptData.status);
+        $('.stat-opt').text(apptData.status);
+        $('.apptDate').text(apptData.date);
+        $('.apptTime').text(apptData.time);
+        $('.apptService').text(apptData.service);
+        $('.apptDentist').text(apptData.dentist);
+        $('.update-appt').attr('data-id', apptData.ApptID);
+        console.log(apptData.id);
+        
+        console.log(
+            $('[name="appt_id_update"]').val()
+        );
     });
 
     const doctorStatus = localStorage.getItem('doctor');

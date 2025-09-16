@@ -62,6 +62,7 @@
             >
                 {{ $appt->status }}
             </span>
+            {{-- <span class="badge text-dark bg-danger" data-bs-target="" data-bs-toggle=""><i class="fas fa-plus"></i></span> --}}
         </div>
 
         <div class="col-sm-2 text-end">

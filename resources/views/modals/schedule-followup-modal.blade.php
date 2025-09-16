@@ -1,170 +1,83 @@
 <!-- Follow-up / Operation Scheduling Modal -->
-<div class="modal fade" id="scheduleFollowupModal" tabindex="-1" aria-labelledby="scheduleFollowupLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <form id="followupForm" method="POST">
-        @csrf
-        <div class="modal-header">
-          <h5 class="modal-title" id="scheduleFollowupLabel">Schedule Follow-up or Operation</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <div class="modal-body">
-          <!-- 1. Procedure Details -->
-          <h6>Procedure Details</h6>
-          <div class="mb-3">
-            <label class="form-label">Type of Visit</label>
-            <div>
-              @php
-                $visitTypes = ['Follow-up', 'Operation', 'Emergency', 'Consultation'];
-              @endphp
-              @foreach($visitTypes as $type)
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="visit_type" id="visit_{{ strtolower($type) }}" value="{{ $type }}" required>
-                  <label class="form-check-label" for="visit_{{ strtolower($type) }}">{{ $type }}</label>
+<div class="modal fade" id="scheduleFollowupModal-{{$appt->id}}" tabindex="-1" aria-labelledby="scheduleFollowupLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content rounded-3 shadow-sm">
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title fw-semibold mb-1" id="scheduleFollowupLabel">Schedule Follow-Up</h5>
+                    <p class="small text-muted mb-0">Add any notes or details about the patient’s follow-up or
+                        procedure.</p>
                 </div>
-              @endforeach
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-          </div>
 
-          <div class="mb-3">
-            <label for="planned_procedure" class="form-label">Planned Procedure</label>
-            <select id="planned_procedure" name="planned_procedure" class="form-select" required>
-              <option value="" disabled selected>Select procedure</option>
-              @php
-                $procedures = ['Extraction', 'Filling', 'Root Canal', 'Crown', 'Scaling', 'Cleaning', 'Consultation'];
-              @endphp
-              @foreach($procedures as $proc)
-                <option value="{{ $proc }}">{{ $proc }}</option>
-              @endforeach
-              <option value="Other">Other (Specify below)</option>
-            </select>
-            <input type="text" name="planned_procedure_other" id="planned_procedure_other" class="form-control mt-2" placeholder="Specify other procedure" style="display:none;">
-          </div>
+            <div class="modal-body">
+                <form class="pt-apt-nts">
+                  @csrf
+                    <!-- Date -->
+                    <div class="mb-3">
+                        <label for="date" class="form-label fw-semibold">Date</label>
+                        <input type="date" class="form-control rounded-0" id="date" name="date"
+                            value="{{ date('Y-m-d') }}">
+                    </div>
+                    <input type="hidden" name="dentist-id" value="{{Auth::user()->id}}">
+                    <input type="hidden" name="appointment-id" value="{{$appt->id}}">
+                    <!-- Tooth # (text input for multiple numbers) -->
+                    <div class="mb-3">
+                        <label for="tooth" class="form-label fw-semibold">Tooth #</label>
+                        <input type="text" class="form-control rounded-0" id="tooth" name="tooth"
+                            placeholder="e.g. 1, 2, 3">
+                        <small class="text-muted">Enter tooth numbers separated by commas</small>
+                    </div>
 
-          <div class="mb-3">
-            <label for="followup_datetime" class="form-label">Date & Time</label>
-            <input type="datetime-local" class="form-control" id="followup_datetime" name="followup_datetime" required>
-          </div>
+                      <div class="mb-3">
+                        <label for="tooth" class="form-label fw-semibold">Procedure</label>
+                        <input type="text" class="form-control rounded-0" id="procedure" name="procedure">
+                    </div>
 
-          <hr>
+                    <!-- Amounts -->
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="amount_charge" class="form-label fw-semibold">Amount Charge</label>
+                            <input type="text" class="form-control rounded-0" id="amount_charge" oninput="formatValueInput(this)"
+                                name="amount_charge">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="amount_paid" class="form-label fw-semibold">Amount Paid</label>
+                            <input type="text" class="form-control rounded-0"oninput="formatValueInput(this)" id="amount_paid" name="amount_paid">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="balance" class="form-label fw-semibold">Balance</label>
+                            <input type="text" class="form-control rounded-0"oninput="formatValueInput(this)" id="balance" name="balance">
+                        </div>
+                    </div>
 
-          <!-- 2. Teeth Selection -->
-          <h6>Teeth Selection</h6>
-          <div class="mb-3">
-            <label for="teeth_selection" class="form-label">Teeth to Operate On</label>
-            <!-- Teeth Selection as Checkboxes -->
-<div class="mb-3">
-  <label class="form-label">Teeth to Operate On</label>
-  <div class="row">
-    @php
-      // Example quadrant-based tooth list
-      $quadrants = [
-        'Upper Right' => ['18', '17', '16', '15', '14', '13', '12', '11'],
-        'Upper Left'  => ['21', '22', '23', '24', '25', '26', '27', '28'],
-        'Lower Left'  => ['38', '37', '36', '35', '34', '33', '32', '31'],
-        'Lower Right' => ['41', '42', '43', '44', '45', '46', '47', '48'],
-      ];
-    @endphp
+                    <!-- Post-op Notes -->
+                    <div class="mb-3">
+                        <label for="post_op_notes" class="form-label fw-semibold">Post-op Notes</label>
+                        <textarea class="form-control rounded-0" id="post_op_notes" name="post_op_notes" rows="2"></textarea>
+                    </div>
 
-    @foreach ($quadrants as $label => $teeth)
-      <div class="col-md-6 mb-2">
-        <strong>{{ $label }}</strong>
-        <div class="d-flex flex-wrap gap-2 mt-1">
-          @foreach ($teeth as $tooth)
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="teeth_selection[]" id="tooth_{{ $tooth }}" value="{{ $tooth }}">
-              <label class="form-check-label" for="tooth_{{ $tooth }}">#{{ $tooth }}</label>
+                    <!-- Important Notes -->
+                    <div class="mb-3">
+                        <label for="important_notes" class="form-label fw-semibold">Important Notes</label>
+                        <textarea class="form-control rounded-0" id="important_notes" name="important_notes" rows="2"></textarea>
+                    </div>
+
+                    <!-- Dentist -->
+                    {{-- <div class="mb-3">
+                        <label for="dentist" class="form-label fw-semibold">Dentist</label>
+                        <input type="text" class="form-control rounded-0" value="{{ Auth::user()->FirstName }} {{ Auth::user()->LastName }}" id="dentist" name="dentist">
+                    </div> --}}
+                </form>
+
+
             </div>
-          @endforeach
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm small btn-secondary rounded-2"
+                    data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-sm small btn-primary rounded-2 save-nts">Save Changes</button>
+            </div>
         </div>
-      </div>
-    @endforeach
-  </div>
-</div>
-
-            <small class="form-text text-muted">Hold Ctrl (Cmd) to select multiple teeth.</small>
-          </div>
-
-          <div class="mb-3">
-            <label for="tooth_condition_notes" class="form-label">Notes about Tooth Condition</label>
-            <textarea class="form-control" id="tooth_condition_notes" name="tooth_condition_notes" rows="2" placeholder="e.g., cracked molar, needs crown"></textarea>
-          </div>
-
-          <hr>
-
-          <!-- 3. Materials & Inventory -->
-          <h6>Materials & Inventory</h6>
-          <div id="inventory-items-container" class="mb-3">
-            <label class="form-label">Inventory Items to Use</label>
-            <div class="row g-2 align-items-center mb-2 inventory-item-row">
-              <div class="col-7">
-                <input type="text" name="inventory_items[]" class="form-control inventory-item-input" placeholder="Type to search inventory..." autocomplete="off" list="inventoryList" required>
-                <datalist id="inventoryList">
-                  @php
-                    // Example inventory items - replace with actual stock from backend
-                    $inventoryItems = ['Anesthetic', 'Crown', 'Filling Material', 'Sutures', 'Sterile Drape', 'Suction Tip'];
-                  @endphp
-                  @foreach($inventoryItems as $item)
-                    <option value="{{ $item }}">
-                  @endforeach
-                </datalist>
-              </div>
-              <div class="col-3">
-                <input type="number" min="1" name="inventory_quantities[]" class="form-control" placeholder="Quantity" required>
-              </div>
-              <div class="col-2">
-                <button type="button" class="btn btn-danger btn-sm remove-inventory-item" title="Remove item">&times;</button>
-              </div>
-            </div>
-          </div>
-          <button type="button" class="btn btn-outline-primary btn-sm mb-3" id="addInventoryItemBtn">+ Add Another Item</button>
-
-          <div class="mb-3">
-            <label for="assistant_notes" class="form-label">Assistant Notes (Optional)</label>
-            <textarea class="form-control" id="assistant_notes" name="assistant_notes" rows="2" placeholder="e.g., Prepare suction tip, sterile drape"></textarea>
-          </div>
-
-          <hr>
-
-          <!-- 4. Additional Notes / Instructions -->
-          <h6>Additional Notes / Instructions</h6>
-          <div class="mb-3">
-            <label for="post_op_reminders" class="form-label">Post-op Care Reminders</label>
-            <textarea class="form-control" id="post_op_reminders" name="post_op_reminders" rows="3" placeholder="e.g., avoid hard foods for 24 hrs"></textarea>
-          </div>
-
-          <div class="mb-3">
-            <label for="special_precautions" class="form-label">Special Precautions</label>
-            <textarea class="form-control" id="special_precautions" name="special_precautions" rows="2" placeholder="e.g., allergies, antibiotic prophylaxis"></textarea>
-          </div>
-
-          <div class="form-check mb-3">
-            <input class="form-check-input" type="checkbox" id="patient_informed" name="patient_informed" required>
-            <label class="form-check-label" for="patient_informed">
-              Patient informed about precautions and post-op care
-            </label>
-          </div>
-
-          <hr>
-
-          <!-- 5. Cost Estimate (Optional) -->
-          <h6>Cost Estimate (Optional)</h6>
-          <div class="mb-3 row">
-            <label for="cost_estimate" class="col-sm-3 col-form-label">Estimated Cost (USD)</label>
-            <div class="col-sm-6">
-              <input type="number" min="0" step="0.01" class="form-control" id="cost_estimate" name="cost_estimate" placeholder="e.g., 150.00">
-            </div>
-          </div>
-
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Appointment</button>
-        </div>
-      </form>
     </div>
-  </div>
 </div>
-

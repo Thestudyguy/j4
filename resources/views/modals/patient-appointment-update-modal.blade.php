@@ -1,4 +1,4 @@
-<div class="modal fade patient-update-appt-modal" id="update-appointment-{{ $appt->id }}" data-bs-backdrop="static">
+<div class="modal fade patient-update-appt-modal" id="update-appointment-{{ $appt->id  ?? ''}}" data-bs-backdrop="static">
     <div class="loader-container update-appointment-modal visually-hidden">
         <div class="loader"></div>
     </div>  
@@ -10,9 +10,9 @@
             </div>
             <form action="">
                 @csrf
-                <input type="hidden" name="appt_id_update" value="{{$appt->id}}" id="update_appt_{{$appt->id}}">
-                <input type="hidden" name="update_selected_date" id="update_selected_date_{{ $appt->id }}">
-                <input type="hidden" name="update_selected_time" id="update_selected_time_{{ $appt->id }}">
+                <input type="hidden" name="appt_id_update" value="{{$appt->id ?? ''}}" id="update_appt_{{$appt->id ?? ''}}">
+                <input type="hidden" name="update_selected_date" id="update_selected_date_{{ $appt->id  ?? ''}}">
+                <input type="hidden" name="update_selected_time" id="update_selected_time_{{ $appt->id  ?? ''}}">
             </form>
             <div class="modal-body">
                 <!-- Appointment Details -->
@@ -21,20 +21,20 @@
                     <div class="row">
                         <div class="col-md-6 mb-2">
                             <span class="fw-semibold">Date:</span> 
-                            <span>{{ $appt->Date }}</span>
+                            <span class="apptDate">{{ $appt->Date  ?? ''}}</span>
                         </div>
                         <div class="col-md-6 mb-2">
                             <span class="fw-semibold">Time:</span> 
-                            <span>{{ $appt->Time }}</span>
+                            <span class="apptTime">{{ $appt->Time  ?? ''}}</span>
                         </div>
                         {{-- https://ph.smartapply.indeed.com/beta/indeedapply/form/questions-module/questions/2 --}}
                         <div class="col-md-6 mb-2">
                             <span class="fw-semibold">Service:</span> 
-                            <span>{{ $appt->service }}</span>
+                            <span class="apptService">{{ $appt->service  ?? ''}}</span>
                         </div>
                         <div class="col-md-6 mb-2">
                             <span class="fw-semibold">Dentist:</span> 
-                            <span>{{ $appt->title }} {{ $appt->dfName }} {{ $appt->dlname }}</span>
+                            <span class="apptDentist">{{ $appt->title  ?? ''}} {{ $appt->dfName  ?? ''}} {{ $appt->dlname  ?? ''}}</span>
                         </div>
                         {{-- <div class="col-md-6 mb-2">
                             <span class="fw-semibold">Status:</span> 
@@ -47,7 +47,7 @@
                 <div class="mb-4">
                     <label class="fw-semibold mb-2">Update Action</label>
                     <select name="appointment-update-selection" class="form-select appointment-update-selection">
-                        <option value="" selected hidden>{{ $appt->status }}</option>
+                        <option value="" class="stat-opt" selected hidden>{{ $appt->status  ?? ''}}</option>
                         <option value="Cancel" class="text-danger fw-semibold">Cancel</option>
                         <option value="reschedule" class="text-info fw-semibold">Reschedule</option>
                     </select>
@@ -60,19 +60,19 @@
                                     Select a Date
                                 </div>
                                 <center>
-                                    <div class="card-body" id="calendar-container-update-{{ $appt->id }}"></div>
+                                    <div class="card-body date-container-update" id="calendar-container-update-{{ $appt->id  ?? ''}}"></div>
                                 </center>
                             </div>
                             <div class="col-md-6 mb-4">
                                 <span id="selected-date-title-update">Select a date to see available slots</span>
-                                <div id="time-slots-update-{{ $appt->id }}" class="row g-2"></div>
+                                <div id="time-slots-update-{{ $appt->id  ?? ''}}" class="row g-2 time-slots-update-prep"></div>
                             </div>
                         </div>
                 </div>
             </div>
 
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary rounded-0 px-4 update-appt" data-id='{{$appt->id}}'>Update</button>
+                <button type="submit" class="btn btn-primary rounded-0 px-4 update-appt" data-id='{{$appt->id ?? ''}}'>Update</button>
                 <button type="button" class="btn btn-secondary rounded-0 px-4" data-bs-dismiss="modal">Cancel</button>
             </div>
         </div>

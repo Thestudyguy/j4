@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\Inventory;
+use App\Models\opt_notes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -66,19 +67,59 @@ class DentistController extends Controller
                 'patient_info.Email',
                 'patient_info.LastName',
                 'patient_info.id as refID',
-                'sub_services.Service as service'
+                'sub_services.Service as service',
             )
             ->where('appointments.status', '!=', 'archive')
             ->get();
+            $statusCounts = DB::table('appointments')
+            ->select('status', DB::raw('COUNT(*) as total'))
+            ->where('status', '!=', 'archive')
+            ->where('doctor_id', function($query) use ($doctorID) {
+                $query->select('id')->from('doctors')->where('user_id', $doctorID);
+            })
+            ->groupBy('status')
+            ->pluck('total', 'status'); // returns associative array: ['completed' => 10, 'pending' => 5, ...]
             $inventoryItems = Inventory::where('isVisible', true)->get();
-            Log::info(json_encode($dentistAppointments, JSON_PRETTY_PRINT));
+            Log::info(json_encode($statusCounts, JSON_PRETTY_PRINT));
 
 
-        return view('pages.dentist.dentist-interface', compact('appointments', 'count', 'test', 'testCount', 'dentistAppointments', 'inventoryItems'));
+        return view('pages.dentist.dentist-interface', compact('appointments', 'count', 'test', 'statusCounts', 'testCount', 'dentistAppointments', 'inventoryItems'));
 
     } catch (\Throwable $th) {
         throw $th;
     }
 }
+
+    public function CreateNotes(Request $request)
+{
+    try {
+        Log::info($request->all());
+        $notes = opt_notes::create([
+            'appointment'            => $request->input('appointment-id'),
+            'Date'            => $request->input('date'),
+            'dentist'      => $request->input('dentist-id'),
+            'Tooth'           => $request->input('tooth'),
+            'Procedure'       => $request->input('procedure'),
+            'AmountCharge'   => $request->input('amount_charge'),
+            'AmountPaid'     => $request->input('amount_paid'),
+            'Balance'         => $request->input('balance'),
+            'PostOpNotes'   => $request->input('post_op_notes'),
+            'ImportantNotes' => $request->input('important_notes'),
+        ]);
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Notes successfully created',
+            'data'    => $notes
+        ], 201);
+
+    } catch (\Throwable $th) {
+        return response()->json([
+            'status'  => 'error',
+            'message' => $th->getMessage()
+        ], 500);
+    }
+}
+
 
 }

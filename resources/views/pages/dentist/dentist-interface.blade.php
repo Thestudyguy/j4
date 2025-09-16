@@ -28,21 +28,35 @@
                     </div>
                 </div>
                 <div class="col-sm-4">
-                    <div class="card p-3" style="height: 220px; overflow-x: hidden;">
-                        <div class="row">
-                            <div class="col-sm-12 fw-semibold lead text-sm">Completed</div>
-                            {{-- <div class="col-sm-6 text-end"><a href="">see all</a></div> --}}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="card p-3" style="height: 220px; overflow-x: hidden;">
-                        <div class="row">
-                            <div class="col-sm-12 fw-semibold lead text-sm">Upcoming Procedures</div>
-                            {{-- <div class="col-sm-6 text-end"><a href="">see all</a></div> --}}
-                        </div>
-                    </div>
-                </div>
+    <div class="card p-3 shadow-sm border-0 rounded-3" style="height: 220px; overflow-x: hidden;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-semibold lead text-sm">Completed</span>
+            <a href="#" class="small text-decoration-none text-primary">See all</a>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center h-100">
+            <div class="display-4 fw-bold">
+                {{ $statusCounts['completed'] ?? 0 }}
+            </div>
+            {{-- <small class="text-muted">Appointments</small> --}}
+        </div>
+    </div>
+</div>
+
+<div class="col-sm-4">
+    <div class="card p-3 shadow-sm border-0 rounded-3" style="height: 220px; overflow-x: hidden;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-semibold lead text-sm">Upcoming Procedures</span>
+            <a href="#" class="small text-decoration-none text-primary">See all</a>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center h-100">
+            <div class="display-4 fw-bold">
+                {{ $statusCounts['Pending'] ?? 0 }}
+            </div>
+            {{-- <small class="text-muted">Appointments</small> --}}
+        </div>
+    </div>
+</div>
+
             </div>
 
             {{-- Header --}}
@@ -78,15 +92,14 @@
                             </a>
                             {{-- <a href="#" class="text-secondary me-1" title="Edit"><i class="fas fa-edit"></i></a> --}}
                             <a href="#" class="text-secondary" title="Cancel"><i class="fas fa-archive"></i></a>
-                            <span class="badge" data-bs-target="#scheduleFollowupModal" data-bs-toggle="modal" title="add notes"><i class="fas fa-sticky-note text-secondary"></i></span>
+                            <span class="badge" data-bs-target="#scheduleFollowupModal-{{ $appt->id }}" data-bs-toggle="modal" title="add notes"><i class="fas fa-sticky-note text-secondary"></i></span>
                         </div>
                     </div>
                     @include('modals.patient-appointment-update-modal')
-                @empty
+                    @empty
                     <div class="text-center text-muted py-4">No appointments found.</div>
-                @endforelse
-                    @include('modals.schedule-followup-modal')
-            </div>
+                    @endforelse
+            </div>@include('modals.schedule-followup-modal', ['apptId' => $appt->id])
             <div class="row align-items-center mt-3">
 
     <!-- Image -->

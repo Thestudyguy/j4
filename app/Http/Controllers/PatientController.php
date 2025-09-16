@@ -281,6 +281,7 @@ class PatientController extends Controller
 
     public function UpdateAppointment(Request $request)
     {
+        Log::info($request->all());
         try {
             Log::info($request['status']);
             if ($request['status'] === 'cancel') {

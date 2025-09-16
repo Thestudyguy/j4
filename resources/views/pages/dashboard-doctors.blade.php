@@ -61,6 +61,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-sm-8" style="max-height: 500px; overflow: hidden;">
                 <div class="row bg-white p-3 m-2 border rounded-2 doctor-info-container"
                     style="max-height: 500px; overflow-y: auto">
@@ -100,6 +101,7 @@
             </div>
 
         </div>
+    @include('modals.patient-appointment-update-modal')
         @include('modals.new-doctor')
     </div>
 @endsection
