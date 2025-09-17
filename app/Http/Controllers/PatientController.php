@@ -161,6 +161,7 @@ class PatientController extends Controller
                 ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
                 ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
                 ->join('users', 'users.id', '=', 'appointments.patient_id')
+                ->leftJoin('opt_notes','opt_notes.appointment','=', 'appointments.id')
                 ->select(
                     'doctors.FirstName as dfName',
                     'doctors.ProfessionalTitle as title',
@@ -171,10 +172,11 @@ class PatientController extends Controller
                     'appointments.Time',
                     'appointments.Date',
                     'appointments.status',
-                    'appointments.id'
+                    'appointments.id',
+                    'opt_notes.Date as note_date', 'opt_notes.Tooth','opt_notes.Procedure','opt_notes.AmountCharge','opt_notes.AmountPaid','opt_notes.Balance', 'PostOpNotes', 'ImportantNotes', 'opt_notes.id as note_id'
                 )
                 ->get();
-                Log::info(json_encode($patientHistory, JSON_PRETTY_PRINT));
+                Log::info(json_encode($prepAppointment, JSON_PRETTY_PRINT));
             $patientForecastPayment = $prepAppointment->sum('price');
             $patientDuePayments = $prepAppointment->where('status', 'completed')->sum('price');
             return view('pages.patients.patient-appointment-list', compact('prepAppointment', 'patientForecastPayment', 'patient', 'patientHistory', 'patientDuePayments'));

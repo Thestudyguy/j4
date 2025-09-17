@@ -40,7 +40,7 @@
 
     <div class="row align-items-center border rounded-3 m-1 px-3 py-2 small appointment-row bg-light shadow-sm"
          id="{{ $appt->refID }}"
-         style="{{ $isDisabled ? 'opacity:0.6; pointer-events:none;' : '' }}">
+         >
 
         <div class="col-sm-2 fw-semibold text-dark">
             {{ $appt->FirstName . " " . $appt->LastName }}
@@ -50,7 +50,7 @@
         <div class="col-sm-2 text-primary">{{ $appt->service }}</div>
 
         <div class="col-sm-2">
-            <span class="badge text-dark
+            <span style="{{ $isDisabled ? 'opacity:0.6; pointer-events:none;' : '' }}" class="badge text-dark
                 {{ $appt->status === 'cancel' ? 'bg-danger' :
                    ($appt->status === 'completed' ? 'bg-secondary' :
                    ($appt->status === 'confirmed' ? '' : 'bg-info')) }}"
@@ -62,6 +62,9 @@
             >
                 {{ $appt->status }}
             </span>
+            @if ($appt->note_id)
+                <span class="badge" data-bs-target="#viewNoteModal-{{ $appt->note_id }}" data-bs-toggle="modal"><i class="fas fa-file text-info"></i></span>
+            @endif
             {{-- <span class="badge text-dark bg-danger" data-bs-target="" data-bs-toggle=""><i class="fas fa-plus"></i></span> --}}
         </div>
 
@@ -72,7 +75,8 @@
     </div>
 
     @include('modals.patient-appointment-update-modal')
-@endforeach
+    @include('modals.view-appt-notes-modal')
+    @endforeach
 
 
 

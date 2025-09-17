@@ -48,7 +48,9 @@
                     <label class="fw-semibold mb-2">Update Action</label>
                     <select name="appointment-update-selection" class="form-select appointment-update-selection">
                         <option value="" class="stat-opt" selected hidden>{{ $appt->status  ?? ''}}</option>
-                        <option value="Cancel" class="text-danger fw-semibold">Cancel</option>
+                        <option value="Completed" class="text-success fw-semibold">Completed</option>
+                        {{-- <option value="Cancel" class="text-danger fw-semibold">Cancel</option> --}}
+                        <option value="cancel" class="text-danger fw-semibold">Cancel</option>
                         <option value="reschedule" class="text-info fw-semibold">Reschedule</option>
                     </select>
                 </div>

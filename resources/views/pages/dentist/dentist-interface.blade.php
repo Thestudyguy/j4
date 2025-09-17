@@ -2,6 +2,9 @@
 
 @section('content')
     <div class="container-fluid p-5">
+        <div class="loader-container dentist-page visually-hidden">
+        <div class="loader"></div>
+    </div>  
         <div class="container p-2">
             <h4 class="fw-bold m2-4 pt-5">Appointment Summary</h4>
 
@@ -88,18 +91,24 @@
                             </span>
                             <a href="{{ route('patient-details-view', ['id' => $appt->patient_id]) }}"
                                 class="text-secondary ms-2 me-1" title="View patient information" target="_blank">
-                                <i class="fas fa-eye"></i>
+                                <i class="fas fa-eye text-warning"></i>
                             </a>
                             {{-- <a href="#" class="text-secondary me-1" title="Edit"><i class="fas fa-edit"></i></a> --}}
-                            <a href="#" class="text-secondary" title="Cancel"><i class="fas fa-archive"></i></a>
-                            <span class="badge" data-bs-target="#scheduleFollowupModal-{{ $appt->id }}" data-bs-toggle="modal" title="add notes"><i class="fas fa-sticky-note text-secondary"></i></span>
+                            <a href="#" class="text-secondary" title="Cancel"><i class="fas fa-archive text-danger"></i></a>
+                            @if ($appt->note_id)
+                                <span class="badge text-secondary" data-bs-target="#viewNoteModal-{{ $appt->note_id }}" data-bs-toggle="modal" title="view note"><i class="fas fa-file text-info"></i></span>
+                            @else
+                            <span class="badge tooltip-test" data-bs-target="#scheduleFollowupModal-{{ $appt->id }}" {{$appt->note_date ?? 'style="display: none;"'}} data-bs-toggle="modal" title="add notes"><i class="fas fa-sticky-note text-primary"></i></span>
+                            @endif
                         </div>
                     </div>
                     @include('modals.patient-appointment-update-modal')
+                    @include('modals.schedule-followup-modal')
+                    @include('modals.view-appt-notes-modal')
                     @empty
                     <div class="text-center text-muted py-4">No appointments found.</div>
                     @endforelse
-            </div>@include('modals.schedule-followup-modal', ['apptId' => $appt->id])
+                </div>
             <div class="row align-items-center mt-3">
 
     <!-- Image -->

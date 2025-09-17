@@ -12,7 +12,7 @@
             </div>
 
             <div class="modal-body">
-                <form class="pt-apt-nts">
+                <form class="pt-apt-nts-{{$appt->id}}">
                   @csrf
                     <!-- Date -->
                     <div class="mb-3">
@@ -20,7 +20,7 @@
                         <input type="date" class="form-control rounded-0" id="date" name="date"
                             value="{{ date('Y-m-d') }}">
                     </div>
-                    <input type="hidden" name="dentist-id" value="{{Auth::user()->id}}">
+                    <input type="hidden" name="dentist-id" value=" {{$dentist->id}}">
                     <input type="hidden" name="appointment-id" value="{{$appt->id}}">
                     <!-- Tooth # (text input for multiple numbers) -->
                     <div class="mb-3">

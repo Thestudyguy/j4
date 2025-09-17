@@ -16,8 +16,7 @@
                 </div>
             </div>
            @foreach ($prepAppointment as $appt)
-    <div class="row p-2 rounded-2 my-2 text-sm text-left"
-         style="background: #f0f0f0; @if($appt->status === 'cancel') opacity:0.6; @endif">
+    <div class="row p-2 rounded-2 my-2 text-sm text-left" @if($appt->status === 'cancel') style="" @endif>
 
         <div class="col-sm-2 text-sm">{{ $appt->Date }}</div>
         <div class="col-sm-2 text-sm">{{ $appt->Time }}</div>
@@ -27,6 +26,7 @@
         <div class="col-sm-2 text-sm">
             @if($appt->status === 'cancel')
                 <span class="badge bg-danger text-white fw-bold">Cancelled</span>
+                <span class="badge text-white fw-bold" data-bs-target="#viewNoteModal-{{ $appt->note_id }}" data-bs-toggle="modal"><i class="fas fa-file text-info"></i></span>
             @elseif($appt->status === 'completed')
                 <span class="badge bg-success text-white fw-bold">Completed</span>
             @else
@@ -38,6 +38,7 @@
             @endif
         </div>
 
+        @include('modals.view-appt-notes-modal')
         @include('modals.patient-appointment-update-modal')
     </div>
 @endforeach

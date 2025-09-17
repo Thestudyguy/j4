@@ -7,25 +7,28 @@ $(document).ready(function () {
     });
 
    $('.save-nts').on('click', function () {
-    let formData = $('.pt-apt-nts').serializeArray();
-    console.log(formData);
-    let callFlag = true; // assume valid by default
-
-    $.each(formData, (index, fields) => {
-        let $input = $(`[name='${fields.name}']`);
-        $input.removeClass('is-invalid');
-
-        if (fields.value.trim() === '') {
-            callFlag = false; // once false, keep it false
-            Toast.fire({
-                icon: 'warning',
-                title: 'Missing Fields',
-                text: 'Please fill out all fields'
-            });
-            $input.addClass('is-invalid');
-        }
-    });
+       let formUID = $(this).closest('.modal').attr('id').split('-');
+       let formData = $(`.pt-apt-nts-${formUID[1]}`).serializeArray();
+       console.log(formData);
+       let callFlag = true; // assume valid by default
+       
+       $.each(formData, (index, fields) => {
+           let $input = $(`[name='${fields.name}']`);
+           $input.removeClass('is-invalid');
+           
+           if (fields.value.trim() === '') {
+               callFlag = false; // once false, keep it false
+               Toast.fire({
+                   icon: 'warning',
+                   title: 'Missing Fields',
+                   text: 'Please fill out all fields'
+                });
+                $input.addClass('is-invalid');
+            }
+        });
+        // $('.dentist-page').removeClass('visually-hidden');
     if (callFlag) {
+        $('.dentist-page').removeClass('visually-hidden');
         $.ajax({
             type: 'POST',
             url: 'appointments/new-note',
@@ -36,10 +39,11 @@ $(document).ready(function () {
             success: function(response){
                 console.log(response);
                 localStorage.setItem('notes', 'created');
+                $('.dentist-page').addClass('visually-hidden');
                 location.reload();
             },
             error: function (xhr) {
-                // $('.loader-container').addClass('visually-hidden');
+                $('.dentist-page').addClass('visually-hidden');
                 Toast.fire({
                     icon: 'error',
                     title: 'Error',

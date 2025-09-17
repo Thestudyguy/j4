@@ -9,8 +9,8 @@ class opt_notes extends Model
     //
     protected $table = "opt_notes";
     protected $fillable = [
-        "appointment-id",
-        "dentist-id",
+        "appointment",
+        "dentist",
         "Date",
         "Tooth",
         "Procedure",
@@ -19,6 +19,5 @@ class opt_notes extends Model
         "Balance",
         "PostOpNotes",
         "ImportantNotes",
-        "Dentist",
     ];
 }

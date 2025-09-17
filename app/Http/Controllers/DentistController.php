@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\Doctors;
 use App\Models\Inventory;
 use App\Models\opt_notes;
 use Illuminate\Http\Request;
@@ -21,12 +22,11 @@ class DentistController extends Controller
 
     try {
         $doctorID = Auth::user()->id;
-        Log::info($doctorID);
         $appointments = Appointment::where('appointments.doctor_id', $doctorID)
         ->join('doctors', 'doctors.user_id', '=', 'appointments.doctor_id')    
         ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
-            ->join('patient_info','patient_info.id','=','appointments.patient_id')
-            ->join('users','users.id','=','doctors.user_id')
+        ->join('patient_info','patient_info.id','=','appointments.patient_id')
+        ->join('users','users.id','=','doctors.user_id')
             ->select(
                 'appointments.id as appointment_id',
                 'appointments.date',
@@ -34,9 +34,10 @@ class DentistController extends Controller
                 'appointments.status',
                 'patient_info.FirstName',
                 'patient_info.LastName',
-                'sub_services.Service'
+                'sub_services.Service',
             )
             ->get();
+
             $test = DB::table('doctors')
             ->join('users', 'users.id', '=', 'doctors.user_id')
             ->join('appointments', 'appointments.doctor_id', '=', 'doctors.id')
@@ -56,6 +57,7 @@ class DentistController extends Controller
             ->join('appointments', 'appointments.doctor_id','=','doctors.id')
             ->join('patient_info', 'patient_info.id','=','appointments.patient_id')
             ->join('sub_services', 'sub_services.id','=','appointments.service_id')
+            ->leftJoin('opt_notes','opt_notes.appointment','=','appointments.id')
             ->select(
                 'doctors.ProfessionalTitle as title', 'doctors.Firstname as dfName', 'doctors.LastName as dlname',
                 'appointments.id',
@@ -68,9 +70,11 @@ class DentistController extends Controller
                 'patient_info.LastName',
                 'patient_info.id as refID',
                 'sub_services.Service as service',
+                'opt_notes.Date as note_date', 'opt_notes.Tooth','opt_notes.Procedure','opt_notes.AmountCharge','opt_notes.AmountPaid','opt_notes.Balance', 'PostOpNotes', 'ImportantNotes', 'opt_notes.id as note_id'
             )
             ->where('appointments.status', '!=', 'archive')
             ->get();
+            Log::info($dentistAppointments->toArray());
             $statusCounts = DB::table('appointments')
             ->select('status', DB::raw('COUNT(*) as total'))
             ->where('status', '!=', 'archive')
@@ -82,8 +86,8 @@ class DentistController extends Controller
             $inventoryItems = Inventory::where('isVisible', true)->get();
             Log::info(json_encode($statusCounts, JSON_PRETTY_PRINT));
 
-
-        return view('pages.dentist.dentist-interface', compact('appointments', 'count', 'test', 'statusCounts', 'testCount', 'dentistAppointments', 'inventoryItems'));
+            $dentist = Doctors::where('user_id', $doctorID)->firstOrFail();
+        return view('pages.dentist.dentist-interface', compact('appointments', 'count', 'test', 'statusCounts', 'testCount', 'dentistAppointments', 'inventoryItems', 'dentist'));
 
     } catch (\Throwable $th) {
         throw $th;
@@ -93,16 +97,17 @@ class DentistController extends Controller
     public function CreateNotes(Request $request)
 {
     try {
-        Log::info($request->all());
+        
+        Log::info($request['appointment-id']);
         $notes = opt_notes::create([
             'appointment'            => $request->input('appointment-id'),
             'Date'            => $request->input('date'),
             'dentist'      => $request->input('dentist-id'),
             'Tooth'           => $request->input('tooth'),
             'Procedure'       => $request->input('procedure'),
-            'AmountCharge'   => $request->input('amount_charge'),
-            'AmountPaid'     => $request->input('amount_paid'),
-            'Balance'         => $request->input('balance'),
+            'AmountCharge' => str_replace(',', '', $request->input('amount_charge') ?? 0),
+            'AmountPaid'     =>  str_replace(',', '', $request->input('amount_paid') ?? 0),
+            'Balance'         =>  str_replace(',', '', $request->input('balance') ?? 0),
             'PostOpNotes'   => $request->input('post_op_notes'),
             'ImportantNotes' => $request->input('important_notes'),
         ]);

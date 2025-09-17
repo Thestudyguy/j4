@@ -154,6 +154,7 @@ class Controller
         ->leftJoin('users', 'users.id', '=', 'appointments.patient_id')
         ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
         ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
+        ->leftJoin('opt_notes','opt_notes.appointment','=', 'appointments.id')
         ->select(
             'doctors.ProfessionalTitle as title', 'doctors.Firstname as dfName', 'doctors.LastName as dlname',
             'users.id as refID',
@@ -164,7 +165,8 @@ class Controller
             'appointments.time as Time',
             'appointments.status',
             'sub_services.Service as service',
-            'appointments.id'
+            'appointments.id',
+                    'opt_notes.Date as note_date', 'opt_notes.Tooth','opt_notes.Procedure','opt_notes.AmountCharge','opt_notes.AmountPaid','opt_notes.Balance', 'PostOpNotes', 'ImportantNotes', 'opt_notes.id as note_id'
         )
         ->get();
 
