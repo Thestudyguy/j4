@@ -15,14 +15,20 @@
                     </option>
                 </select> --}}
             </div>
-            <div class="col-sm-2">
-                <button class="btn btn-transparent border" style="background: #244F79;" title="download">
-                    <i class="fas fa-download text-white"></i>
-                </button>
-                <button data-bs-target="#new-service" data-bs-toggle='modal'
-                    class="btn btn-transparent text-sm text-white form-control-sm border" style="background: #244F79;">
-                    Add Item <i class="fas fa-plus text-white"></i>
-            </div>
+           <div class="col-sm-2 d-flex gap-2">
+     <div class="col-sm-4">
+    <a href="{{ url('/services-report-pdf') }}" target="_blank"
+       class="btn btn-transparent border border-secondary float-end btn-sm fw-semibold text-sm">
+        <i class="fas fa-upload"></i>
+    </a>
+</div>
+    <button data-bs-target="#new-service" data-bs-toggle="modal"
+        class="btn btn-transparent text-sm text-white form-control-sm border"
+        style="background: #244F79;">
+        Add Item <i class="fas fa-plus text-white"></i>
+    </button>
+</div>
+
         </div>
         <div class="row bg-white p-3 m-2 border rounded-2">
             <div class="col-sm-12">

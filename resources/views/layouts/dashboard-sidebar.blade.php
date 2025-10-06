@@ -3,7 +3,7 @@
         <img class="brand-image" src="{{ asset('images/dclogo.png') }}" alt="" style="width: 50%">
     </center>
     <a href="" class="brand-link" style="text-decoration: none;"></a>
-    <div style="
+    {{-- <div style="
     position: fixed;
     bottom: 20px;
     left: 20px;
@@ -24,9 +24,8 @@
         <li>Add and edit patient medical records.</li>
         <li>Monitor completed, ongoing, and upcoming procedures.</li>
         <li>Add follow-up checkups.</li>
-        {{-- <li>Manage Inventory Items</li> --}}
     </ol>
-</div>
+</div> --}}
     <div class="sidebar">
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column dashboard-nav-link" data-widget="treeview" role="menu" data-accordion="false">

@@ -7,21 +7,24 @@
     </div>   
         <div class="row bg-white p-3 m-2 border rounded-2 align-items-center">
             <div class="col-sm-3">
-                <input type="search" class="form-control rounded-5 form-control-sm" placeholder="Search appointments...">
+                <input type="search" id="searchAppointments" class="form-control rounded-5 form-control-sm" placeholder="Search appointments...">
             </div>
             <div class="col-sm-3"></div>
             <div class="col-sm-2"></div>
             <div class="col-sm-2">
-                <button class="btn btn-transparent border" style="background: #244F79;" title="Download">
-                    <i class="fas fa-download text-white"></i>
-                </button>
+                <div class="col-sm-4">
+    <a href="{{ url('/appointments-report-pdf') }}" target="_blank"
+       class="btn btn-transparent border border-secondary float-end btn-sm fw-semibold text-sm">
+        <i class="fas fa-upload"></i>
+    </a>
+</div>
                 <!-- <button class="btn btn-transparent text-sm text-white form-control-sm border" style="background: #244F79;" data-bs-toggle="modal" data-bs-target="#add-appointment">
                     Add Appointment <i class="fas fa-plus text-white"></i>
                 </button> -->
             </div>
         </div>
 
-        <div class="row bg-white p-3 m-2 border rounded-2">
+        <div class="row bg-white p-3 m-2 border rounded-2" id="appointmentList">
             <div class="col-sm-12">
                 <div class="row fw-semibold text-muted small mb-2">
                     <div class="col-sm-2">Patient</div>

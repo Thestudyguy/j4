@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Chatbot;
 use App\Http\Controllers\DentistController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\PDFController;
 use App\Models\Doctors;
 use App\Models\Services;
 use App\Models\SubService;
@@ -9,10 +11,26 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\HomeController;
 Route::get('/', [HomeController::class, 'index'])->name('default');
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 Auth::routes();
 Route::view('/dental-medical-history', 'pages.dental-medical-history')->name('dental-medical-history');
+Route::post('/chatbot', function (Request $request) {
+    $userMsg = $request->input('message');
 
+    $response = Http::withToken(env('OPENAI_API_KEY'))
+        ->post('https://api.openai.com/v1/chat/completions', [
+            "model" => "gpt-4o-mini", // cheaper and fast
+            "messages" => [
+                ["role" => "system", "content" => "You are a helpful dental clinic assistant. You know about hours, location, services, and appointments."],
+                ["role" => "user", "content" => $userMsg]
+            ]
+        ]);
+
+    return response()->json([
+        'reply' => $response->json()['choices'][0]['message']['content']
+    ]);
+});
 
 Route::get('/client-appointment-form', [function() {
     $services = Services::where('isVisible', true)->get();
@@ -75,4 +93,9 @@ Route::get('/test-mail', function () {
     }
 });
 
+Route::get('/services-report-pdf', [PDFController::class, 'ServicesReportPDF']);
+Route::get('/inventory-report-pdf', [PDFController::class, 'InventoryReportPDF']);
+Route::get('/mission-report-pdf', [PDFController::class, 'MissionImposible']);
+Route::get('/appointments-report-pdf', [PDFController::class, 'AppointmentsReportPDF']);
+Route::post('/chatbot/respond', [Chatbot::class, 'respond']);
 Route::get('/new-appointment-form', [PatientController::class, 'CreateAppointment'])->name('new-appointment-form');

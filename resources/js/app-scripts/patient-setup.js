@@ -15,6 +15,15 @@ $(document).ready(function () {
         toast: false,
         position: 'bottom-end',
     });
+    $(document).on('change', '#acceptTermsCheckbox', function() {
+    if ($(this).prop('checked')) {
+        $('#acceptTermsButton').removeAttr('disabled');
+    } else {
+        $('#acceptTermsButton').attr('disabled', true);
+    }
+});
+
+
     //toggling field visibility on required fields
     $(document).on('change', '.toggle-extra-field', function () {
         const target = $(this).data('target');
@@ -146,7 +155,8 @@ $(document).ready(function () {
 
         if (currentStep === 2) {
             let isValid = true;
-
+            console.log('diri ko mag flag?');
+            // $('.terms-and-condition').click();
             function markInvalid($el) {
                 $el.addClass('is-invalid');
                 isValid = false;
@@ -236,8 +246,10 @@ $(document).ready(function () {
                     text: 'Please complete all required fields before continuing.'
                 });
                 return;
+            }else{
+    $('.terms-and-condition').click();
             }
-
+            
             let formData = $('.client-medical-history-form').serializeArray();
             const grouped = {
                 Illnesses: {

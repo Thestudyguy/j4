@@ -33,53 +33,34 @@
         @include('layouts.footer')
     @endif
 
-<div class="chatbox" id="chatbox">
-    <div class="chat-header">Chatbot</div>
-    <div class="chat-messages" id="chatMessages"></div>
+
+
+  <!-- Chat Toggle Button -->
+<button id="chatToggle" class="chat-toggle">💬</button>
+
+  <!-- Chatbox -->
+  <div id="chatBox" class="chatbox" aria-hidden="true">
+    <div class="chat-header">
+      <div class="title">Chat Support</div>
+      <button id="closeChat" class="close-chat" aria-label="Close chat">&times;</button>
+    </div>
+
+    <div id="chatMessages" class="chat-messages">
+      <!-- initial greeting (optional) -->
+      <div class="message-wrapper bot">
+        <div class="avatar">🤖</div>
+        <div class="message-bubble bot">Hello! 👋 How can I help you today?</div>
+      </div>
+    </div>
+
     <div class="chat-input">
-      <input type="text" id="chatInput" placeholder="Type a message...">
+      <input id="chatInput" type="text" placeholder="Type a message..." autocomplete="off" />
       <button id="sendBtn">Send</button>
     </div>
   </div>
 
-  <button class="chat-toggle" id="chatToggle">💬</button>
 
-   <script>
-    const chatToggle = document.getElementById("chatToggle");
-    const chatbox = document.getElementById("chatbox");
-    const sendBtn = document.getElementById("sendBtn");
-    const chatInput = document.getElementById("chatInput");
-    const chatMessages = document.getElementById("chatMessages");
 
-    // Toggle chatbox
-    chatToggle.addEventListener("click", () => {
-      chatbox.style.display = chatbox.style.display === "flex" ? "none" : "flex";
-    });
-
-    // Send message
-    sendBtn.addEventListener("click", sendMessage);
-    chatInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") sendMessage();
-    });
-
-    function sendMessage() {
-      const msg = chatInput.value.trim();
-      if (!msg) return;
-      appendMessage("You", msg, "user");
-      chatInput.value = "";
-      setTimeout(() => {
-        appendMessage("Bot", "This is a dummy response.", "bot");
-      }, 600);
-    }
-
-    function appendMessage(sender, text, type) {
-      const div = document.createElement("div");
-      div.classList.add("message", type);
-      div.innerText = `${sender}: ${text}`;
-      chatMessages.appendChild(div);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-  </script>
 </body>
 
 @include('components.scripts')

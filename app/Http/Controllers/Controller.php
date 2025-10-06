@@ -166,7 +166,7 @@ class Controller
             'appointments.status',
             'sub_services.Service as service',
             'appointments.id',
-                    'opt_notes.Date as note_date', 'opt_notes.Tooth','opt_notes.Procedure','opt_notes.AmountCharge','opt_notes.AmountPaid','opt_notes.Balance', 'PostOpNotes', 'ImportantNotes', 'opt_notes.id as note_id'
+            'opt_notes.Date as note_date', 'opt_notes.Tooth','opt_notes.Procedure','opt_notes.AmountCharge','opt_notes.AmountPaid','opt_notes.Balance', 'PostOpNotes', 'ImportantNotes', 'opt_notes.id as note_id'
         )
         ->get();
 
@@ -226,12 +226,17 @@ class Controller
             'appointments.status', 'appointments.date', 'appointments.time',
             'users.FirstName',
             //service
-            'sub_services.Service'
+            'sub_services.Service', 'sub_services.Price'
         )
         ->get();
+        // $paymentDetails = DB::table('appointments')
+        // ->where()
+        // ->get();
+        $patients = DB::table('patient_info')->get();
+        $totalPatient = count($patients);
         $patientCount = Appointment::all();
             $count = count($patientCount);
-        return view('pages.dashboard-dashboard', compact('appointments', 'count'));
+        return view('pages.dashboard-dashboard', compact('appointments', 'count', 'totalPatient'));
     }
 
     public function ClientDashboard()

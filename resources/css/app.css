@@ -273,86 +273,143 @@
 }
 
 
+
+
+
+    /* chatbot */
+    /* Chatbox container */
 .chat-toggle {
       position: fixed;
       bottom: 20px;
-      right: 20px;
-      background: #4e73df;
-      color: white;
-      border: none;
-      border-radius: 50%;
+      right: 30px;
       width: 60px;
       height: 60px;
-      font-size: 24px;
+      border-radius: 50%;
+      background: #0066cc;
+      color: white;
+      border: none;
+      font-size: 26px;
       cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+      transition: all 0.28s ease-in-out;
+      transform-origin: bottom right;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.3s;
+      z-index: 1000;
     }
-    .chat-toggle:hover {
-      background: #2e59d9;
+    .chat-toggle.hidden {
+      transform: scale(0);
+      opacity: 0;
+      pointer-events: none;
     }
 
-    /* Chatbox */
+    /* ---- chatbox ---- */
     .chatbox {
       position: fixed;
       bottom: 90px;
-      right: 20px;
-      width: 320px;
-      height: 400px;
+      right: 30px;
+      width: 360px;
+      height: 440px;
       background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      display: none;
-      flex-direction: column;
+      border-radius: 14px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: scale(0.92);
+      pointer-events: none;
+      transition: all 0.28s ease-in-out;
+      z-index: 999;
+      font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial;
+    }
+    .chatbox.show {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
     }
 
     .chat-header {
-      background: #4e73df;
-      color: white;
-      padding: 12px;
-      font-weight: bold;
+      background: #0066cc;
+      color: #fff;
+      padding: 12px 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .chat-header .title { font-size: 15px; }
+
+    .close-chat {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px 8px;
     }
 
     .chat-messages {
       flex: 1;
-      padding: 10px;
+      padding: 12px;
       overflow-y: auto;
-      font-size: 14px;
+      background: #f6f7fb;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
     .chat-input {
       display: flex;
-      border-top: 1px solid #ccc;
+      gap: 8px;
+      padding: 10px;
+      border-top: 1px solid #e6e6e6;
+      background: #fff;
     }
     .chat-input input {
       flex: 1;
-      border: none;
       padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      outline: none;
       font-size: 14px;
     }
     .chat-input button {
-      background: #4e73df;
+      padding: 10px 14px;
       border: none;
-      color: white;
-      padding: 10px 15px;
+      border-radius: 8px;
+      background: #0066cc;
+      color: #fff;
       cursor: pointer;
     }
-    .chat-input button:hover {
-      background: #2e59d9;
+    .chat-input button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* message bubble / wrapper */
+    .message-wrapper { display:flex; align-items:flex-end; gap:8px; }
+    .message-wrapper.user { justify-content: flex-end; }
+    .message-wrapper.bot  { justify-content: flex-start; }
+
+    .avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: #ddd;
+      display:flex; align-items:center; justify-content:center;
+      font-size: 16px;
+      flex-shrink:0;
     }
 
-    .message {
-      margin: 5px 0;
+    .message-bubble {
+      max-width: 75%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      line-height: 1.35;
+      font-size: 14px;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.05);
     }
-    .user {
-      text-align: right;
-      color: #2e59d9;
-    }
-    .bot {
-      text-align: left;
-      color: #333;
-    }
+    .message-bubble.user { background: #0066cc; color: #fff; border-bottom-right-radius: 6px; }
+    .message-bubble.bot  { background: #e9eefb; color: #0b2c57; border-bottom-left-radius: 6px; }
+
+    .typing { font-style: italic; color: #666; background: transparent !important; box-shadow:none !important; padding:6px 8px; }

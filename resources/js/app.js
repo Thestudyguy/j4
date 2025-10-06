@@ -12,6 +12,7 @@ import './app-scripts/inventory';
 import './app-scripts/edit-patient-medical-history';
 import './app-scripts/patient-appointment-note';
 import './app-scripts/appointment-notes';
+import './app-scripts/chatbot';
 $(document).ready(function(){
     window.formatValueInput = function(input) {
         var value = input.value.replace(/[^0-9\.]/g, '');

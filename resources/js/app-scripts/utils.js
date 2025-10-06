@@ -505,4 +505,33 @@ $(document).ready(function () {
         localStorage.removeItem('appointment'); // clear so it doesn't fire again
     }
 
+    //appointment search
+    $("#searchAppointments").on("keyup", function () {
+        let value = $(this).val().toLowerCase();
+
+        $("#appointmentList .appointment-row").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().includes(value));
+        });
+    });
+
+
+//patient search
+$("#searchPatients").on("keyup", function () {
+        let value = $(this).val().toLowerCase();
+
+        $("#patientList .appointment-row").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().includes(value));
+        });
+    });
+
+
+    //inventory search
+    $("#searchInventory").on("keyup", function () {
+        let value = $(this).val().toLowerCase();
+
+        $("#inventoryList .inventory-row").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().includes(value));
+        });
+    });
+
 });

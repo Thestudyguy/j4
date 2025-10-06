@@ -370,6 +370,6 @@
                 </div>
             </div>
             @if (Auth::user()->Role !== 'Dentist')
-            <button class="submit btn-primary btn-sm form-control fw-bold update-patient-basic-info">Update</button>
+            <button class="submit btn-primary btn-sm form-control fw-bold update-patient-basic-info {{ Auth::user()->Role !== 'Dentist' ? 'text-muted' : '' }}" {{ Auth::user()->Role !== 'Dentist' ? 'disabled' : '' }}>Update</button>
             @endif
         </form>

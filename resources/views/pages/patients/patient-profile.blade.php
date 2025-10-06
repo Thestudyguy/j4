@@ -28,8 +28,11 @@
                         <button
                             class="visually-hidden btn-secondary mx-1 btn-sm fw-semibold lead patient-account-setup-back-btn">Back</button>
                         <button class="btn-info btn-sm fw-semibold lead patient-account-setup-next-btn">Next</button>
+                        {{-- hidden button for terms and condition. Why hide it in the first place? cause fuck you thats why --}}
+                        <button class="btn btn-primary visually-hidden terms-and-condition" data-bs-toggle='modal' data-bs-target="#termsModal"></button>
+                        @include('modals.terms-and-conditions')
                         <button
-                            class="visually-hidden btn-primary btn-sm fw-semibold lead patient-account-setup-finish-btn">Finish</button>
+                            class="visually-hidden btn-primary btn-sm fw-semibold lead" id="acceptTermsButton">Finish</button>
                     </div>
                 </div>
             </div>

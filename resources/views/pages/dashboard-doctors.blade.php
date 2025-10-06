@@ -48,14 +48,14 @@
                                 </div>
                                 <!-- <img width="50" src="{{ asset($doctor->image_path) }}" alt=""> -->
 
-                                <div class="col-sm-4 pl-2 d-flex align-items-center justify-content-center">
+                                {{-- <div class="col-sm-4 pl-2 d-flex align-items-center justify-content-center">
                                     <button class="btn btn-transparent p-0 ml-3" data-bs-target='' data-bs-toggle='modal'><i
                                             class="fas fa-trash text-danger text-sm"></i></button>
                                     <button class="btn btn-transparent p-0"><i
                                             class="fas fa-pen text-success text-sm"></i></button>
                                     <button class="btn btn-transparent p-0" data-bs-target='' data-bs-toggle='modal'><i
                                             class="fas fa-plus text-dark text-sm"></i></button>
-                                </div>
+                                </div> --}}
                             </div>
                         @endforeach
                     </div>
