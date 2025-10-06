@@ -41,14 +41,25 @@ $(document).ready(function() {
                         console.log(response);
                            window.location.href = response.redirect;
                     },
-                    error: function (xhr) {
-                        $('.loader-container').addClass('visually-hidden');
-                        Toast.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: xhr.responseJSON.message
-                        });
-                    }
+                    error: function(xhr) {
+    $('.loader-container').addClass('visually-hidden');
+
+    // Check if errors object exists
+    let errorMessage = 'An error occurred';
+    if (xhr.responseJSON && xhr.responseJSON.errors) {
+        // Collect all error messages into a single string
+        errorMessage = Object.values(xhr.responseJSON.errors)
+            .flat() // flatten arrays
+            .join('\n'); // join multiple messages with a newline
+    }
+
+    Toast.fire({
+        icon: 'error',
+        title: 'Error',
+        text: errorMessage
+    });
+}
+
                 });
             }else{
                 // setPostActionToast('error', 'Fatal Error', 'Something went wrong!');

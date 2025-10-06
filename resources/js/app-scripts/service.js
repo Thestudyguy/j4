@@ -103,26 +103,28 @@ $(document).ready(function () {
 
         const $form = $(this); // `this` is the form element
         const serializedForm = $form.serializeArray();
-        const subServiceImage = $('#subserviceimage')[0];
+        const subServiceImage = $form.find('.subserviceimage')[0];
         let hasError = false;
-
+        console.log(serializedForm);
+        
         $.each(serializedForm, (index, fields) => {
             // console.log(fields);
             if (fields.value.trim() === '') {
                 $(`[name=${fields.name}]`).addClass('is-invalid');
                 hasError = true;
+                console.log('asdasd');
+                
             } else {
                 $(`[name=${fields.name}]`).removeClass('is-invalid');
             }
 
         });
         if (!subServiceImage || subServiceImage.files.length === 0) {
-            $('#subserviceimage').addClass('is-invalid');
-            hasError = true;
-        } else {
-            $('#subserviceimage').removeClass('is-invalid');
-        }
-
+    $(subServiceImage).addClass('is-invalid');
+    hasError = true;
+} else {
+    $(subServiceImage).removeClass('is-invalid');
+}
         if (hasError) {
             Toast.fire({
                 icon: 'error',

@@ -45,13 +45,13 @@
        </a>
       </li>
       <li class="nav-item mx-3">
-        <a class="nav-link text-dark" style="color: #fff;" href="#about">{{ __('About Us') }}</a>
+        <a class="nav-link text-dark" style="color: #fff;" href="#j4-story">{{ __('About Us') }}</a>
       </li>
       <li class="nav-item mx-3">
         <a class="nav-link text-dark" style="color: #fff;" href="#services">{{ __('Services') }}</a>
       </li>
       <li class="nav-item mx-3">
-        <a class="nav-link text-dark" style="color: #fff;" href="#contact">{{ __('Contact Us') }}</a>
+        <a class="nav-link text-dark" style="color: #fff;" href="#footer">{{ __('Contact Us') }}</a>
       </li>
       {{-- <li class="nav-item mx-3">
         <a class="nav-link text-dark" style="color: #fff;" href="#">{{ __('LogIn') }}</a>

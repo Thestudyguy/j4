@@ -14,7 +14,7 @@
 
                 <div class="mb-3">
                     <label for="serviceprice" class="form-label">Service Price</label>
-                    <input type="text" class="form-control form-control-sm rounded-1" name="serviceprice" id="serviceprice">
+                    <input type="text" class="form-control form-control-sm rounded-1" name="serviceprice" id="serviceprice" onchange="formatValueInput(this)">
                 </div>
 
                 <div class="mb-3">
@@ -26,7 +26,11 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <label for="serviceimage" class="form-label">Service Image</label>
-                            <input class="form-control form-control-sm" type="file" name="serviceimage" accept=".png, .jpg, .jpeg" id="subserviceimage">
+                            <input class="form-control form-control-sm subserviceimage" 
+       type="file" 
+       name="serviceimage" 
+       accept=".png, .jpg, .jpeg" 
+       id="subserviceimage-{{$service->id}}">
                         </div>
                         <div class="col-sm-12">
                             <center>

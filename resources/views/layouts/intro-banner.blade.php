@@ -11,7 +11,7 @@
                         Experience the pinnacle of oral health with Professional Dental Care Solutions. Our dentist is
                         dedicated to providing comprehensive dental care tailored to your unique needs.
                     </div>
-                    <div class="banner-super-sub-text">
+                    {{-- <div class="banner-super-sub-text">
                         <a href="{{ route('client-appointment-form') }}">
 
                             <button style="background-color: #20536B; font-size: 12px;"
@@ -19,8 +19,13 @@
                                 BOOK AN APPOINTMENT
                             </button>
                         </a>
-                        @include('modals.appointment-form')
-                    </div>
+                    </div> --}}
+                     <a href="{{ route('register') }}">
+            
+         <button style="background-color: #20536B; font-size: 12px;" class="text-white btn rounded-5 p-2 mx-2 px-4">
+            BOOK AN APPOINTMENT
+        </button>
+       </a>
                 </div>
             </div>
         </div>

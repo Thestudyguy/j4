@@ -230,7 +230,98 @@ $pdf->Cell(0, 8, 'End of Report', 0, 1, 'C','', '');
     exit;
 }
 
+public function MissionImposible() {
+    $pdf = new \FPDF('P', 'mm', 'A4');
+    $pdf->AddPage();
 
+    // Title (smaller font size)
+    $pdf->SetFont('Arial', 'B', 14);  // Title font adjusted from 16 to 14
+    $pdf->Cell(0, 10, 'Pay Slip', 0, 1, 'C');
+    $pdf->Ln(5);
+
+    // Employee Details (Left & Right)
+    $pdf->SetFont('Arial', '', 10);  // Adjusted to 10 for readability
+    $pdf->Cell(40, 8, 'Company: ', 0, 0);
+    $pdf->Cell(80, 8, 'Example Company Ltd', 0, 0);
+
+    $pdf->Cell(40, 8, 'Payroll Period: ', 0, 0);
+    $pdf->Cell(0, 8, '2025-09-01 - 2025-09-30', 0, 1);
+
+    $pdf->Cell(40, 8, 'Employee: ', 0, 0);
+    $pdf->Cell(80, 8, 'Lagrosa Mirasol Gosila', 0, 0);
+
+    $pdf->Cell(40, 8, 'Chinese Name: ', 0, 0);
+    $pdf->Cell(0, 8, '', 0, 1);
+
+    $pdf->Cell(40, 8, 'Position: ', 0, 0);
+    $pdf->Cell(80, 8, 'Software Developer', 0, 0);
+
+    $pdf->Cell(40, 8, 'Value Date: ', 0, 0);
+    $pdf->Cell(0, 8, '2025-09-30', 0, 1);
+
+    $pdf->Cell(40, 8, 'Section: ', 0, 0);
+    $pdf->Cell(80, 8, 'Development', 0, 0);
+
+    $pdf->Cell(40, 8, 'MPF Date: ', 0, 0);
+    $pdf->Cell(0, 8, '2025-09-30', 0, 1);
+
+    $pdf->Ln(10);
+
+    // Payment Table Header
+    $pdf->SetFont('Arial', 'B', 10);  // Adjusted to 10 for header
+    $pdf->Cell(70, 8, 'Payment Type', 1);
+    $pdf->Cell(45, 8, 'Method', 1);
+    $pdf->Cell(45, 8, 'Amount (HKS)', 1);
+    $pdf->Ln();
+
+    // Payment Table Body
+    $pdf->SetFont('Arial', '', 10);  // Adjusted to 10 for body text
+    $pdf->Cell(70, 8, 'Basic Salary', 1);
+    $pdf->Cell(45, 8, 'Bank Transfer', 1);
+    $pdf->Cell(45, 8, '1,428.00', 1);
+    $pdf->Ln();
+
+    // Total
+    $pdf->SetFont('Arial', 'B', 10);  // Adjusted to 10 for the total row
+    $pdf->Cell(115, 8, 'Total:', 1);
+    $pdf->Cell(45, 8, '1,428.00', 1);
+    $pdf->Ln(15);
+
+    // MPF Contribution Detail
+    $pdf->SetFont('Arial', 'B', 9);  // Adjusted to 9 for better fit in the table header
+    $pdf->Cell(30, 8, 'Relevant Income', 1, 0, 'C');
+    $pdf->Cell(30, 8, 'Mandatory Contribution', 1, 0, 'C');
+    $pdf->Cell(30, 8, 'Voluntary Contribution', 1, 0, 'C');
+    $pdf->Cell(30, 8, 'Total Contribution', 1, 1, 'C');
+
+    // Sub-headers for Employee & Employer (Adjusted to fit better)
+    $pdf->SetFont('Arial', '', 8);  // Adjusted font size to 8 for this section
+    $pdf->Cell(30, 8, '', 0, 0);  // Empty for Relevant Income
+    $pdf->Cell(15, 8, 'Employer', 1, 0, 'C');
+    $pdf->Cell(15, 8, 'Employee', 1, 0, 'C');
+    $pdf->Cell(15, 8, 'Employer', 1, 0, 'C');
+    $pdf->Cell(15, 8, 'Employee', 1, 0, 'C');
+    $pdf->Cell(15, 8, 'Employer', 1, 0, 'C');
+    $pdf->Cell(15, 8, 'Employee', 1, 1, 'C');
+
+    // Example values row (Adjusted for font and spacing)
+    $pdf->SetFont('Arial', '', 8);  // Adjusted to 8 for better fit in the table
+    $pdf->Cell(30, 8, 'Basic Salary', 1, 0, 'L');
+    $pdf->Cell(15, 8, '0.00', 1, 0, 'C');
+    $pdf->Cell(15, 8, '0.00', 1, 0, 'C');
+    $pdf->Cell(15, 8, '0.00', 1, 0, 'C');
+    $pdf->Cell(15, 8, '0.00', 1, 0, 'C');
+    $pdf->Cell(15, 8, '0.00', 1, 0, 'C');
+    $pdf->Cell(15, 8, '0.00', 1, 1, 'C');
+
+    $pdf->Ln(10);
+    $pdf->SetFont('Arial', 'I', 9);  // Adjusted to 9 for the footer
+    $pdf->Cell(0, 8, '*** End Of Report ***', 0, 1, 'C');
+
+    // Show in browser
+    $pdf->Output('I', 'pay_slip.pdf');
+    exit;
+}
 
 
 }

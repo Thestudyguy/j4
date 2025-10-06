@@ -10,7 +10,7 @@
                 </div>
                 <div class="welcome-text lead text-sm text-dark">At J4 Dental Clinic, we provide trusted, affordable, and gentle dental care in a clean and modern clinic. Whether it is your first visit or a regular check-up, our friendly team is here to make you feel safe, comfortable, and confident.</div>
                 <div class="know-about-us-btn-container">
-                    <button class="btn text-light lead fw-semibold btn-sm mt-2" style="background: #063D58;">Know About Us</button>
+                    {{-- <button class="btn text-light lead fw-semibold btn-sm mt-2" style="background: #063D58;">Know About Us</button> --}}
                 </div>
             </div>
         </div>

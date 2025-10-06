@@ -56,9 +56,9 @@
                 <p><strong>11. Contact Us</strong><br>
                 For privacy-related questions or requests, please contact:<br>
                 <strong>Data Protection Officer - J4 Dental Clinic</strong><br>
-                Email: [Insert Email Address]<br>
-                Phone: [Insert Contact Number]<br>
-                Address: [Insert Clinic Address]</p>
+                Email: j4Clinic.business@gmail.com<br>
+                Phone: 0956-483-5641<br>
+                Address: Pereyras compound Barangay Magugpo West, Tagum City. Near Bus terminal</p>
 
                 <div class="form-check mt-3">
                     <input class="form-check-input" type="checkbox" id="acceptTermsCheckbox">
