@@ -97,7 +97,7 @@
     </div>
     <div class="form-nav-btn-container d-flex flex-row p-3 align-items-center justify-content-center">
         <button class="btn btn-primary mx-2 float-left form-nav-btn-back visually-hidden">Back</button>
-        <button class="btn btn-primary float-right form-nav-btn-finish visually-hidden">Finish</button>
+        <button class="btn btn-primary float-right form-nav-btn-finish visually-hidden patient-account-setup-finish-btn">Finish</button>
         <button class="btn btn-primary float-right form-nav-btn-next">Next</button>
     </div>
     </div>

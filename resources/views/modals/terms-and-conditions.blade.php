@@ -69,12 +69,12 @@
             </div>
            
             <div class="modal-footer">
-                <button type="submit" class="btn btn-danger patient-account-setup-finish-btn" id="acceptTermsButton" disabled>
+                {{-- <button type="submit" class="btn btn-danger " data-bs-dismiss="modal" disabled>
+                    Accept and Proceed
+                </button> --}}
+                <button type="button" class="btn btn-danger rounded-0" id="acceptTermsButton" data-bs-dismiss="modal" disabled>
                     Accept and Proceed
                 </button>
-                {{-- <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">
-                    Cancel
-                </button> --}}
             </div>
         </div>
     </div>

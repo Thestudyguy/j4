@@ -136,7 +136,7 @@ $(document).ready(function () {
                                 data-dentist='${data.LastName}, ${data.FirstName}'
                                 data-service='${data.Service}'
                                 data-id='${data.ApptID}'
-                                data-bs-target=".patient-update-appt-modal" data-bs-toggle="modal"
+                                
                                 >
                                 <i class="fw-semibold small rounded-2 p-1
                                     ${data.status === 're-sched' ? 'bg-info text-dark' : ''}

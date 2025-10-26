@@ -40,9 +40,9 @@
                             <br><input type="radio" name="sex" value="female" {{ $patient->Gender === 'Female' ? 'checked' : '' }}> --}}
                             <div class="row p-2 sex-container"><!-- goffy ahh class name -->
                                 <div class="col-sm-6"><input type="radio" name="sex" value="Male"
-                                        {{ $patient->Gender === 'Male' ? 'checked' : '' }} style="pointer-events: {{Auth::user()->Role === 'Admin' ? 'none' : ''}}">Male</div>
+                                        {{ $patient->Gender === 'Male' ? 'checked' : '' }} style="pointer-events: {{Auth::user()->Role !== 'Admin' ? 'none' : ''}}">Male</div>
                                 <div class="col-sm-6"><input type="radio" name="sex" value="Female"
-                                        {{ $patient->Gender === 'Female' ? 'checked' : '' }} style="pointer-events: {{Auth::user()->Role === 'Admin' ? 'none' : ''}}">Female</div>
+                                        {{ $patient->Gender === 'Female' ? 'checked' : '' }} style="pointer-events: {{Auth::user()->Role !== 'Admin' ? 'none' : ''}}">Female</div>
                             </div>
                         </div>
                         <div class="col-sm-4">

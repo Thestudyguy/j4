@@ -77,7 +77,7 @@
         </div>
     </div>
 
-    @include('modals.patient-appointment-update-modal')
+    {{-- @include('modals.patient-appointment-update-modal') --}}
     @include('modals.view-appt-notes-modal')
     @endforeach
 

@@ -13,10 +13,10 @@ $(document).ready(function () {
 
         if ($input.attr('type') === 'password') {
             $input.attr('type', 'text');
-            $icon.removeClass('fa-eye').addClass('fa-eye-slash');
+            $icon.removeClass('fa-eye-slash').addClass('fa-eye');
         } else {
             $input.attr('type', 'password');
-            $icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            $icon.removeClass('fa-eye').addClass('fa-eye-slash');
         }
     });
     //     $(document).ready(function () {

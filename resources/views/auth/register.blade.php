@@ -43,7 +43,7 @@
     <div class="input-group">
         <input type="password" id="password" name="password" class="form-control">
         <span class="input-group-text toggle-password" data-target="password" style="cursor: pointer;">
-            <i class="fas fa-eye"></i>
+            <i class="fas fa-eye-slash"></i>
         </span>
     </div>
 </div>
@@ -54,7 +54,7 @@
     <div class="input-group">
         <input type="password" id="password_confirmation" name="password_confirmation" class="form-control">
         <span class="input-group-text toggle-password" data-target="password_confirmation" style="cursor: pointer;">
-            <i class="fas fa-eye"></i>
+            <i class="fas fa-eye-slash"></i>
         </span>
     </div>
 </div>

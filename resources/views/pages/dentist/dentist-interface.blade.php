@@ -34,7 +34,7 @@
     <div class="card p-3 shadow-sm border-0 rounded-3" style="height: 220px; overflow-x: hidden;">
         <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="fw-semibold lead text-sm">Completed</span>
-            <a href="#" class="small text-decoration-none text-primary">See all</a>
+            {{-- <a href="#" class="small text-decoration-none text-primary">See all</a> --}}
         </div>
         <div class="d-flex flex-column justify-content-center align-items-center h-100">
             <div class="display-4 fw-bold">
@@ -49,7 +49,7 @@
     <div class="card p-3 shadow-sm border-0 rounded-3" style="height: 220px; overflow-x: hidden;">
         <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="fw-semibold lead text-sm">Upcoming Procedures</span>
-            <a href="#" class="small text-decoration-none text-primary">See all</a>
+            {{-- <a href="#" class="small text-decoration-none text-primary">See all</a> --}}
         </div>
         <div class="d-flex flex-column justify-content-center align-items-center h-100">
             <div class="display-4 fw-bold">
@@ -102,7 +102,7 @@
                             @endif
                         </div>
                     </div>
-                    @include('modals.patient-appointment-update-modal')
+                    {{-- @include('modals.patient-appointment-update-modal') --}}
                     @include('modals.schedule-followup-modal')
                     @include('modals.view-appt-notes-modal')
                     @empty
