@@ -459,6 +459,7 @@ $(document).ready(function () {
                 });
                 return;
             }
+            $('.patients-page').removeClass('visually-hidden');
             $.ajax({
         url: '/new/walk-in-patient',
         type: 'POST',
@@ -467,10 +468,12 @@ $(document).ready(function () {
             },
         data: walkInData,
         success: function (response) {
-            // localStorage.setItem('patient-setup', 'created');
-            // location.reload();
+            $('.patients-page').addClass('visually-hidden');
+            localStorage.setItem('patient-setup', 'created');
+            location.reload();
         },
         error: function (jqXHR, err, stat) {
+            $('.patients-page').addClass('visually-hidden');
                 Toast.fire({
                     icon: 'error',
                     title: stat,
@@ -488,6 +491,13 @@ $(document).ready(function () {
             title: 'Patient Info has been updated'
         });
         localStorage.removeItem('patient-pbi'); // clear so it doesn't fire again
+    }
+    if (localStorage.getItem('patient-setup') === 'created') {
+        Toast.fire({
+            icon: 'success',
+            title: 'Walkin Patient Added'
+        });
+        localStorage.removeItem('patient-setup'); // clear so it doesn't fire again
     }
     if (appointmentStatus === 'Appointment Rescheduled') {
         Toast.fire({

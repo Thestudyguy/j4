@@ -134,6 +134,7 @@ $(document).ready(function () {
             return;
         } else {
             // console.log(serializedForm);
+            $('.services-page').removeClass('visually-hidden');
             const prepForm = $form[0];
             const toPartForm = new FormData(prepForm);
             console.log(toPartForm);
@@ -147,14 +148,16 @@ $(document).ready(function () {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
                 },
                 success: function (response) {
+            $('.services-page').addClass('visually-hidden');
                     setPostActionToast('success', 'Service Added', 'The service was added successfully.');
                     $form[0].reset();
                     location.reload();
                     $('#new-service').modal('hide');
                 },
                 error: function (xhr) {
+            $('.services-page').addClass('visually-hidden');
                     console.error('Error adding service:', xhr);
-                    $('.loader-container').addClass('visually-hidden');
+                    // $('.loader-container').addClass('visually-hidden');
                     if (xhr.responseJSON && xhr.responseJSON.errors) {
                         let errors = xhr.responseJSON.errors;
                         let firstField = Object.keys(errors)[0];

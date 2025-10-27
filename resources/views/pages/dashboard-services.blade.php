@@ -1,6 +1,9 @@
 @extends('dashboard')
 @section('content')
     <div class="container-fluid p-2 pt-5 vh-100" style="overflow-y: hide;">
+        <div class="loader-container services-page visually-hidden">
+            <div class="loader"></div>
+        </div>
         <h1 class="h1 mt-2 p-3">Services</h1>
         <div class="row bg-white p-3 m-2 border rounded-2">
             <div class="col-sm-3">

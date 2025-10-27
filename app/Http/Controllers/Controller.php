@@ -175,9 +175,9 @@ class Controller
     }
 
     public function PatientDetails($id){
+        // dd($id);
         $patient = Patients::where('id', $id)->first();
     $patientHistory = PatientHistory::where('patient_id', $patient->id)->first() ?? new PatientHistory();
-// dd($patientHistory);
     $services = DB::table('appointments')
     ->where('appointments.patient_id', $id)
     ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
@@ -186,7 +186,7 @@ class Controller
     $prepAppointment = DB::table('appointments')
                 ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
                 ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
-                ->join('users', 'users.id', '=', 'appointments.patient_id')
+                // ->join('users', 'users.id', '=', 'appointments.patient_id')
                 ->select(
                     'doctors.FirstName as dfName',
                     'doctors.ProfessionalTitle as title',
@@ -197,6 +197,7 @@ class Controller
                     'appointments.Date',
                     'appointments.status'
                 )
+                ->where('appointments.patient_id', $id)
                 ->get();
                 $servicesCount = count($prepAppointment);
                 $completedAppt = DB::table('appointments')
