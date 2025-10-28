@@ -44,7 +44,7 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="amount_paid" class="form-label fw-semibold">Amount Paid</label>
-                            <input type="text" class="form-control rounded-0"oninput="formatValueInput(this)" id="amount_paid" name="amount_paid">
+                            <input type="text" class="form-control rounded-0" oninput="formatValueInput(this)" id="amount_paid" name="amount_paid">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="balance" class="form-label fw-semibold">Balance</label>

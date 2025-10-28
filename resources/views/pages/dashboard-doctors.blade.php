@@ -55,7 +55,7 @@
                                             class="fas fa-pen text-success text-sm"></i></button>
                                     <button class="btn btn-transparent p-0" data-bs-target='' data-bs-toggle='modal'><i
                                             class="fas fa-plus text-dark text-sm"></i></button>
-                                </div> --}}
+                                </div> --}} 
                             </div>
                         @endforeach
                     </div>

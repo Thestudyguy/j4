@@ -21,19 +21,20 @@
             </div>
             <div class="container-fluid rounded-5 bg-light mt-5">
                 <div class="row p-2 rounded-5">
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <span class="fw-semibold text-muted small">Product Name</span>
                     </div>
-                    <div class="col-sm-3">
-                        <span class="fw-semibold text-muted small">Ca
-                            
-                            tegory</span>
+                    <div class="col-sm-2">
+                        <span class="fw-semibold text-muted small">Category</span>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <span class="fw-semibold text-muted small">On Hand</span>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <span class="fw-semibold text-muted small">Status</span>
+                    </div>
+                    <div class="col-sm-2">
+                        <span class="fw-semibold text-muted small">Time Stamps</span>
                     </div>
                 </div>
             </div>
@@ -48,19 +49,19 @@
                         @endphp
 
                         <div class="row inventory-row bg-light mt-1">
-                            <div class="col-sm-3">
+                            <div class="col-sm-2">
                                 <span class="fw-semibold text-muted small">{{ $items->item_name }}</span>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-2">
                                 <span class="fw-semibold text-muted small">{{ $items->category }}</span>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-2">
                                 <span
                                     class="fw-semibold small {{ $isOutOfStock ? 'text-danger fw-bold' : ($isLowStock ? 'text-warning fw-semibold' : 'text-muted') }}">
                                     {{ $items->on_hand }}
                                 </span>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-2">
                                 @if ($isOutOfStock)
                                     <small class="text-danger fw-bold small">Out of Stock</small>
                                 @elseif($isLowStock)
@@ -68,6 +69,14 @@
                                 @else
                                     <small class="text-info fw-semibold">In Stock</small>
                                 @endif
+                            </div>
+                            <div class="col-sm-2">
+                                <span
+                                    class="fw-semibold small fw-bold text-muted">
+                                    {{ $items->created_at->timezone('Asia/Manila')->format('F j, Y g:i A') }}
+
+
+                                </span>
                             </div>
                         </div>
                     @endforeach

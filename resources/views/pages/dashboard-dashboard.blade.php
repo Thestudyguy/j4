@@ -7,7 +7,7 @@
             <!-- Left side: Patient stats + Appointment Requests -->
             <div class="col-12 col-lg-8">
                 <div class="row g-3">
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-6">
                         @php
                             // Filter appointments for today
                             $todayAppointments = $appointments->filter(function ($appt) {
@@ -25,9 +25,8 @@
                             </div>
                         </div>
 
-
                     </div>
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-6">
                         <div class="card text-center">
                             <div class="card-title p-3">Total Patients</div>
                             <div class="card-body"></div>
@@ -42,7 +41,7 @@
                         $pendingCount = $pendingAppointments->count();
                     @endphp
 
-                    <div class="col-12 col-md-4">
+                    {{-- <div class="col-12 col-md-4">
                         <div class="card text-center">
                             <div class="card-title p-3">Requests</div>
                             <div class="card-body"></div>
@@ -50,50 +49,79 @@
                                 <h1>{{ $pendingCount }}</h1>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <!-- Appointment Requests -->
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <div class="request">Appointment Request</div>
-                                    <div><button class="btn btn-link"><a href="{{ route('appointments') }}">See
-                                                all</a></button></div>
+                                    <div class="request">Inventory Status</div>
+                                    {{-- <div><button class="btn btn-link"><a href="{{ route('appointments') }}">See
+                                                all</a></button></div> --}}
                                 </div>
                             </div>
                             <div class="card-body">
-                                <!-- <div class="col">Edrian</div>
-                                <div class="col">Orthodontic</div>
-                                <div class="col">July 21, 2025</div>
-                                <div class="col">1:00 PM</div>
-                                <div class="col text-success rounded-5">Completed</div> -->
-                                @foreach ($appointments as $appt)
-                                    <div class="row bg-light p-3 rounded-3 small text-center">
-                                        <div class="col">{{ $appt->FirstName }}</div>
-                                        <div class="col">{{ $appt->Service }}</div>
-                                        <div class="col">{{ $appt->date }}</div>
-                                        <div class="col">{{ $appt->time }}</div>
-                                        <div class="col fw-semibold rounded-5">
-                                            @php
-                                                $status = $appt->status;
-                                            @endphp
-
-                                            <!-- Badge color coding based on status -->
-                                            @if ($status == 'Pending')
-                                                <span class="badge bg-warning text-dark">{{ $status }}</span>
-                                            @elseif($status == 'Confirmed')
-                                                <span class="badge bg-success">{{ $status }}</span>
-                                            @elseif($status == 'Cancelled')
-                                                <span class="badge bg-danger">{{ $status }}</span>
-                                            @elseif($status == 'Completed')
-                                                <span class="badge bg-primary">{{ $status }}</span>
-                                            @else
-                                                <span class="badge bg-secondary">{{ $status }}</span>
-                                            @endif
-                                        </div>
+                                <div class="row p-2 rounded-5">
+                                    <div class="col-sm-2">
+                                        <span class="fw-semibold text-muted small">Product Name</span>
                                     </div>
+                                    <div class="col-sm-2">
+                                        <span class="fw-semibold text-muted small">Category</span>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <span class="fw-semibold text-muted small">On Hand</span>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <span class="fw-semibold text-muted small">Status</span>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <span class="fw-semibold text-muted small">Time Stamps</span>
+                                    </div>
+                                </div>
+                                <!-- <div class="col">Edrian</div>
+                                        <div class="col">Orthodontic</div>
+                                        <div class="col">July 21, 2025</div>
+                                        <div class="col">1:00 PM</div>
+                                        <div class="col text-success rounded-5">Completed</div> -->
+                                @foreach ($inventory as $items)
+                                    @php
+                                        $maxStock = $items->max_stock ?? 100;
+                                        $lowStockThreshold = $maxStock * 0.15;
+                                        $isOutOfStock = $items->on_hand == 0;
+                                        $isLowStock = !$isOutOfStock && $items->on_hand <= $lowStockThreshold;
+                                    @endphp
+
+                                    @if ($isOutOfStock || $isLowStock)
+                                        <div class="row inventory-row bg-light mt-1">
+                                            <div class="col-sm-2">
+                                                <span class="fw-semibold text-muted small">{{ $items->item_name }}</span>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <span class="fw-semibold text-muted small">{{ $items->category }}</span>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <span
+                                                    class="fw-semibold small {{ $isOutOfStock ? 'text-danger fw-bold' : 'text-warning fw-semibold' }}">
+                                                    {{ $items->on_hand }}
+                                                </span>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                @if ($isOutOfStock)
+                                                    <small class="text-danger fw-bold small">Out of Stock</small>
+                                                @elseif($isLowStock)
+                                                    <small class="text-warning fw-semibold">Low</small>
+                                                @endif
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <span class="fw-semibold small text-muted">
+                                                    {{ $items->created_at->timezone('Asia/Manila')->format('F j, Y g:i A') }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    @endif
                                 @endforeach
+
                             </div>
                         </div>
                     </div>
@@ -118,7 +146,7 @@
                                         <div class="col">Amount</div>
                                     </div>
                                     @foreach ($appointments as $appt)
-                                        <div class="row fw-semibold small mt-2 bg-white rounded-5 p-3">
+                                        <div class="row small mt-2 bg-white rounded-5 p-3">
                                             <div class="col">{{ $appt->FirstName }}</div>
                                             <div class="col">{{ $appt->date }}</div>
                                             <div class="col">{{ $appt->Service }}</div>
@@ -135,11 +163,7 @@
 
             <!-- Right side: Calendar + Today's Appointments -->
             <div class="col-12 col-lg-4">
-                <div class="mb-3">
-                    <iframe src="https://calendar.google.com/calendar/embed?src=your_calendar_id&ctz=Asia%2FManila"
-                        style="border:0;" class="w-100" height="400" frameborder="0" scrolling="no">
-                    </iframe>
-                </div>
+
 
                 @php
                     use Carbon\Carbon;
@@ -178,7 +202,8 @@
                             <div class="row bg-light p-3 rounded-3 small text-center mb-2 shadow-sm">
                                 <div class="col fw-semibold">{{ $appt->FirstName }}</div>
                                 <div class="col">{{ $appt->Service }}</div>
-                                <div class="col {{ $statusClass }}">{{ ucfirst($appt->status) }}</div>
+                                <div class="col">{{ $appt->time }}</div>
+                                {{-- <div class="col {{ $statusClass }}">{{ ucfirst($appt->status) }}</div> --}}
                             </div>
                         @empty
                             <p class="text-center text-muted m-0">No appointments today.</p>
@@ -187,7 +212,11 @@
 
                     </div>
                 </div>
-
+                <div class="mb-3">
+                    <iframe src="https://calendar.google.com/calendar/embed?src=your_calendar_id&ctz=Asia%2FManila"
+                        style="border:0;" class="w-100" height="400" frameborder="0" scrolling="no">
+                    </iframe>
+                </div>
             </div>
         </div>
     </div>

@@ -33,7 +33,7 @@ class Controller
         public function NewInventoryItem(Request $request) {
         try {
             $validated = $request->validate([
-                'item_name' => 'required|string|max:255|unique:inventories,item_name',
+                'item_name' => 'required|string|max:255',
                 'category'  => 'required|string|max:255',
                 'stock'     => 'required|integer|min:0'
             ]);
@@ -219,6 +219,7 @@ class Controller
     }
     public function Dashboard()
     {
+        $inventory = Inventory::all();
         $appointments = DB::table('appointments')
         ->join('users', 'users.id', '=', 'appointments.patient_id')
         ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
@@ -237,7 +238,7 @@ class Controller
         $totalPatient = count($patients);
         $patientCount = Appointment::all();
             $count = count($patientCount);
-        return view('pages.dashboard-dashboard', compact('appointments', 'count', 'totalPatient'));
+        return view('pages.dashboard-dashboard', compact('inventory','appointments', 'count', 'totalPatient'));
     }
 
     public function ClientDashboard()

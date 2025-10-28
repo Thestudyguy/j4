@@ -19,6 +19,8 @@ $(document).ready(function () {
             $icon.removeClass('fa-eye').addClass('fa-eye-slash');
         }
     });
+    
+
     //     $(document).ready(function () {
     //     $.ajaxSetup({
     //         headers: {

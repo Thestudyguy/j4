@@ -53,7 +53,7 @@
         </div>
         <div class="d-flex flex-column justify-content-center align-items-center h-100">
             <div class="display-4 fw-bold">
-                {{ $statusCounts['Pending'] ?? 0 }}
+                {{ $statusCounts['pending'] ?? 0 }}
             </div>
             {{-- <small class="text-muted">Appointments</small> --}}
         </div>
@@ -94,7 +94,7 @@
                                 <i class="fas fa-eye text-warning"></i>
                             </a>
                             {{-- <a href="#" class="text-secondary me-1" title="Edit"><i class="fas fa-edit"></i></a> --}}
-                            <a href="#" class="text-secondary" title="Cancel"><i class="fas fa-archive text-danger"></i></a>
+                            {{-- <a href="#" class="text-secondary" title="Cancel"><i class="fas fa-archive text-danger"></i></a> --}}
                             @if ($appt->note_id)
                                 <span class="badge text-secondary" data-bs-target="#viewNoteModal-{{ $appt->note_id }}" data-bs-toggle="modal" title="view note"><i class="fas fa-file text-info"></i></span>
                             @else

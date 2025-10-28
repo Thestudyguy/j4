@@ -12,6 +12,22 @@
                     <div class="alert alert-warning">
                         Please complete your account setup before making an appointment.
                     </div>
+                    {{-- <div class="alert alert-info">
+                        Please complete your account setup before making an appointment.
+                    </div>
+                    <div class="alert alert-secondary">
+                        Please complete your account setup before making an appointment.
+                    </div>
+                    <div class="alert alert-danger">
+                        Please complete your account setup before making an appointment.
+                    </div>
+                    <div class="alert alert-dark">
+                        Please complete your account setup before making an appointment.
+                    </div>
+                    <div class="alert alert-success">
+                        Please complete your account setup before making an appointment.
+                    </div> --}}
+                    
                     <div class="col-sm-12 patient-setup patient-setup-step-1">
                         {{-- <center><img class="" src="{{ asset('images/dclogo.png') }}" alt="" style="width: 25%"></center> --}}
                         @include('components.client-appointment-form-personal-info')

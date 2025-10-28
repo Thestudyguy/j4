@@ -1,6 +1,6 @@
-<aside class="main-sidebar sidebar-info-primary elevation-1 fixed" style="position: fixed;background: whitesmoke;">
+<aside class="main-sidebar sidebar-info-primary elevation-1 fixed" style="position: fixed;background: #0A2A51;">
     <center>
-        <img class="brand-image" src="{{ asset('images/dclogo.png') }}" alt="" style="width: 50%">
+        <img class="brand-image" src="{{ asset('images/j4.png') }}" alt="" style="width: 50%">
     </center>
     <a href="" class="brand-link" style="text-decoration: none;"></a>
     {{-- <div style="
@@ -74,37 +74,37 @@
                     {{-- Show these for non-patient and non-dentist roles --}}
                     <li class="nav-item">
                         <a href="{{ route('appointments') }}" class="nav-link">
-                            <i class="nav-icon fas fa-notes-medical"></i>
+                            <i class="nav-icon fas fa-notes-medical"style="color: white;"></i>
                             <p class="text-sm">{{ __('Appointments') }}</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('dashboard') }}" class="nav-link">
-                            <i class="nav-icon fas fa-th"></i>
+                            <i class="nav-icon fas fa-th"style="color: white;"></i>
                             <p class="text-sm">{{ __('Dashboard') }}</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('services-dashboard') }}" class="nav-link">
-                            <i class="nav-icon fa fa-file-invoice"></i>
+                            <i class="nav-icon fa fa-file-invoice"style="color: white;"></i>
                             <p class="text-sm">{{ __('Services') }}</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('doctors') }}" class="nav-link">
-                            <i class="nav-icon fas fa-user"></i>
+                            <i class="nav-icon fas fa-user"style="color: white;"></i>
                             <p class="text-sm">{{ __('Doctors') }}</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('patients') }}" class="nav-link">
-                            <i class="nav-icon fas fa-users"></i>
+                            <i class="nav-icon fas fa-users"style="color: white;"></i>
                             <p class="text-sm">{{ __('Patients') }}</p>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('inventory') }}" class="nav-link">
-                            <i class="nav-icon fas fa-boxes"></i>
+                            <i class="nav-icon fas fa-boxes"style="color: white;"></i>
                             <p class="text-sm">{{ __('Inventory') }}</p>
                         </a>
                     </li>
@@ -119,7 +119,12 @@
                         </a>
                     </li>
                 @endif
-
+{{-- <li class="nav-item">
+                        <a href="{{ route('dentist-interface') }}" class="nav-link">
+                            <i class="nav-icon fas fa-file" style="color: white;"></i>
+                            <p class="text-sm">{{ __('My appointments') }}</p>
+                        </a>
+                    </li> --}}
             </ul>
         </nav>
     </div>

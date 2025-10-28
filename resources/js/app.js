@@ -22,4 +22,15 @@ $(document).on('input', 'input[name="serviceprice"]', function() {
     } else {
         $(this).val(parts[0]);
     }
+
 });
+window.formatValueInput = function(input) {
+        var value = input.value.replace(/[^0-9\.]/g, '');
+        var parts = value.split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        if (parts.length > 1) {
+            input.value = parts[0] + '.' + parts[1];
+        } else {
+            input.value = parts[0];
+        }
+    };

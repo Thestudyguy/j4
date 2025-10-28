@@ -156,7 +156,7 @@ $(document).ready(function () {
         if (currentStep === 2) {
             let isValid = true;
             console.log('diri ko mag flag?');
-            $('.terms-and-condition').click();
+            // $('.terms-and-condition').click();
             function markInvalid($el) {
                 $el.addClass('is-invalid');
                 isValid = false;
@@ -247,7 +247,7 @@ $(document).ready(function () {
                 });
                 return;
             }else{
-    // $('.terms-and-condition').click();
+    $('.terms-and-condition').click();
             }
             
             let formData = $('.client-medical-history-form').serializeArray();

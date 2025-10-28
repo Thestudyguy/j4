@@ -12,6 +12,9 @@
     "wdth" 100;
 }
 */
+/* a .nav-link{
+  color: white;
+} */
 *{
     font-family: "Rubik", sans-serif;
     /* font-optical-sizing: auto; */
@@ -152,6 +155,7 @@
 
 .nav-link{
     cursor: pointer;
+    color: white;
 }
 .intro-banner {
     background: 
@@ -247,7 +251,7 @@
 }
 
 .nav-link p{
-    color: black;
+    color: white;
 }
 .services-row-container{
     background-color: whitesmoke;
