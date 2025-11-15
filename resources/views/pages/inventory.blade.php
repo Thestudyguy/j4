@@ -31,6 +31,9 @@
                         <span class="fw-semibold text-muted small">On Hand</span>
                     </div>
                     <div class="col-sm-2">
+                        <span class="fw-semibold text-muted small">Unit Price</span>
+                    </div>
+                    <div class="col-sm-2">
                         <span class="fw-semibold text-muted small">Status</span>
                     </div>
                     <div class="col-sm-2">
@@ -62,6 +65,10 @@
                                 </span>
                             </div>
                             <div class="col-sm-2">
+                                {{-- <span class="fw-semibold text-muted small">{{ $items->price }}</span> --}}
+                                <span class="fw-semibold text-muted small">{{ number_format($items->price, 2) }}</span>
+                            </div>
+                            <div class="col-sm-2">
                                 @if ($isOutOfStock)
                                     <small class="text-danger fw-bold small">Out of Stock</small>
                                 @elseif($isLowStock)
@@ -70,6 +77,7 @@
                                     <small class="text-info fw-semibold">In Stock</small>
                                 @endif
                             </div>
+                            
                             <div class="col-sm-2">
                                 <span
                                     class="fw-semibold small fw-bold text-muted">
@@ -78,6 +86,7 @@
 
                                 </span>
                             </div>
+                            
                         </div>
                     @endforeach
                 </div>

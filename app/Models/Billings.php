@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Inventory extends Model
+class Billings extends Model
 {
     //
     protected $fillable = [
-        "item_name","category","on_hand", "price"
+        'appointmentID', 'item', 'itemID', 'itemPrice', 'quantity'
     ];
 }

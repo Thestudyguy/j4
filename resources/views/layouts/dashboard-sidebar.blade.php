@@ -36,6 +36,7 @@
                             <p class="text-sm">{{ __('Appointments') }}</p>
                         </a>
                     </li>
+                    
                     <li class="nav-item">
                         <a href="{{ route('dashboard') }}" class="nav-link">
                             <i class="nav-icon fas fa-th"></i>
@@ -74,8 +75,15 @@
                     {{-- Show these for non-patient and non-dentist roles --}}
                     <li class="nav-item">
                         <a href="{{ route('appointments') }}" class="nav-link">
-                            <i class="nav-icon fas fa-notes-medical"style="color: white;"></i>
+                            <i class="nav-icon fas fa-notes-medical" style="color: white;"></i>
                             <p class="text-sm">{{ __('Appointments') }}</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('billings') }}" class="nav-link">
+                            <i class="nav-icon fas fa-credit-card" style="color: white;"></i>
+                            <p class="text-sm">{{ __('Billings') }}</p>
                         </a>
                     </li>
                     <li class="nav-item">

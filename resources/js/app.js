@@ -13,6 +13,7 @@ import './app-scripts/edit-patient-medical-history';
 import './app-scripts/patient-appointment-note';
 import './app-scripts/appointment-notes';
 import './app-scripts/chatbot';
+import './app-scripts/billing';
 $(document).on('input', 'input[name="serviceprice"]', function() {
     var value = $(this).val().replace(/[^0-9\.]/g, '');
     var parts = value.split('.');
@@ -22,6 +23,8 @@ $(document).on('input', 'input[name="serviceprice"]', function() {
     } else {
         $(this).val(parts[0]);
     }
+
+    
 
 });
 window.formatValueInput = function(input) {
@@ -34,3 +37,16 @@ window.formatValueInput = function(input) {
             input.value = parts[0];
         }
     };
+$(document).ready(function () {
+
+    $('#notifBtn').on('click', function (e) {
+        e.stopPropagation();
+        $('#notifDropdown').toggle();
+    });
+
+    // Close when clicking outside
+    $(document).on('click', function () {
+        $('#notifDropdown').hide();
+    });
+
+});

@@ -69,6 +69,8 @@ Route::middleware('authenticated')->group(function(){
     Route::post('services/remove-sub-service', [Controller::class,'RemoveSubService'])->name('services/remove-sub-service');
     Route::post('doctors/get-doctors-appointment/{id}', [Controller::class,'GetDoctorsAppointments'])->name('services/remove-sub-service');
     Route::post('appointments/new-note', [DentistController::class,'CreateNotes']);
+    Route::get('billings', [Controller::class,'Billings'])->name('billings');
+    Route::post('store-billing', [Controller::class,'NewBilling'])->name('store-billing');
 });
 Route::get('/patient-appointments', [PatientController::class, 'PatientAppointmentList'])->name('patient-appointments-page');
 Route::post('/appointments/update', [PatientController::class, 'UpdateAppointment']);

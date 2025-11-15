@@ -39,6 +39,10 @@
                         <input type="number" id="stock" name="stock" class="form-control"
                             placeholder="Enter stock amount" min="0" required>
                     </div>
+                    <div class="mb-3">
+                        <label for="stock" class="form-label fw-semibold">Unit Price</label>
+                        <input type="text" class="form-control form-control-sm rounded-1" name="price" id="price" onchange="formatValueInput(this)">
+                    </div>
                 </form>
         </div>
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Mail\MailDentistAccount;
 use App\Mail\MailPatientAppointmentStatus;
 use App\Models\Appointment;
+use App\Models\Billings;
 use App\Models\Doctors;
 use App\Models\Inventory;
 use App\Models\PatientHistory;
@@ -35,13 +36,15 @@ class Controller
             $validated = $request->validate([
                 'item_name' => 'required|string|max:255',
                 'category'  => 'required|string|max:255',
-                'stock'     => 'required|integer|min:0'
+                'stock'     => 'required|integer|min:0',
+                'price'     => 'required|min:0'
             ]);
 
             $item = new Inventory();
             $item->item_name = $validated['item_name'];
             $item->category  = $validated['category'];
             $item->on_hand = (int) $validated['stock'];
+            $item->price = (int) $validated['price'];
             $item->save();
 
             return response()->json([
@@ -764,5 +767,92 @@ public function UpdateSubServices(Request $request)
             return response()->json(['message'=> $th->getMessage()]);
             //throw $th;
         }
+    
     }
+
+    public function Billings(){
+        try {
+            $billings = DB::table('billings')
+            ->join('appointments', 'appointments.id', '=', 'billings.appointmentID')
+            ->join('patient_info', 'patient_info.id', '=', 'appointments.patient_id')
+            ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
+            ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
+            ->join('users', 'users.id', '=', 'doctors.user_id')
+            // ->select()
+            ->get();
+            Log::info(json_encode($billings, JSON_PRETTY_PRINT));
+            $patients = User::where('Role', 'patient')->get();
+            $patientInfo = Patients::get();
+            $inventory = Inventory::get();
+            $appointments = DB::table('appointments')
+            ->join('patient_info', 'patient_info.id', '=', 'appointments.patient_id')
+            ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
+            ->select(
+                'appointments.id', 'appointments.created_at', 'appointments.date', 'appointments.time',
+                'patient_info.FirstName', 'patient_info.LastName',
+                'sub_services.Service'
+            )
+            ->get();
+            return view('pages.dashboard-billings', compact('billings','appointments','inventory','patients', 'patientInfo'));
+
+            //code...
+        } catch (\Throwable $th) {
+            return response()->json(['message'=> $th->getMessage()]);
+            //throw $th;
+        }
+    }
+    public function NewBilling(Request $request)
+{
+    try {
+        Log::info($request['appointmentID']);
+        $request->validate([
+            'appointmentID' => 'required|exists:appointments,id',
+            'items' => 'required|array|min:1',
+            'items.*.itemID' => 'required|exists:inventories,id',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.itemprice' => 'required|numeric|min:0',
+            'items.*.item' => 'required|string',
+        ]);
+
+        $appointmentID = $request->appointmentID;
+        $items = $request->items;
+
+        $exists = Billings::where('appointmentID', $appointmentID)->exists();
+        if ($exists) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Billing for this appointment already exists.'
+            ], 409); // 409 = Conflict
+        }
+
+        foreach ($items as $item) {
+            Billings::create([
+                'appointmentID' => $appointmentID,
+                'itemID' => $item['itemID'],
+                'item' => $item['item'],
+                'itemPrice' => $item['itemprice'],
+                'quantity' => $item['quantity'],
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Billing saved successfully'
+        ]);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'success' => false,
+            'errors' => $e->errors()
+        ], 422);
+
+    } catch (\Throwable $th) {
+        Log::error($th->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => 'Something went wrong while saving billing.'
+        ], 500);
+    }
+}
+
 }
