@@ -50,21 +50,28 @@
                     <tr>
                         <th>Patient</th>
                         <th>Procedure</th>
-                        <th>Total</th>
-                        <th>Date</th>
+                        {{-- <th>Quantity</th> --}}
+                        <th>Amount</th>
+                        {{-- <th>Date</th> --}}
                         <th>Date Issued</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @foreach ($billings as $item)
+                    @foreach ($updatedBilling as $item)
+                      @php
+                      $total = 0;
+                        $total += ($item->quantity * $item->itemPrice);
+                    @endphp
                         <tr id="{{ $item->appointmentID }}">
                             <td>{{ $item->FirstName }} {{ $item->LastName }}</td>
                             <td>{{ $item->Service }}</td>
-                            <td>₱{{ number_format($item->itemPrice, 2) }}</td>
-                            <td>{{ $item->date }} - {{ $item->time }}</td>
-                            <td>{{ $item->created_at }}</td>
+                            {{-- <td>₱{{ number_format($item->quantity) }}</td> --}}
+                            <td>₱{{ number_format($total, 2) }}</td>
+                            {{-- <td>{{ \Carbon\Carbon::parse($item->date)->format('F j, Y') }}</td> --}}
+
+                            <td>{{ \Carbon\Carbon::parse($item->created_at)->format('F j, Y') }}</td>
 
                             <td class="text-center">
                                 <a href="" target="_blank"
@@ -72,6 +79,8 @@
                                     <i class="fas fa-upload"></i>
                                 </a>
                             </td>
+                            {{-- <pre>{!! json_encode($item, JSON_PRETTY_PRINT) !!}</pre> --}}
+
                         </tr>
                     @endforeach
                 </tbody>

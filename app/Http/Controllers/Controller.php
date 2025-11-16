@@ -872,7 +872,19 @@ public function UpdateSubServices(Request $request)
             ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
             ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
             ->join('users', 'users.id', '=', 'doctors.user_id')
-            // ->select()
+            // ->select('patient_info.FirstName as ptfname', 'patient_info.LastName as ptlname', 'appointments.id as appointmentID', 'sub_services.Service')
+            ->get();
+
+            $updatedBilling = DB::table('billings')
+            ->join('appointments', 'appointments.id', '=', 'billings.appointmentID')
+            ->join('patient_info', 'patient_info.id', '=', 'appointments.patient_id')
+            ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
+            ->join('inventories', 'inventories.id', '=', 'billings.itemID')
+            ->select(
+                'patient_info.FirstName', 'patient_info.LastName',
+                'sub_services.Service',
+                'appointments.date', 'appointments.time', 'billings.created_at', 'billings.quantity', 'appointments.id as appointmentID', 'inventories.price as itemPrice'
+            )
             ->get();
             Log::info(json_encode($billings, JSON_PRETTY_PRINT));
             $patients = User::where('Role', 'patient')->get();
@@ -887,7 +899,7 @@ public function UpdateSubServices(Request $request)
                 'sub_services.Service'
             )
             ->get();
-            return view('pages.dashboard-billings', compact('billings','appointments','inventory','patients', 'patientInfo'));
+            return view('pages.dashboard-billings', compact('updatedBilling','billings','appointments','inventory','patients', 'patientInfo'));
 
             //code...
         } catch (\Throwable $th) {
