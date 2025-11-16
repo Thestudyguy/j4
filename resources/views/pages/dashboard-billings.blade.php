@@ -74,11 +74,16 @@
                             <td>{{ \Carbon\Carbon::parse($item->created_at)->format('F j, Y') }}</td>
 
                             <td class="text-center">
-                                <a href="" target="_blank"
-                                    class="btn btn-outline-secondary btn-sm">
-                                    <i class="fas fa-upload"></i>
-                                </a>
-                            </td>
+    <form action="{{ url('report/billing-pdf/' . $item->appointmentID) }}" 
+          method="POST" 
+          target="_blank">
+        @csrf
+
+        <button type="submit" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-upload"></i>
+        </button>
+    </form>
+</td>
                             {{-- <pre>{!! json_encode($item, JSON_PRETTY_PRINT) !!}</pre> --}}
 
                         </tr>

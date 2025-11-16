@@ -43,12 +43,13 @@
                                 @foreach ($inventory as $item)
                                     <tr id="{{ $item->id }}">
                                         <td>
-                                            <select class="form-control" name="items-{{ $item->id }}"
+                                            {{-- <select class="form-control" name="items-{{ $item->id }}"
                                                 id="">
                                                 <option value="{{ $item->id }}" selected>{{ $item->item_name }}
                                                 </option>
                                                 <option value="{{ $item->id }}">{{ $item->item_name }}</option>
-                                            </select>
+                                            </select> --}}
+                                            <span class="text-dark fw-semibold sm">{{ $item->item_name }}</span>
                                         </td>
                                         <td>{{ $item->on_hand }}</td>
                                         <td><input class="form-control" type="number" name="quantity"

@@ -354,6 +354,231 @@ $pdf->Cell(0, 7, '*** End Of Report ***', 0, 1, 'C');
     exit;
 }
 
+    public function GenerateBillingReport($appointmentID)
+{
+    $pdf = new \FPDF('P', 'mm', 'A4');
+    $pdf->AddPage();
+    $billingReport = DB::table('appointments')
+        ->join('patient_info', 'patient_info.id', '=', 'appointments.patient_id')
+        ->join('patient_history', 'patient_history.patient_id', '=', 'patient_info.id')
+        ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
+        ->select(
+            'patient_info.*',
+            'patient_history.*',
+            'doctors.FirstName as dfname', 
+            'doctors.LastName as dlname', 
+            'doctors.ProfessionalTitle', 
+            'doctors.AreaOfExpertise', 
+            'doctors.MDLink',
+            'appointments.date as appt_date'
+        )
+        ->where('appointments.id', $appointmentID)
+        ->first();
+
+    if (!$billingReport) {
+        return back()->with('error', 'No report data found.');
+    }
+
+    // Load FPDF
+    $pdf = new \FPDF('P','mm','A4');
+    $pdf->AddPage();
+    $pdf->SetAutoPageBreak(true, 15);
+
+    // ====================================================================================
+    // HEADER WITH LOGO + TITLE
+    // ====================================================================================
+    $logoPath = public_path('images/dclogo.png');
+    if (file_exists($logoPath)) {
+        $pdf->Image($logoPath, 10, 10, 28);
+    }
+
+    $pdf->SetFont('Arial','B',20);
+    $pdf->SetTextColor(40,40,40);
+    $pdf->Cell(0,10,'',0,1); // spacer
+    $pdf->Cell(0,10,'DentalCare Patient Report',0,1,'C');
+
+    $pdf->SetFont('Arial','',12);
+    $pdf->SetTextColor(80,80,80);
+    $pdf->Cell(0,6,'Comprehensive Medical & Dental Assessment',0,1,'C');
+    $pdf->Ln(5);
+
+    // Horizontal line
+    $pdf->SetDrawColor(150,150,150);
+    $pdf->Line(10, 35, 200, 35);
+    $pdf->Ln(7);
+
+    // Utility function to make section headers
+    $makeSection = function($pdf, $text) {
+        $pdf->SetFillColor(230, 235, 255);
+        $pdf->SetDrawColor(180,180,180);
+        $pdf->SetTextColor(30,30,30);
+        $pdf->SetFont('Arial','B',12);
+        $pdf->Cell(0,8,"  " . $text,1,1,'L',true);
+        $pdf->Ln(2);
+        $pdf->SetFont('Arial','',11);
+        $pdf->SetTextColor(40,40,40);
+    };
+
+    // ====================================================================================
+    // SECTION: PATIENT INFORMATION
+    // ====================================================================================
+    $makeSection($pdf, 'Patient Information');
+
+    $fullName = trim($billingReport->FirstName.' '.$billingReport->MiddleName.' '.$billingReport->LastName);
+
+    $pdf->Cell(50,7,'Full Name:',0,0);
+    $pdf->Cell(0,7,$fullName,0,1);
+
+    $pdf->Cell(50,7,'Birthdate:',0,0);
+    $pdf->Cell(0,7,\Carbon\Carbon::parse($billingReport->BirthDate)->format('F j, Y'),0,1);
+
+    $pdf->Cell(50,7,'Address:',0,1);
+    $pdf->MultiCell(0,7,$billingReport->Address);
+
+    $pdf->Cell(50,7,'Mobile:',0,0);
+    $pdf->Cell(0,7,$billingReport->MobileNo,0,1);
+
+    $pdf->Cell(50,7,'Email:',0,0);
+    $pdf->Cell(0,7,$billingReport->Email,0,1);
+
+    $pdf->Ln(3);
+
+    // ====================================================================================
+    // SECTION: DOCTOR INFORMATION
+    // ====================================================================================
+    $makeSection($pdf, 'Attending Doctor');
+
+    $docName = $billingReport->dfname.' '.$billingReport->dlname;
+
+    $pdf->Cell(50,7,'Doctor:',0,0);
+    $pdf->Cell(0,7,$docName,0,1);
+
+    $pdf->Cell(50,7,'Specialty:',0,0);
+    $pdf->Cell(0,7,$billingReport->ProfessionalTitle . " / " . $billingReport->AreaOfExpertise,0,1);
+
+    $pdf->Ln(3);
+
+    // ====================================================================================
+    // SECTION: DENTAL HISTORY
+    // ====================================================================================
+    $makeSection($pdf, 'Dental History');
+
+    $pdf->Cell(50,7,'Previous Dentist:',0,0);
+    $pdf->Cell(0,7,$billingReport->previous_dentist ?? 'N/A',0,1);
+
+    $pdf->Cell(50,7,'Last Visit:',0,0);
+    $pdf->Cell(0,7,$billingReport->last_visit ? \Carbon\Carbon::parse($billingReport->last_visit)->format('F j, Y') : 'N/A',0,1);
+
+    $pdf->Ln(3);
+
+    // ====================================================================================
+    // SECTION: PHYSICIAN INFORMATION
+    // ====================================================================================
+    $makeSection($pdf, 'Physician Information');
+
+    $fields = [
+        'Physician Name' => $billingReport->physician_name,
+        'Specialty' => $billingReport->physician_specialty,
+        'Office Address' => $billingReport->physician_office_address,
+        'Office Phone' => $billingReport->physician_office_no,
+    ];
+
+    foreach ($fields as $label => $value) {
+        $pdf->Cell(50,7,$label.':',0,0);
+        if (strlen($value) > 40) {
+            $pdf->Ln(7);
+            $pdf->MultiCell(0,6,$value);
+        } else {
+            $pdf->Cell(0,7,$value ?: 'N/A',0,1);
+        }
+    }
+
+    $pdf->Ln(3);
+
+    // ====================================================================================
+    // SECTION: MEDICAL HISTORY
+    // ====================================================================================
+    $makeSection($pdf, 'Medical History');
+
+    $medicalFields = [
+        'General Health' => $billingReport->good_health,
+        'Uses Drugs' => $billingReport->uses_drugs,
+        'Under Medical Care' => $billingReport->under_medical_care,
+        'Medical Condition Details' => $billingReport->medical_condition_text,
+        'Had Surgery' => $billingReport->had_surgery,
+        'Surgery Details' => $billingReport->surgery_text,
+        'Pregnant' => $billingReport->pregnant,
+        'Hospitalized' => $billingReport->hospitalized,
+        'Hospitalization Details' => $billingReport->hospitalization_details,
+        'Birth Control' => $billingReport->taking_birth_control,
+        'Taking Medications' => $billingReport->taking_medications,
+        'Medication Details' => $billingReport->medications_details,
+        'Uses Tobacco' => $billingReport->using_tobacco,
+        'Nursing' => $billingReport->nursing,
+        'Blood Type' => $billingReport->blood_type,
+        'Blood Pressure' => $billingReport->blood_pressure,
+    ];
+
+    foreach ($medicalFields as $label => $value) {
+        if ($value !== null && $value !== '') {
+            $pdf->Cell(60,7,$label.':',0,0);
+            $pdf->MultiCell(0,7,$value);
+        }
+    }
+
+    $pdf->Ln(3);
+
+    // ====================================================================================
+    // SECTION: KNOWN CONDITIONS
+    // ====================================================================================
+    $makeSection($pdf, 'Known Medical Conditions');
+
+    $conditions = json_decode($billingReport->known_conditions, true);
+
+    if ($conditions && count($conditions)) {
+        foreach ($conditions as $c) {
+            $pdf->Cell(5,6,'•',0,0);
+            $pdf->Cell(0,6,$c,0,1);
+        }
+    } else {
+        $pdf->Cell(0,7,'No known medical conditions.',0,1);
+    }
+
+    $pdf->Ln(3);
+
+    // ====================================================================================
+    // SECTION: ALLERGIES
+    // ====================================================================================
+    $makeSection($pdf, 'Allergies');
+
+    $pdf->Cell(50,7,'Reported Allergies:',0,0);
+    $pdf->Cell(0,7,$billingReport->allergy ?? 'None',0,1);
+
+    if (!empty($billingReport->allergy_others)) {
+        $pdf->Ln(2);
+        $pdf->MultiCell(0,7,'Other Allergy Notes: '.$billingReport->allergy_others);
+    }
+
+    $pdf->Ln(10);
+
+    // ====================================================================================
+    // SIGNATURE SECTION
+    // ====================================================================================
+    $pdf->SetFont('Arial','B',12);
+    $pdf->Cell(0,8,'Verification & Signature',0,1);
+
+    $pdf->Ln(15);
+
+    $pdf->SetFont('Arial','',11);
+    $pdf->Cell(80,7,'_____________________________',0,1);
+    $pdf->Cell(80,7,'Attending Dentist / Authorized Personnel',0,1);
+
+    // ====================================================================================
+    // OUTPUT PDF
+    // ====================================================================================
+    $pdf->Output('I','Patient_Report.pdf');
+    exit;
+}
 
 
 }
