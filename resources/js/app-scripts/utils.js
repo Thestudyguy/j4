@@ -19,7 +19,7 @@ $(document).ready(function () {
             $icon.removeClass('fa-eye').addClass('fa-eye-slash');
         }
     });
-    
+
 
     //     $(document).ready(function () {
     //     $.ajaxSetup({
@@ -388,25 +388,54 @@ $(document).ready(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function (response) {
-            $('.update-pbi-loader').addClass('visually-hidden');
-            localStorage.setItem('patient-pbi', 'updated');
-            location.reload();
+                $('.update-pbi-loader').addClass('visually-hidden');
+                localStorage.setItem('patient-pbi', 'updated');
+                location.reload();
             },
             error: function (jqXHR, err, stat) {
-        $('.update-pbi-loader').addClass('visually-hidden');
+                $('.update-pbi-loader').addClass('visually-hidden');
                 Toast.fire({
                     icon: 'error',
                     title: stat,
                     text: jqXHR.responseJSON.error
                 });
-             }
+            }
         });
     });
 
-    $('.save-walk-in').on('click', function(){
-        const walkInData = $('.walk-in-form').serializeArray();
-        console.log(walkInData);
-        const optionalFields = [
+    let currentStep = 1;
+    const totalSteps = $('.walk-in.step').length;
+
+    $('.walk-in.step').hide();
+    $('.walk-in.step').eq(currentStep - 1).show();
+
+    function showStep(step) {
+        $('.walk-in.step').hide();
+        $('.walk-in.step').eq(step - 1).show();
+
+        if (step === 1) {
+            $('.walk-in-navback').hide();
+        } else {
+            $('.walk-in-navback').show();
+        }
+
+        if (step === totalSteps) {
+            $('.walk-in-navnext').hide();
+            $('.save-walk-in').removeClass('visually-hidden');
+        } else {
+            $('.walk-in-navnext').show();
+            $('.save-walk-in').addClass('visually-hidden');
+        }
+    }
+
+    let dataWalkin = null;
+    // Next button click
+    let walkInData;
+    $('.walk-in-navnext').on('click', function () {
+        if (currentStep === 1) {
+            walkInData = $('.walk-in-form').serializeArray();
+            console.log(walkInData);
+            const optionalFields = [
                 'middlename',
                 'religion',
                 'effectivedate',
@@ -420,33 +449,33 @@ $(document).ready(function () {
                 'email'
             ];
 
-             const minorRequiredFields = [
-        'guardian',
-        'guardianoccupation',
-        'consultationreason'
-    ];
-            
+            const minorRequiredFields = [
+                'guardian',
+                'guardianoccupation',
+                'consultationreason'
+            ];
+
             let hasEmptyRequired = false;
             walkInData.forEach(field => {
                 $(`[name="${field.name}"]`).removeClass('is-invalid');
 
             });
             walkInData.forEach(field => {
-        // Case 1: Always required fields (not in optionalFields)
-        if (!optionalFields.includes(field.name) && !field.value.trim()) {
-            $(`[name="${field.name}"]`).addClass('is-invalid');
-            hasEmptyRequired = true;
-        }
+                // Case 1: Always required fields (not in optionalFields)
+                if (!optionalFields.includes(field.name) && !field.value.trim()) {
+                    $(`[name="${field.name}"]`).addClass('is-invalid');
+                    hasEmptyRequired = true;
+                }
 
-        // Case 2: Minor fields required only if .for-minor is visible
-        if (!$('.for-minor').hasClass('visually-hidden') && minorRequiredFields.includes(field.name)) {
-            if (!field.value.trim()) {
-                $(`[name="${field.name}"]`).addClass('is-invalid');
-                hasEmptyRequired = true;
-            }
-        }
-    });
-        if (!$('input[name="sex"]:checked').val()) {
+                // Case 2: Minor fields required only if .for-minor is visible
+                if (!$('.for-minor').hasClass('visually-hidden') && minorRequiredFields.includes(field.name)) {
+                    if (!field.value.trim()) {
+                        $(`[name="${field.name}"]`).addClass('is-invalid');
+                        hasEmptyRequired = true;
+                    }
+                }
+            });
+            if (!$('input[name="sex"]:checked').val()) {
                 $('.client-sex-field').addClass(' border border-danger');
                 hasEmptyRequired = true;
             } else {
@@ -461,28 +490,90 @@ $(document).ready(function () {
                 });
                 return;
             }
-            $('.patients-page').removeClass('visually-hidden');
-            $.ajax({
-        url: '/new/walk-in-patient',
-        type: 'POST',
+        }
+        if (currentStep === 2) {
+
+            if ($('#selected_date').val() === '' && $('#selected_time').val() === '') {
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'No date and time selected',
+                    text: 'Please select date and time for your appointment'
+                });
+                return;
+            }
+            console.log('selected date and time', $('#selected_date').val(), $('#selected_time').val());
+        }
+        if (currentStep === 3) {
+            if ($('#selected_service_id').val() === '') {
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'No Service selected',
+                    text: 'Please select a service'
+                });
+                return;
+            }
+            console.log($('#selected_service_id').val());
+
+        }
+
+        if (currentStep < totalSteps) {
+            currentStep++;
+            showStep(currentStep);
+        }
+    });
+
+    // Back button click
+    $('.walk-in-navback').on('click', function () {
+        if (currentStep > 1) {
+            currentStep--;
+            showStep(currentStep);
+        }
+    });
+
+    // Initialize
+    showStep(currentStep);
+
+
+    $('.save-walk-in').on('click', function () {
+        console.log($('#selected_doctor_id').val());
+
+        if ($('#selected_doctor_id').val() === '') {
+            Toast.fire({
+                icon: 'warning',
+                title: 'No Doctor selected',
+                text: 'Please select a doctor'
+            });
+            return;
+        }
+        $('.patients-page').removeClass('visually-hidden');
+        $.ajax({
+            url: '/new/walk-in-patient',
+            type: 'POST',
             headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
             },
-        data: walkInData,
-        success: function (response) {
-            $('.patients-page').addClass('visually-hidden');
-            localStorage.setItem('patient-setup', 'created');
-            location.reload();
-        },
-        error: function (jqXHR, err, stat) {
-            $('.patients-page').addClass('visually-hidden');
+            data: {
+                walkInData: walkInData,
+                doctor_id: $('#selected_doctor_id').val(),
+                service_id: $('#selected_service_id').val(),
+                date: $('#selected_date').val(),
+                time: $('#selected_time').val()
+            },
+
+            success: function (response) {
+                $('.patients-page').addClass('visually-hidden');
+                localStorage.setItem('patient-setup', 'created');
+                location.reload();
+            },
+            error: function (jqXHR, err, stat) {
+                $('.patients-page').addClass('visually-hidden');
                 Toast.fire({
                     icon: 'error',
                     title: stat,
                     text: jqXHR.responseJSON.error
                 });
-             }
-    });
+            }
+        });
     });
 
     const appointmentStatus = localStorage.getItem('appointment');
@@ -527,8 +618,8 @@ $(document).ready(function () {
     });
 
 
-//patient search
-$("#searchPatients").on("keyup", function () {
+    //patient search
+    $("#searchPatients").on("keyup", function () {
         let value = $(this).val().toLowerCase();
 
         $("#patientList .appointment-row").filter(function () {

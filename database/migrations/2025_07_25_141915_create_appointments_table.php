@@ -26,6 +26,8 @@ return new class extends Migration
             $table->string('time');
             $table->date('resched_date')->nullable();
             $table->string('resched_time')->nullable();
+            $table->boolean('is_walk_in')->default(false);
+            $table->string('created_by')->nullable();
             $table->timestamps();
         });
     }

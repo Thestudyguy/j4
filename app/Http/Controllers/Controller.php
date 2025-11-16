@@ -5,6 +5,7 @@ use App\Mail\MailDentistAccount;
 use App\Mail\MailPatientAppointmentStatus;
 use App\Models\Appointment;
 use App\Models\Billings;
+use App\Models\DentistOffSched;
 use App\Models\Doctors;
 use App\Models\Inventory;
 use App\Models\PatientHistory;
@@ -80,13 +81,18 @@ class Controller
             ]);
             Log::info(json_encode($validated, JSON_PRETTY_PRINT));
             // return;
-            Appointment::create([
-                'patient_id' => $validated['patient_id'],
-                'doctor_id' => $validated['selected_doctor_id'],
-                'service_id' => $validated['selected_service_id'],
-                'date' => $validated['selected_date'],
-                'time' => $validated['selected_time'],
-            ]);
+            $user = Auth::user();
+
+Appointment::create([
+    'patient_id' => $validated['patient_id'],
+    'doctor_id' => $validated['selected_doctor_id'],
+    'service_id' => $validated['selected_service_id'],
+    'date' => $validated['selected_date'],
+    'time' => $validated['selected_time'],
+    'created_by' => $user->Role !== 'patient'
+        ? $user->FirstName . ' ' . $user->LastName
+        : null,
+]);
 
             return response()->json([
                 'status' => 'success',
@@ -115,6 +121,67 @@ class Controller
     }
 
     public function Patients(){
+        $subServices = SubService::all();//'isVisible', true put this shit back when we rollback its migration
+        $doctors = Doctors::where('isRemoved', false)->get();
+        $doctorss = DB::table('doctors')
+        ->leftJoin('dentist_off_scheds', 'dentist_off_scheds.dentist_id', '=', 'doctors.id')
+        ->select(
+            'doctors.id as dentistID',
+            'doctors.FirstName',
+            'doctors.LastName',
+            'doctors.ProfessionalTitle',
+            'doctors.MiddleName',
+            'doctors.Suffix',
+            'doctors.MDLink',
+            'doctors.email',
+            'doctors.AreaOfExpertise',
+            'doctors.image_path',
+            'dentist_off_scheds.id as off_sched_id',
+            'dentist_off_scheds.date as off_date',
+            'dentist_off_scheds.time as off_time',
+            'dentist_off_scheds.created_at as off_created',
+            'dentist_off_scheds.updated_at as off_updated'
+        )
+        ->where('doctors.isRemoved', false)
+        ->orderBy('doctors.id')
+        ->orderBy('dentist_off_scheds.date')
+        ->get();
+$availableDoctors = [];
+
+foreach ($doctorss as $row) {
+
+    $dentistID = $row->dentistID;
+
+    if (!isset($availableDoctors[$dentistID])) {
+        $availableDoctors[$dentistID] = [
+            'doctor'    => [
+                'dentistID'        => $row->dentistID,
+                'FirstName'        => $row->FirstName,
+                'LastName'         => $row->LastName,
+                'ProfessionalTitle'=> $row->ProfessionalTitle,
+                'MiddleName'       => $row->MiddleName,
+                'Suffix'           => $row->Suffix,
+                'MDLink'           => $row->MDLink,
+                'email'            => $row->email,
+                'AreaOfExpertise'  => $row->AreaOfExpertise,
+                'image_path'       => $row->image_path,
+            ],
+            'off_sched' => []
+        ];
+    }
+
+    // Only add off-schedule if it exists
+    if ($row->off_sched_id) {
+        $availableDoctors[$dentistID]['off_sched'][] = [
+            'id'         => $row->off_sched_id,
+            'date'       => $row->off_date,
+            'time'       => $row->off_time,
+            'created_at' => $row->off_created,
+            'updated_at' => $row->off_updated
+        ];
+    }
+}
+$availableDoctors = array_values($availableDoctors);
         $patients = DB::table('patient_info')
         ->leftJoin('appointments','appointments.patient_id', '=', 'patient_info.id')
         ->leftJoin('sub_services','sub_services.id','=', 'appointments.service_id')
@@ -148,11 +215,11 @@ class Controller
         $doctors = Doctors::where('isRemoved', false)->get();
         // $servicesCount = count($patients);
         Log::info(json_encode($patients, JSON_PRETTY_PRINT));
-        return view('pages.patients', compact('patients', 'subServices', 'doctors'));
+        return view('pages.patients', compact('patients', 'subServices', 'doctors', 'availableDoctors'));
     }
 
     public function AllAppointments(){
-        $appointments = DB::table('appointments')
+        $allappointments = DB::table('appointments')
         ->join('patient_info', 'patient_info.id', '=', 'appointments.patient_id')
         ->leftJoin('users', 'users.id', '=', 'appointments.patient_id')
         ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
@@ -173,8 +240,8 @@ class Controller
         )
         ->get();
 
-        // Log::info($appointments);
-        return view('pages.all-appointments', compact('appointments'));
+        Log::info(json_encode($allappointments, JSON_PRETTY_PRINT));
+        return view('pages.all-appointments', compact('allappointments'));
     }
 
     public function PatientDetails($id){
@@ -224,16 +291,19 @@ class Controller
     {
         $inventory = Inventory::all();
         $appointments = DB::table('appointments')
-        ->join('users', 'users.id', '=', 'appointments.patient_id')
-        ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
-        ->select(
-            //appointment 
-            'appointments.status', 'appointments.date', 'appointments.time',
-            'users.FirstName',
-            //service
-            'sub_services.Service', 'sub_services.Price'
-        )
-        ->get();
+    ->join('users', 'users.id', '=', 'appointments.patient_id')
+    ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
+    ->select(
+    'appointments.status', 
+    'appointments.date',   // keep original
+    'appointments.time',
+    'users.FirstName', 
+    'sub_services.Service', 
+    'sub_services.Price',
+    'appointments.created_at as appointment_created'
+)
+    ->get();
+
         // $paymentDetails = DB::table('appointments')
         // ->where()
         // ->get();
@@ -241,6 +311,7 @@ class Controller
         $totalPatient = count($patients);
         $patientCount = Appointment::all();
             $count = count($patientCount);
+            view()->share('appointments', $appointments);
         return view('pages.dashboard-dashboard', compact('inventory','appointments', 'count', 'totalPatient'));
     }
 
@@ -569,32 +640,37 @@ class Controller
 public function AddWalkInPatient(Request $request)
 {
     try {
+        // Map walkInData array to flat associative array
+        $walkInData = collect($request->walkInData)->pluck('value', 'name')->toArray();
+
+        // Validation rules
         $rules = [
-            'firstname'    => 'required|string|max:255',
-            'lastname'     => 'required|string|max:255',
-            'middlename'   => 'nullable|string|max:255',
-            'birthdate'            => 'required|date',
-            'sex'                  => 'required|in:male,female,Male,Female',
-            'age'                  => 'required|integer|min:0',
-            'religion'             => 'nullable|string|max:255',
-            'nationality'          => 'required|string|max:255',
-            'nickname'             => 'required|string|max:255',
-            'address'              => 'required|string|max:500',
-            'homeno'               => 'nullable|string|max:20',
-            'occupation'           => 'required|string|max:255',
-            'officeno'             => 'nullable|string|max:20',
-            'effectivedate'        => 'nullable|date',
-            'faxno'                => 'nullable|string|max:20',
-            'email'                => 'nullable|email|max:255',
-            'mobileno'             => 'required|string|max:20',
-            'guardian'             => 'nullable|string|max:255',
-            'guardianoccupation'   => 'nullable|string|max:255',
-            'referal'              => 'nullable|string|max:255',
-            'consultationreason'   => 'nullable|string|max:1000',
+            'firstname'  => 'required|string|max:255',
+            'lastname'   => 'required|string|max:255',
+            'middlename' => 'nullable|string|max:255',
+            'birthdate'  => 'required|date',
+            'sex'        => 'required|in:male,female,Male,Female',
+            'age'        => 'required|integer|min:0',
+            'religion'   => 'nullable|string|max:255',
+            'nationality'=> 'required|string|max:255',
+            'nickname'   => 'required|string|max:255',
+            'address'    => 'required|string|max:500',
+            'homeno'     => 'nullable|string|max:20',
+            'occupation' => 'required|string|max:255',
+            'officeno'   => 'nullable|string|max:20',
+            'effectivedate'=> 'nullable|date',
+            'faxno'      => 'nullable|string|max:20',
+            'email'      => 'nullable|email|max:255',
+            'mobileno'   => 'required|string|max:20',
+            'guardian'   => 'nullable|string|max:255',
+            'guardianoccupation'=>'nullable|string|max:255',
+            'referal'    => 'nullable|string|max:255',
+            'consultationreason'=>'nullable|string|max:1000',
         ];
 
-        $validated = $request->validate($rules);
+        $validated = Validator::make($walkInData, $rules)->validate();
 
+        // Prepare patient data for insertion
         $data = [
             'FirstName'          => $validated['firstname'],
             'LastName'           => $validated['lastname'],
@@ -617,20 +693,38 @@ public function AddWalkInPatient(Request $request)
             'GuardianOccupation' => $validated['guardianoccupation'] ?? null,
             'Referal'            => $validated['referal'] ?? null,
             'ReasonForVisit'     => $validated['consultationreason'] ?? null,
+            // 'is_walk_in'         => true,
+            // 'created_by'         => auth()->user()->FirstName . ' ' . auth()->user()->LastName,
         ];
 
-        // Step 3: Insert to DB
-        DB::table('patient_info')->insert($data);
+        // Insert patient
+        $patientId = DB::table('patient_info')->insertGetId($data);
+
+        // Insert appointment
+        DB::table('appointments')->insert([
+            'patient_id' => $patientId,
+            'doctor_id'  => $request->doctor_id,
+            'service_id' => $request->service_id,
+            'date'       => $request->date,
+            'time'       => $request->time,
+            'status'     => 'Pending',
+            'is_walk_in' => true,
+            'created_by' => auth()->user()->FirstName . ' ' . auth()->user()->LastName,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
         return response()->json(['message' => 'Walk-in patient added successfully'], 201);
+
     } catch (\Throwable $th) {
         Log::error('Error adding walk-in patient: ' . $th->getMessage());
         return response()->json([
             'message' => 'Failed to add patient',
-            'error' => $th->getMessage(),
+            'error'   => $th->getMessage(),
         ], 500);
     }
 }
+
 
 
 public function UpdateOrCreatePatientHistory(Request $request)
@@ -852,6 +946,129 @@ public function UpdateSubServices(Request $request)
             'success' => false,
             'message' => 'Something went wrong while saving billing.'
         ], 500);
+    }
+}
+
+public function storeOffSchedule(Request $request)
+{
+    // Validate incoming data
+    $request->validate([
+        'dentist_id' => 'required|exists:doctors,id',
+        'date'       => 'required|date',
+        'time'       => 'nullable|string',
+    ]);
+
+    $dentistId = $request->dentist_id;
+    $date      = $request->date;
+    $time      = $request->time;
+
+    /*
+    |--------------------------------------------------------------------------
+    | 1. Check duplicates:
+    |    - If time is null  → full-day off
+    |    - If time has value → time-specific off
+    |--------------------------------------------------------------------------
+    */
+
+    if ($time === null || $time === '') {
+
+        // ❗ Check if a full-day off exists already
+        $existingFullDay = DentistOffSched::where('dentist_id', $dentistId)
+            ->where('date', $date)
+            ->whereNull('time')
+            ->first();
+
+        if ($existingFullDay) {
+            return response()->json([
+                'success' => false,
+                'type'    => 'duplicate_full_day',
+                'message' => "This dentist already has a FULL-DAY off scheduled for {$date}.",
+                'suggestion' => "Remove the existing full-day off or choose a time-specific off-schedule."
+            ], 409);
+        }
+
+        // ❗ If full-day IS being added, but there are time slots added — block it
+        $existingTimeSlots = DentistOffSched::where('dentist_id', $dentistId)
+            ->where('date', $date)
+            ->whereNotNull('time')
+            ->count();
+
+        if ($existingTimeSlots > 0) {
+            return response()->json([
+                'success' => false,
+                'type'    => 'conflict_time_slots_exist',
+                'message' => "This dentist already has specific TIME-SLOT off schedules on {$date}.",
+                'details' => "You cannot add a full-day off because time-based entries already exist.",
+                'suggestion' => "Clear the time-slot blocks first, then add a full-day off."
+            ], 409);
+        }
+
+    } else {
+
+        // ❗ Check if this exact time slot exists
+        $existingTime = DentistOffSched::where('dentist_id', $dentistId)
+            ->where('date', $date)
+            ->where('time', $time)
+            ->first();
+
+        if ($existingTime) {
+            return response()->json([
+                'success' => false,
+                'type'    => 'duplicate_time_slot',
+                'message' => "The time slot {$time} on {$date} is already marked as unavailable for this dentist.",
+                'suggestion' => "Choose a different time or remove the existing time-slot off."
+            ], 409);
+        }
+
+        // ❗ Prevent time-slot creation if full-day off exists
+        $fullDayExists = DentistOffSched::where('dentist_id', $dentistId)
+            ->where('date', $date)
+            ->whereNull('time')
+            ->first();
+
+        if ($fullDayExists) {
+            return response()->json([
+                'success' => false,
+                'type'    => 'full_day_conflict',
+                'message' => "A full-day off is already set for {$date}.",
+                'details' => "You cannot add a time slot because the entire day is marked unavailable.",
+                'suggestion' => "Remove the full-day off first if you want time-slot based scheduling."
+            ], 409);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 2. No duplicates → Create entry
+    |--------------------------------------------------------------------------
+    */
+
+    $record = DentistOffSched::create([
+        'dentist_id' => $dentistId,
+        'date'       => $date,
+        'time'       => $time,
+    ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | 3. Return success
+    |--------------------------------------------------------------------------
+    */
+    return response()->json([
+        'success' => true,
+        'message' => $time
+            ? "Time slot {$time} on {$date} has been blocked for this dentist."
+            : "A full-day off has been added for {$date}.",
+        'data' => $record
+    ], 201);
+}
+
+
+public function GetDentistSched(Request $request){
+    try {
+        
+    } catch (\Throwable $th) {
+        throw $th;
     }
 }
 

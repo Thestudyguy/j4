@@ -5,7 +5,7 @@
 
 
             <div class="container py-4">
-                <h4 class="fw-bold text-dark mb-4 text-left">My Profile</h4>
+                <h4 class="fw-bold text-dark mb-4 text-left">My Profile {{ Auth::user()->id }}</h4>
                 <div class="row p-2 rounded-2 mb-2" style="background: #f0f0f0;">
                     <div class="col-sm-2 text-sm">Date</div>
                     <div class="col-sm-2 text-sm">Time</div>
@@ -18,8 +18,8 @@
            @foreach ($prepAppointment as $appt)
     <div class="row p-2 rounded-2 my-2 text-sm text-left" @if($appt->status === 'cancel') style="" @endif>
 
-        <div class="col-sm-2 text-sm">{{ $appt->Date }}</div>
-        <div class="col-sm-2 text-sm">{{ $appt->Time }}</div>
+        <div class="col-sm-2 text-sm">{{ $appt->date }}</div>
+        <div class="col-sm-2 text-sm">{{ $appt->time }}</div>
         <div class="col-sm-2 text-sm">{{ $appt->service }}</div>
         <div class="col-sm-4 text-sm">{{ $appt->title }} {{ $appt->dfName }} {{ $appt->dlname }}</div>
 

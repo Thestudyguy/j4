@@ -36,7 +36,7 @@
 
 
 
-               @foreach ($appointments as $appt)
+               @foreach ($allappointments as $appt)
     @php
         $isDisabled = in_array($appt->status, ['cancel', 'completed']);
     @endphp

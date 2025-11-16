@@ -33,5 +33,6 @@
         minDate: "today",
     });
 </script>
+
 <!-- Custom App Script -->
 <script src="{{ asset('dist/js/pages/dashboard.js') }}"></script>

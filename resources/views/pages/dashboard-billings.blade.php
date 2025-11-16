@@ -1,81 +1,84 @@
 @extends('dashboard')
 @section('content')
-    <div class="container-fluid pt-5">
-        <div class="loader-container billings-page visually-hidden">
-            <div class="loader"></div>
-        </div>
-        <div class="row mt-2 p-3">
-            <div class="col-sm-10">
-                <h1 class="h1 mt-2 p-3">Billings</h1>
-            </div>
-            <div class="col-sm-2 mt-2 p-3">
-                <button class="btn btn-primary lead sm fw-normal" data-bs-target="#new-billing" data-bs-toggle="modal">
-                    <i class="fas fa-plus mx-1 fw-normal"></i>New Billing
-                </button>
-                @include('modals.new-billing-modal')
-            </div>
-        </div>
-        <div class="row mt-2 p-2">
-            <div class="col-sm-3">
-                <div class="card p-5">
-                    <span class=" lead fw-semibold text-muted">Total Billings</span>
-                    <div class="card-body">
-                        <span class="text-center fw-semibold text-lg">
-                            100
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="card p-5">
-                    <span class="lead fw-semibold text-muted">Total Revenue</span>
-                    <div class="card-body">
-                        <span class="text-center fw-semibold text-lg">
-                            100
-                        </span>
-                    </div>
-                </div>
+<div class="container-fluid pt-5 billings-container">
+
+    <div class="loader-container billings-page visually-hidden">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 px-3 mt-4">
+        <h1 class="fw-bold mb-0 text-primary">Billings</h1>
+
+        <button class="btn btn-primary fw-semibold px-3"
+                data-bs-target="#new-billing" data-bs-toggle="modal">
+            <i class="fas fa-plus me-1"></i> New Billing
+        </button>
+
+        @include('modals.new-billing-modal')
+    </div>
+
+    <!-- Statistic Cards -->
+    <div class="row g-3 px-3 mb-4">
+
+        <div class="col-sm-3">
+            <div class="stat-card shadow-sm">
+                <span class="text-muted small">Total Billings</span>
+                <p class="display-6 fw-semibold">{{ $totalBillings ?? 100 }}</p>
             </div>
         </div>
-        <div class="row m-2">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-tools">
-                        <input type="text" name="" class="form-control" placeholder="search..." id="">
-                    </div>
-                    <span class="fw-bold text-lg">Billings</span>
-                </div>
-                <div class="card-body" style="overflow-y: auto; max-height: 500px;">
-                    <table class="table table-hover table-bordered">
-                        <thead>
-                            <th>Patient</th>
-                            <th>Procedure</th>
-                            <th>Total</th>
-                            <th>Date</th>
-                            <th>Date Issued</th>
-                        </thead>
-                        <tbody>
-                            @foreach ($billings as $item)
-                                <tr id="{{ $item->appointmentID }}">
-                                    <td>{{ $item->FirstName }} {{ $item->LastName }}</td>
-                                    <td>{{ $item->Service }}</td>
-                                    <td>{{ $item->itemPrice }}</td>
-                                    <td>{{ $item->date }} - {{ $item->time }}</td>
-                                    <td>{{ $item->created_at }}</td>
-                                    <td>
-                                        <div class="col-sm-4">
-                                            <a href="" target="_blank"
-                                                class="btn btn-transparent border border-secondary float-end btn-sm fw-semibold text-sm">
-                                                <i class="fas fa-upload"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+
+        <div class="col-sm-3">
+            <div class="stat-card shadow-sm">
+                <span class="text-muted small">Total Revenue</span>
+                <p class="display-6 fw-semibold">{{ $totalRevenue ?? 100 }}</p>
             </div>
+        </div>
+
+    </div>
+
+    <!-- Table Section -->
+    <div class="card shadow-sm border-0 mx-3">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <span class="fw-bold h5 mb-0">Billings List</span>
+            <input type="text" class="form-control w-25" placeholder="Search...">
+        </div>
+
+        <div class="card-body" style="overflow-y: auto; max-height: 500px;">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Patient</th>
+                        <th>Procedure</th>
+                        <th>Total</th>
+                        <th>Date</th>
+                        <th>Date Issued</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach ($billings as $item)
+                        <tr id="{{ $item->appointmentID }}">
+                            <td>{{ $item->FirstName }} {{ $item->LastName }}</td>
+                            <td>{{ $item->Service }}</td>
+                            <td>₱{{ number_format($item->itemPrice, 2) }}</td>
+                            <td>{{ $item->date }} - {{ $item->time }}</td>
+                            <td>{{ $item->created_at }}</td>
+
+                            <td class="text-center">
+                                <a href="" target="_blank"
+                                    class="btn btn-outline-secondary btn-sm">
+                                    <i class="fas fa-upload"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+
+            </table>
         </div>
     </div>
+
+</div>
 @endsection

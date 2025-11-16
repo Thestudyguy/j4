@@ -13,6 +13,7 @@ import './app-scripts/edit-patient-medical-history';
 import './app-scripts/patient-appointment-note';
 import './app-scripts/appointment-notes';
 import './app-scripts/chatbot';
+import './app-scripts/dentist-offsched';
 import './app-scripts/billing';
 $(document).on('input', 'input[name="serviceprice"]', function() {
     var value = $(this).val().replace(/[^0-9\.]/g, '');

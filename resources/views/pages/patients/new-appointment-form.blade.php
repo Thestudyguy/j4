@@ -69,29 +69,41 @@
                 <div class="appointment-step appointment-prep-step-3 visually-hidden">
                     <h4 class="fw-semibold mb-3 text-secondary">Our Dentists</h4>
                     <div class="row">
-                        @foreach ($doctors as $doctor)
-                            <div class="col-md-4 mb-4">
-                                <div class="card h-100 shadow-sm doctor-card" data-id="{{ $doctor->id }}">
-                                    <img src="{{ asset($doctor->image_path) }}" class="card-img-top img-fluid rounded-top"
-                                        alt="{{ $doctor->FirstName }}" style="height: 250px; object-fit: contain;">
-                                    <div class="card-body text-center">
-                                        <h5 class="card-title">
-                                            {{ $doctor->ProfessionalTitle ?? '' }} {{ $doctor->FirstName }}
-                                            {{ $doctor->MiddleName ?? '' }} {{ $doctor->LastName }}
-                                        </h5>
-                                        <p class="text-muted mb-0">{{ $doctor->AreaOfExpertise ?? 'Dentist' }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
-                            
+                        @foreach ($availableDoctors as $item)
+    @php
+        $doctor = $item['doctor'];
+        $offsched = $item['off_sched'];
+    @endphp
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm doctor-card" data-id="{{ $doctor['dentistID'] }}"
+             data-offsched='@json($offsched, JSON_HEX_APOS | JSON_HEX_QUOT)'>
+            <img src="{{ asset($doctor['image_path']) }}" class="card-img-top img-fluid rounded-top"
+                 alt="{{ $doctor['FirstName'] }}" style="height: 250px; object-fit: contain;">
+
+            <div class="card-body text-center">
+                <h5 class="card-title">
+                    {{ $doctor['ProfessionalTitle'] ?? '' }} {{ $doctor['FirstName'] }}
+                    {{ $doctor['MiddleName'] ?? '' }} {{ $doctor['LastName'] }}
+                </h5>
+                <p class="text-muted mb-0">{{ $doctor['AreaOfExpertise'] ?? 'Dentist' }}</p>
+            </div>
         </div>
     </div>
-    <div class="text-center mt-4 confirm-appt-btn">
+@endforeach
+
+
+                    </div>
+                </div>
+                <div class="text-center mt-4 confirm-appt-btn">
                     <button type="submit" class="btn-secondary visually-hidden text-sm fw-semibold"
                         id="back-appointment-btn">Back</button>
                     <button type="submit" class="btn-info text-sm fw-semibold" id="Next-appointment-btn">Next</button>
                     <button type="submit" class="btn-success visually-hidden text-sm fw-semibold"
                         id="confirm-appointment-btn">Confirm Appointment</button>
                 </div>
-@endsection
+                
+
+@vite('resources/js/app.js')
+
+
+            @endsection

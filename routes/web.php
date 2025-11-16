@@ -71,6 +71,8 @@ Route::middleware('authenticated')->group(function(){
     Route::post('appointments/new-note', [DentistController::class,'CreateNotes']);
     Route::get('billings', [Controller::class,'Billings'])->name('billings');
     Route::post('store-billing', [Controller::class,'NewBilling'])->name('store-billing');
+    Route::post('dentist/off-schedule', [Controller::class,'storeOffSchedule']);
+
 });
 Route::get('/patient-appointments', [PatientController::class, 'PatientAppointmentList'])->name('patient-appointments-page');
 Route::post('/appointments/update', [PatientController::class, 'UpdateAppointment']);

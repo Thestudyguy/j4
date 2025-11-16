@@ -19,6 +19,8 @@ class Appointment extends Model
         'doctor_id',
         'service_id',
         'appointment_status',
+        'is_walk_in',
+        'created_by',
         
     ];
 }

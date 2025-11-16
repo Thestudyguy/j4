@@ -30,7 +30,67 @@ class PatientController extends Controller
     {
         $subServices = SubService::all();//'isVisible', true put this shit back when we rollback its migration
         $doctors = Doctors::where('isRemoved', false)->get();
-        return view('pages.patients.new-appointment-form', compact('subServices', 'doctors'));
+        $doctorss = DB::table('doctors')
+        ->leftJoin('dentist_off_scheds', 'dentist_off_scheds.dentist_id', '=', 'doctors.id')
+        ->select(
+            'doctors.id as dentistID',
+            'doctors.FirstName',
+            'doctors.LastName',
+            'doctors.ProfessionalTitle',
+            'doctors.MiddleName',
+            'doctors.Suffix',
+            'doctors.MDLink',
+            'doctors.email',
+            'doctors.AreaOfExpertise',
+            'doctors.image_path',
+            'dentist_off_scheds.id as off_sched_id',
+            'dentist_off_scheds.date as off_date',
+            'dentist_off_scheds.time as off_time',
+            'dentist_off_scheds.created_at as off_created',
+            'dentist_off_scheds.updated_at as off_updated'
+        )
+        ->where('doctors.isRemoved', false)
+        ->orderBy('doctors.id')
+        ->orderBy('dentist_off_scheds.date')
+        ->get();
+$availableDoctors = [];
+
+foreach ($doctorss as $row) {
+
+    $dentistID = $row->dentistID;
+
+    if (!isset($availableDoctors[$dentistID])) {
+        $availableDoctors[$dentistID] = [
+            'doctor'    => [
+                'dentistID'        => $row->dentistID,
+                'FirstName'        => $row->FirstName,
+                'LastName'         => $row->LastName,
+                'ProfessionalTitle'=> $row->ProfessionalTitle,
+                'MiddleName'       => $row->MiddleName,
+                'Suffix'           => $row->Suffix,
+                'MDLink'           => $row->MDLink,
+                'email'            => $row->email,
+                'AreaOfExpertise'  => $row->AreaOfExpertise,
+                'image_path'       => $row->image_path,
+            ],
+            'off_sched' => []
+        ];
+    }
+
+    // Only add off-schedule if it exists
+    if ($row->off_sched_id) {
+        $availableDoctors[$dentistID]['off_sched'][] = [
+            'id'         => $row->off_sched_id,
+            'date'       => $row->off_date,
+            'time'       => $row->off_time,
+            'created_at' => $row->off_created,
+            'updated_at' => $row->off_updated
+        ];
+    }
+}
+$availableDoctors = array_values($availableDoctors);
+        Log::info(json_encode($availableDoctors, JSON_PRETTY_PRINT));
+        return view('pages.patients.new-appointment-form', compact('availableDoctors','subServices', 'doctors'));
     }
 
     public function PatientProfile()
@@ -158,24 +218,35 @@ class PatientController extends Controller
             $patient = Patients::where('patient_id', $patientID)->first();
             $patientHistory = PatientHistory::where('patient_id', $patient->id)->first();
             $prepAppointment = DB::table('appointments')
-                ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
-                ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
-                ->join('users', 'users.id', '=', 'appointments.patient_id')
-                ->leftJoin('opt_notes','opt_notes.appointment','=', 'appointments.id')
-                ->select(
-                    'doctors.FirstName as dfName',
-                    'doctors.ProfessionalTitle as title',
-                    'doctors.LastName as dlname',
-                    'doctors.MiddleName as dmname',
-                    'sub_services.Service as service',
-                    'sub_services.Price as price',
-                    'appointments.Time',
-                    'appointments.Date',
-                    'appointments.status',
-                    'appointments.id',
-                    'opt_notes.Date as note_date', 'opt_notes.Tooth','opt_notes.Procedure','opt_notes.AmountCharge','opt_notes.AmountPaid','opt_notes.Balance', 'PostOpNotes', 'ImportantNotes', 'opt_notes.id as note_id'
-                )
-                ->get();
+    ->join('patient_info', 'patient_info.id', '=', 'appointments.patient_id') // correct link
+    ->join('users', 'users.id', '=', 'patient_info.patient_id') // user → patient_info
+    ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
+    ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
+    ->leftJoin('opt_notes', 'opt_notes.appointment', '=', 'appointments.id')
+    ->where('patient_info.patient_id', Auth::id()) // filter by logged-in user
+    ->select(
+        'doctors.FirstName as dfName',
+        'doctors.ProfessionalTitle as title',
+        'doctors.LastName as dlname',
+        'doctors.MiddleName as dmname',
+        'sub_services.Service as service',
+        'sub_services.Price as price',
+        'appointments.time',
+        'appointments.date',
+        'appointments.status',
+        'appointments.id',
+        'opt_notes.Date as note_date',
+        'opt_notes.Tooth',
+        'opt_notes.Procedure',
+        'opt_notes.AmountCharge',
+        'opt_notes.AmountPaid',
+        'opt_notes.Balance',
+        'opt_notes.PostOpNotes',
+        'opt_notes.ImportantNotes',
+        'opt_notes.id as note_id'
+    )
+    ->get();
+
                 Log::info(json_encode($prepAppointment, JSON_PRETTY_PRINT));
             $patientForecastPayment = $prepAppointment->sum('price');
             $patientDuePayments = $prepAppointment->where('status', 'completed')->sum('price');

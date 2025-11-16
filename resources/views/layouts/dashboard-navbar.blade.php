@@ -13,44 +13,64 @@
     <ul class="navbar-nav ml-auto">
         @if (Auth::user()->Role !== 'patient')
             
-        <li class="nav-item dropdown mr-3 mt-2 position-relative" id="notifBtn">
+       <li class="nav-item dropdown mr-3 mt-2 position-relative" id="notifBtn">
     <i class="bi bi-bell" style="font-size: 1.3rem; cursor: pointer;"></i>
-
-    <span class="badge badge-danger visually-hidden" style="position: absolute; top: 0; right: 0; font-size: 0.6rem;">
-        3
-    </span>
-
-    <!-- Manual dropdown -->
+@if ($totalNotif > 0)
+<span class="badge badge-danger"
+      style="position:absolute; top:-5px; right:-5px; padding:3px 6px; font-size:0.7rem;">
+    {{ $totalNotif }}
+</span>
+@endif
     <div id="notifDropdown" 
-     style="
-        display: none;
-        position: absolute;
-        top: 30px;
-        right: 0;
-        width: 250px;
-        max-height: 180px; /* enough for 3 items */
-        overflow-y: auto;  /* scroll after 3 items */
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        z-index: 1000;
-     ">
+         style="
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 0;
+            width: 250px;
+            max-height: 180px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+         ">
+        @foreach ($appointmentsNotif as $appt)
+    @php
+        // parse appointment date safely
+        $apptDate = \Carbon\Carbon::parse($appt->date);
+        // parse created_at only if it exists
+        $created = null;
+        if (!empty($appt->appointment_created)) {
+            try {
+                $created = \Carbon\Carbon::parse($appt->appointment_created);
+            } catch (\Exception $e) {
+                $created = null;
+            }
+        }
 
-    <div class="notif-item" style="padding: 8px 10px; border-bottom: 1px solid #eee; cursor: pointer;">
+        $isToday = $apptDate->isToday();
+        $isNew = $created ? $created->diffInMinutes(now()) <= 10 : false;
+    @endphp
+
+    <div class="notif-item {{ $isNew ? 'bg-success text-white' : ($isToday ? 'bg-warning text-dark' : '') }}"
+         style="padding: 8px 10px; border-bottom: 1px solid #eee; cursor: pointer;">
         <div style="font-weight: 600;">Appointment Scheduled</div>
         <div style="font-size: 0.85rem; color: #555;">
-            General Checkup • Nov 20, 2025 — 2:00 PM
+            {{ $appt->Service }} • {{ $apptDate->format('M d, Y') }} — {{ \Carbon\Carbon::parse($appt->time)->format('g:i A') }}
         </div>
         <div style="font-size: 0.75rem; color: #888;">
-            Created: Nov 18, 2025 at 9:30 AM
+            Created: {{ $isNew ? 'New' : '' }}
         </div>
     </div>
+@endforeach
 
-</div>
 
-
+    </div>
 </li>
+
+
         @endif
 
 

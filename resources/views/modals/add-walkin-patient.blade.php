@@ -7,43 +7,53 @@
             </div>
 
             <div class="modal-body">
-                            <div class="">
-                <p class="client-info fw-bold">Personal Info</p>
-                <form action="" class="walk-in-form">
+                <div class="walk-in step-1 step">
+                    <p class="client-info fw-bold">Personal Info</p>
+                    <form action="" class="walk-in-form">
                         <div class="row">
                             <div class="col-sm-12 p-3">
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <label for="name" class="form-label fw-normal">Last Name</label>
-                                        <input type="text" class="form-control form-control-sm" id="Last_Name" name="lastname">
+                                        <input type="text" class="form-control form-control-sm" id="Last_Name"
+                                            name="lastname">
                                     </div>
                                     <div class="col-sm-4">
                                         <label for="name" class="form-label fw-normal">First Name</label>
-                                        <input type="text" class="form-control form-control-sm" id="First_Name" name="firstname">
+                                        <input type="text" class="form-control form-control-sm" id="First_Name"
+                                            name="firstname">
                                     </div>
-                                     <div class="col-sm-4">
+                                    <div class="col-sm-4">
                                         <label for="name" class="form-label fw-normal">Middle Name</label>
-                                        <input type="text" class="form-control form-control-sm" id="Middle_Name" name="middlename">
+                                        <input type="text" class="form-control form-control-sm" id="Middle_Name"
+                                            name="middlename">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-12 p-3">
                                 <div class="row">
                                     <div class="col-sm-4">
-                                        <label for="birthdate" class="form-label fw-normal">Birthdate<sup class="text-sm text-danger">*</sup></label>
-                                        <input type="date" class="form-control form-control-sm" id="Birthdate" name="birthdate">
+                                        <label for="birthdate" class="form-label fw-normal">Birthdate<sup
+                                                class="text-sm text-danger">*</sup></label>
+                                        <input type="date" class="form-control form-control-sm" id="Birthdate"
+                                            name="birthdate">
                                     </div>
-                                    <div class="col-sm-4 client-sex-field"><!-- added class for styling with a silly name lol -->
-                                        <label for="sex" class="form-label fw-normal">Sex<sup class="text-sm text-danger">*</sup></label>
+                                    <div class="col-sm-4 client-sex-field">
+                                        <!-- added class for styling with a silly name lol -->
+                                        <label for="sex" class="form-label fw-normal">Sex<sup
+                                                class="text-sm text-danger">*</sup></label>
                                         <br>
                                         <div class="row p-2 sex-container"><!-- goffy ahh class name -->
-                                            <div class="col-sm-6"><input type="radio" name="sex" id="Gender" value="Male">Male</div>
-                                            <div class="col-sm-6"><input type="radio" name="sex" id="Gender" value="Female">Female</div>
+                                            <div class="col-sm-6"><input type="radio" name="sex" id="Gender"
+                                                    value="Male">Male</div>
+                                            <div class="col-sm-6"><input type="radio" name="sex" id="Gender"
+                                                    value="Female">Female</div>
                                         </div>
                                     </div>
-                                     <div class="col-sm-4">
+                                    <div class="col-sm-4">
                                         <label for="age" class="form-label fw-normal">Age</label>
-                                        <input type="number" class="form-control form-control-sm" id="Age" name="age" readonly>
+                                        <input type="number" class="form-control form-control-sm" id="Age"
+                                            name="age" readonly>
                                         {{-- <input type="hidden" name="age" class="age" id="hiddenage"> --}}
                                     </div>
                                 </div>
@@ -52,10 +62,12 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <label for="religion" class="form-label fw-normal">Religion</label>
-                                        <input type="text" class="form-control form-control-sm" id="Religion" name="religion">
+                                        <input type="text" class="form-control form-control-sm" id="Religion"
+                                            name="religion">
                                     </div>
                                     <div class="col-sm-4">
-                                        <label for="nationality" class="form-label fw-normal">Nationality<sup class="text-sm text-danger">*</sup></label>
+                                        <label for="nationality" class="form-label fw-normal">Nationality<sup
+                                                class="text-sm text-danger">*</sup></label>
                                         <select class="form-select" id="Nationality" name="nationality">
                                             <option value="" hidden selected>Select your nationality</option>
                                             <option value="Afghan">Afghan</option>
@@ -99,8 +111,10 @@
                                             <option value="Chinese">Chinese</option>
                                             <option value="Colombian">Colombian</option>
                                             <option value="Comorian">Comorian</option>
-                                            <option value="Congolese (Congo-Brazzaville)">Congolese (Congo-Brazzaville)</option>
-                                            <option value="Congolese (Congo-Kinshasa)">Congolese (Congo-Kinshasa)</option>
+                                            <option value="Congolese (Congo-Brazzaville)">Congolese (Congo-Brazzaville)
+                                            </option>
+                                            <option value="Congolese (Congo-Kinshasa)">Congolese (Congo-Kinshasa)
+                                            </option>
                                             <option value="Costa Rican">Costa Rican</option>
                                             <option value="Croatian">Croatian</option>
                                             <option value="Cuban">Cuban</option>
@@ -255,55 +269,68 @@
                                         </select>
                                     </div>
 
-                                     <div class="col-sm-4">
-                                        <label for="nickname" class="form-label fw-normal">Nickname<sup class="text-sm text-danger">*</sup></label>
-                                        <input type="text" class="form-control form-control-sm" id="Nickname" name="nickname">
+                                    <div class="col-sm-4">
+                                        <label for="nickname" class="form-label fw-normal">Nickname<sup
+                                                class="text-sm text-danger">*</sup></label>
+                                        <input type="text" class="form-control form-control-sm" id="Nickname"
+                                            name="nickname">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-12 p-3">
                                 <div class="row">
                                     <div class="col-sm-6">
-                                    <label for="address" class="form-label fw-normal">Address<sup class="text-sm text-danger">*</sup></label>
-                                    <input type="text" class="form-control form-control-sm" id="Address" name="address">
+                                        <label for="address" class="form-label fw-normal">Address<sup
+                                                class="text-sm text-danger">*</sup></label>
+                                        <input type="text" class="form-control form-control-sm" id="Address"
+                                            name="address">
                                     </div>
                                     <div class="col-sm-6">
-                                    <label for="homeno" class="form-label fw-normal">Home No.</label>
-                                    <input type="text" class="form-control form-control-sm" id="Home_No." name="homeno">
+                                        <label for="homeno" class="form-label fw-normal">Home No.</label>
+                                        <input type="text" class="form-control form-control-sm" id="Home_No."
+                                            name="homeno">
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-sm-12 p-3">
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <label for="occupation" class="form-label fw-normal">Occupation<sup class="text-sm text-danger">*</sup></label>
-                                        <input type="text" class="form-control form-control-sm" id="Occupation" name="occupation">
+                                        <label for="occupation" class="form-label fw-normal">Occupation<sup
+                                                class="text-sm text-danger">*</sup></label>
+                                        <input type="text" class="form-control form-control-sm" id="Occupation"
+                                            name="occupation">
                                     </div>
                                     <div class="col-sm-3">
                                         <label for="officeno" class="form-label fw-normal">Office No.</label>
-                                        <input type="text" class="form-control form-control-sm" id="Office_No." name="officeno">
+                                        <input type="text" class="form-control form-control-sm" id="Office_No."
+                                            name="officeno">
                                     </div>
                                     <div class="col-sm-3">
                                         <label for="effectivedate" class="form-label fw-normal">Effective Date</label>
                                         <!-- <input type="text" class="form-control form-control-sm" id="Effective_Date" name="effectivedate"> -->
-                                            <input type="date" class="form-control form-control-sm" name="effectivedate" id="Effective_Date">
+                                        <input type="date" class="form-control form-control-sm"
+                                            name="effectivedate" id="Effective_Date">
                                     </div>
                                     <div class="col-sm-3">
                                         <label for="faxno" class="form-label fw-normal">Fax No.</label>
-                                        <input type="text" class="form-control form-control-sm" id="Fax_No." name="faxno">
+                                        <input type="text" class="form-control form-control-sm" id="Fax_No."
+                                            name="faxno">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-12 p-3">
                                 <div class="row">
                                     <div class="col-sm-6">
-                                    <label for="email" class="form-label fw-normal">Email</label>
-                                    <input type="email" class="form-control form-control-sm" id="Email" name="email">
+                                        <label for="email" class="form-label fw-normal">Email</label>
+                                        <input type="email" class="form-control form-control-sm" id="Email"
+                                            name="email">
                                     </div>
                                     <div class="col-sm-6">
-                                    <label for="mobileno" class="form-label fw-normal">Mobile No.<sup class="text-sm text-danger">*</sup></label>
-                                    <input type="text" class="form-control form-control-sm" id="Mobile_No." name="mobileno">
+                                        <label for="mobileno" class="form-label fw-normal">Mobile No.<sup
+                                                class="text-sm text-danger">*</sup></label>
+                                        <input type="text" class="form-control form-control-sm" id="Mobile_No."
+                                            name="mobileno">
                                     </div>
                                 </div>
                             </div>
@@ -325,33 +352,117 @@
                                 <p class="fw-semibold" style="font-style: italic">For Minors</p>
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <label for="guardian" class="form-label fw-normal">Parent/Guardian Name</label>
-                                        <input type="text" class="form-control form-control-sm" id="Guardian" name="guardian">
+                                        <label for="guardian" class="form-label fw-normal">Parent/Guardian
+                                            Name</label>
+                                        <input type="text" class="form-control form-control-sm" id="Guardian"
+                                            name="guardian">
                                     </div>
                                     <div class="col-sm-6">
-                                        <label for="guardianoccupation" class="form-label fw-normal">Occupation</label>
-                                        <input type="text" class="form-control form-control-sm" id="Guardian_Occupation" name="guardianoccupation">
+                                        <label for="guardianoccupation"
+                                            class="form-label fw-normal">Occupation</label>
+                                        <input type="text" class="form-control form-control-sm"
+                                            id="Guardian_Occupation" name="guardianoccupation">
                                     </div>
                                     <div class="col-sm-12 my-5">
-                                        <label for="referal" class="form-label fw-normal">Who may we thank for refering you?</label>
-                                        <input type="text" class="form-control form-control-sm" id="Referal" name="referal">
+                                        <label for="referal" class="form-label fw-normal">Who may we thank for
+                                            refering you?</label>
+                                        <input type="text" class="form-control form-control-sm" id="Referal"
+                                            name="referal">
                                     </div>
                                     <div class="col-sm-12">
-                                        <label for="consultation" class="form-label fw-normal">Reason for consulation</label><br>
-                                        <textarea name="consultationreason" id="Reason_For_Consultation" cols="30" rows="10" class="form-control form-control-sm" style="resize: none;"></textarea>
+                                        <label for="consultation" class="form-label fw-normal">Reason for
+                                            consulation</label><br>
+                                        <textarea name="consultationreason" id="Reason_For_Consultation" cols="30" rows="10"
+                                            class="form-control form-control-sm" style="resize: none;"></textarea>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                </form>
-            </div>
-        
+                    </form>
+                </div>
+                <div class="walk-in step-2 step">
+                    <div class="row mb-5">
+                        <div class="col-md-6 mb-4">
+                            <input type="hidden" name="" id="selected_date">
+                            <input type="hidden" name="" id="selected_time">
+                            <input type="hidden" name="" id="selected_service_id">
+                            <input type="hidden" name="" id="selected_doctor_id">
+                            <!-- <div class="card"> -->
+                            <div class="text-dark text-start fw-semibold">
+                                Select a Date
+                            </div>
+                            <center>
+                                <div class="card-body" id="calendar-container"></div>
+                            </center>
+                            <!-- </div> -->
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <!-- <div class="card shadow-sm h-100"> -->
+                            <!-- <div class="card-header bg-primary text-white text-center fw-semibold"> -->
+                            <span id="selected-date-title">Select a date to see available slots</span>
+                            <!-- </div> -->
+                            <!-- <div class="card-body"> -->
+                            <div id="time-slots" class="row g-2"></div>
+                            <!-- </div> -->
+                            <!-- </div> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="walk-in step-3 step">
+                    <h4 class="fw-semibold mb-3 text-secondary">Available Dental Services</h4>
+                    <div class="row mb-5">
+                        @foreach ($subServices as $services)
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 shadow-sm service-card" data-id="{{ $services->id }}">
+                                    <img src="{{ asset('storage/' . $services->image_path) }}"
+                                        class="card-img-top img-fluid rounded-top" alt="{{ $services->Service }}">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">{{ $services->Service }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="walk-in step-4 step">
+                    <h4 class="fw-semibold mb-3 text-secondary">Our Dentists</h4>
+                    <div class="row">
+                        @foreach ($availableDoctors as $item)
+                            @php
+                                $doctor = $item['doctor'];
+                                $offsched = $item['off_sched'];
+                            @endphp
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 shadow-sm doctor-card" data-id="{{ $doctor['dentistID'] }}"
+                                    data-offsched='@json($offsched, JSON_HEX_APOS | JSON_HEX_QUOT)'>
+                                    <img src="{{ asset($doctor['image_path']) }}"
+                                        class="card-img-top img-fluid rounded-top" alt="{{ $doctor['FirstName'] }}"
+                                        style="height: 250px; object-fit: contain;">
+
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">
+                                            {{ $doctor['ProfessionalTitle'] ?? '' }} {{ $doctor['FirstName'] }}
+                                            {{ $doctor['MiddleName'] ?? '' }} {{ $doctor['LastName'] }}
+                                        </h5>
+                                        <p class="text-muted mb-0">{{ $doctor['AreaOfExpertise'] ?? 'Dentist' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+
+
+                    </div>
+                </div>
+
             </div>
 
             <div class="modal-footer">
-                <button type="submit" class="btn rounded-0 text-white save-walk-in" style="background-color: #244F79;">
+                <button type="submit" class="btn rounded-0 text-white save-walk-in visually-hidden"
+                    style="background-color: #244F79;">
                     Save Walk-In
                 </button>
+                <button class="btn rounded-0 text-white btn-primary walk-in-navnext">Next</button>
+                <button class="btn rounded-0 text-white btn-secondary walk-in-navback">Back</button>
                 <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">
                     Cancel
                 </button>

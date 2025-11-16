@@ -5,12 +5,33 @@ $(document).ready(function () {
         showConfirmButton: false,
         timer: 5000
     });
+    function updateDoctorAvailability(selectedDate, selectedTime) {
+    $('.doctor-card').removeClass('disabled-card');
+
+    $('.doctor-card').each(function() {
+        const offsString = $(this).attr('data-offsched'); // Get raw string
+        let offs = [];
+        try {
+            offs = JSON.parse(offsString); // Convert to array
+        } catch (e) {
+            console.warn('Invalid offsched JSON', offsString);
+        }
+
+        const isOff = offs.some(off => off.date === selectedDate && off.time === selectedTime);
+        if (isOff) {
+            $(this).addClass('disabled-card');
+        }
+    });
+}
+
 
     const workingHours = [
         "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
         "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM"
     ];
+    
 
+    
     flatpickr("#calendar-container", {
         inline: true,
         dateFormat: "Y-m-d",
@@ -70,20 +91,30 @@ $(document).ready(function () {
         container.append(firstCol, secondCol);
     }
 
-    $(document).on('click', '.time-slots', function () {
-        const selectedTime = $(this).data('time');
-        const selectedDate = $(this).data('date');
-        // Remove 'active' from all time-slots
-        $('.time-slots').removeClass('active');
-
-        $(this).addClass('active');
-
-
-
-
-        $('#selected_time').val(selectedTime);
-        $('#selected_date').val(selectedDate);
+    $(document).on('click', '.doctor-card.disabled-card', function(e) {
+    e.preventDefault();
+    Swal.fire({
+        icon: 'warning',
+        title: 'Doctor unavailable',
+        text: 'This doctor is off-schedule for the selected date and time.'
     });
+});
+
+
+    $(document).on('click', '.time-slots', function () {
+    const selectedTime = $(this).data('time');
+    const selectedDate = $(this).data('date');
+
+    $('.time-slots').removeClass('active');
+    $(this).addClass('active');
+
+    $('#selected_time').val(selectedTime);
+    $('#selected_date').val(selectedDate);
+
+    // ✅ Disable doctor cards
+    updateDoctorAvailability(selectedDate, selectedTime);
+});
+
 
     $(document).on('click', '.service-card', function () {
         // Deselect all first
@@ -161,6 +192,7 @@ $(document).ready(function () {
                     title: 'No date and time selected',
                     text: 'Please select date and time for your appointment'
                 });
+                
                 return;
             }
         }
