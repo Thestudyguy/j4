@@ -21,6 +21,9 @@ class Appointment extends Model
         'appointment_status',
         'is_walk_in',
         'created_by',
+        'status',
+        'amount_paid',
+        'mark_by',
         
     ];
 }

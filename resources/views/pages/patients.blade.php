@@ -31,7 +31,7 @@
             @foreach ($patients as $refID => $appointments)
                 @php $first = $appointments[0]; @endphp
                 <div class="row align-items-center border rounded-3 m-1 p-2 small appointment-row">
-                    <div class="col-sm-2">{{ $first->FirstName . ' ' . $first->LastName }}</div>
+                    <div class="col-sm-2">{{ $first->FirstName . ' ' . $first->LastName }} <span class="text-muted sm">{{ $first->is_walk_in ? '(walk-in)' : '' }}</span></div>
                     <div class="col-sm-2 text-end">
                         <a href="{{ route('patient-details-view', ['id' => $first->refID]) }}" class="text-muted me-2"
                             title="View"><i class="fas fa-eye"></i></a>

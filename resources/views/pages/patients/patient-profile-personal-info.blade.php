@@ -14,7 +14,7 @@
                         <label for="firstname" class="form-label fw-semibold">First Name</label>
                         <input type="text" name="" disabled class="form-control" id=""
                             value="{{ $patient->FirstName ?? 'N/A' }}">
-                        <p class='firstname'>{{ $patient->FirstName }}</p>
+                        <p class='firstname'>{{ $patient->FirstName ?? 'N/A' }}</p>
                     </div>
                     <div class="col-sm-4">
                         <label for="middlename" class="form-label fw-semibold">Middle Name</label>

@@ -11,10 +11,14 @@ $(document).ready(function () {
     $('.doctor-card').each(function() {
         const offsString = $(this).attr('data-offsched'); // Get raw string
         let offs = [];
+        
         try {
             offs = JSON.parse(offsString); // Convert to array
+            console.log(offs);
         } catch (e) {
             console.warn('Invalid offsched JSON', offsString);
+            console.log(offsString);
+            
         }
 
         const isOff = offs.some(off => off.date === selectedDate && off.time === selectedTime);

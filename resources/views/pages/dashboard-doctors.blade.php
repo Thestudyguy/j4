@@ -53,7 +53,7 @@
                                             class="fas fa-trash text-danger text-sm"></i></button>
                                     <button class="btn btn-transparent p-0"><i
                                             class="fas fa-pen text-success text-sm"></i></button> --}}
-                                    <button data-bs-target="#dentist-offsched" data-bs-toggle="modal" class="btn btn-transparent p-0" data-bs-target="" data-bs-toggle="modal">
+                                    <button data-bs-target="#dentist-offsched-{{ $doctor->id }}" data-bs-toggle="modal" class="btn btn-transparent p-0" data-bs-target="" data-bs-toggle="modal">
                                         <i class="fas fa-user-clock text-dark"></i>
                                     </button>
                                 </div>

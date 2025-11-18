@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('item_name');
             $table->string('category');
             $table->integer('on_hand');
+            $table->date('manufactured_by')->nullable();
+            $table->date('expiration_date')->nullable();
             $table->decimal('price', 15);
             $table->boolean('isVisible')->default(true);
             $table->timestamps();

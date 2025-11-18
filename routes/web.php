@@ -73,6 +73,7 @@ Route::middleware('authenticated')->group(function(){
     Route::post('store-billing', [Controller::class,'NewBilling'])->name('store-billing');
     Route::post('dentist/off-schedule', [Controller::class,'storeOffSchedule']);
     Route::post('report/billing-pdf/{id}', [PDFController::class,'GenerateBillingReport']);
+    Route::post('appointments/complete', [Controller::class,'CompleteAppointment'])->name('appointments/complete');
 
 });
 Route::get('/patient-appointments', [PatientController::class, 'PatientAppointmentList'])->name('patient-appointments-page');

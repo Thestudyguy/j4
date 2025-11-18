@@ -576,8 +576,68 @@ $(document).ready(function () {
         });
     });
 
+    $('.finalise-appt').on('click', function(e) {
+    e.preventDefault();
+
+    let modal = $(this).closest('.modal'); // get the current modal
+    let refID = $(this).attr('id');
+    let amount = $('.animalt').val();
+    if (amount === '') {
+        Toast.fire({
+            icon: 'warning',
+            title: 'Please enter amount'
+        });
+        $('.animalt').addClass('is-invalid');
+        return;
+    }
+ $.ajax({
+        url: "appointments/complete",  // your Laravel route
+        type: "POST",
+        headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
+            },
+        data: {
+            refID: refID,
+            amount: amount,
+        },
+        beforeSend: function () {
+            // btn.prop("disabled", true).text("Processing...");
+            $('.appointment-page').removeClass('visually-hidden');
+        },
+        success: function (response) {
+            $('.appointment-page').addClass('visually-hidden');
+            localStorage.setItem('appointment', 'completed');
+            location.reload();
+            // Toast.fire({
+            //     icon: 'success',
+            //     title: 'Appointment completed successfully!'
+            // });
+        },
+        error: function (xhr) {
+            $('.appointment-page').addClass('visually-hidden');
+            Toast.fire({
+                icon: 'error',
+                title: 'There was a problem finalizing the appointment'
+            });
+        },
+        // complete: function () {
+        //     btn.prop("disabled", false).text("Submit");
+        // }
+    });
+    // continue with submit...
+});
+
+
     const appointmentStatus = localStorage.getItem('appointment');
     const patientPbi = localStorage.getItem('patient-pbi');
+    if(localStorage.getItem('appointment') === 'completed'){
+        Toast.fire({
+            icon: 'success',
+            title: 'Appointment completed successfully!'
+        });
+        localStorage.removeItem('appointment');
+    }
+
     if (patientPbi === 'updated') {
         Toast.fire({
             icon: 'success',

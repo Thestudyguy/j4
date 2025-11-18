@@ -191,6 +191,7 @@ $availableDoctors = array_values($availableDoctors);
         'appointments.date',
         'appointments.time',
         'appointments.status',
+        'appointments.is_walk_in',
         'sub_services.Service',
         'patient_info.id as refID'
         )
@@ -964,6 +965,7 @@ public function UpdateSubServices(Request $request)
 public function storeOffSchedule(Request $request)
 {
     // Validate incoming data
+    
     $request->validate([
         'dentist_id' => 'required|exists:doctors,id',
         'date'       => 'required|date',
@@ -1083,5 +1085,57 @@ public function GetDentistSched(Request $request){
         throw $th;
     }
 }
+
+    public function CompleteAppointment(Request $request)
+{
+    try {
+        // Validate incoming data
+        Log::info($request['amount']);
+        $request->merge([
+            'amount' => str_replace(',', '', $request->amount)
+        ]);
+        $validated = $request->validate([
+            'refID'  => 'required|integer',
+            'amount' => 'required|numeric|min:1',
+        ]);
+
+        $apptID = $validated['refID'];
+
+        // Find appointment
+        $appointment = Appointment::find($apptID);
+
+        if (!$appointment) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Appointment not found.'
+            ], 404);
+        }
+
+
+        // Update fields
+        $appointment->update([
+            'amount_paid' => $validated['amount'],
+            'mark_by'     => Auth::id(),
+            'status'      => 'Completed',   // optional but recommended
+        ]);
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Appointment completed successfully.'
+        ]);
+
+    } catch (\Throwable $th) {
+
+        Log::error('CompleteAppointment error:', [
+            'error' => $th->getMessage(),
+        ]);
+
+        return response()->json([
+            'status'  => 'error',
+            'message' => 'An error occurred while completing the appointment.'
+        ], 500);
+    }
+}
+
 
 }

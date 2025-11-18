@@ -6,7 +6,7 @@
             <div class="appointment-loader"></div>
         </div>
         @if (Auth::check() && Auth::user()->is_first_login && Auth::user()->Role === 'patient')
-            <h1 class="fw-bold mt-2">My Profile</h1>
+            <h1 class="fw-bold mt-2 ug makita animal nani">My Profile</h1>
             <div class="container h-100">
                 <div class="row m-2">
                     <div class="alert alert-warning">

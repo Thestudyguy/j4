@@ -5,7 +5,7 @@
 
 
             <div class="container py-4">
-                <h4 class="fw-bold text-dark mb-4 text-left">My Profile {{ Auth::user()->id }}</h4>
+                <h4 class="fw-bold text-dark mb-4 text-left">My Profile</h4>
                 <div class="row p-2 rounded-2 mb-2" style="background: #f0f0f0;">
                     <div class="col-sm-2 text-sm">Date</div>
                     <div class="col-sm-2 text-sm">Time</div>

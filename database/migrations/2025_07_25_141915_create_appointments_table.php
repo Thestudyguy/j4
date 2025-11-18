@@ -28,6 +28,9 @@ return new class extends Migration
             $table->string('resched_time')->nullable();
             $table->boolean('is_walk_in')->default(false);
             $table->string('created_by')->nullable();
+            $table->decimal('amount_paid', 15)->nullable();
+            $table->unsignedBigInteger('mark_by')->nullable();
+            $table->foreign('mark_by')->references('id')->on('users')->nullOnDelete();
             $table->timestamps();
         });
     }

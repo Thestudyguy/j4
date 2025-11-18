@@ -247,7 +247,7 @@ $availableDoctors = array_values($availableDoctors);
     )
     ->get();
 
-                Log::info(json_encode($prepAppointment, JSON_PRETTY_PRINT));
+                Log::info(json_encode($patient, JSON_PRETTY_PRINT));
             $patientForecastPayment = $prepAppointment->sum('price');
             $patientDuePayments = $prepAppointment->where('status', 'completed')->sum('price');
             return view('pages.patients.patient-appointment-list', compact('prepAppointment', 'patientForecastPayment', 'patient', 'patientHistory', 'patientDuePayments'));

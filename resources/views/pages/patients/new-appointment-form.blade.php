@@ -82,6 +82,7 @@
 
             <div class="card-body text-center">
                 <h5 class="card-title">
+                    <pre>{{ $offsched }}</pre>
                     {{ $doctor['ProfessionalTitle'] ?? '' }} {{ $doctor['FirstName'] }}
                     {{ $doctor['MiddleName'] ?? '' }} {{ $doctor['LastName'] }}
                 </h5>
