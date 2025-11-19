@@ -6,10 +6,30 @@ $(document).ready(function () {
     "01:00 PM","02:00 PM","03:00 PM","04:00 PM","05:00 PM"
   ];
 
+   function updateDoctorAvailability($modal, selectedDate, selectedTime) {
+    $modal.find('.scheduled-appt-doctor-card').removeClass('disabled-card');
+
+    $modal.find('.scheduled-appt-doctor-card').each(function() {
+      const offsString = $(this).attr('data-offsched');
+      let offs = [];
+
+      try { offs = JSON.parse(offsString); } 
+      catch (e) { offs = []; console.warn('Invalid offsched JSON', offsString); }
+
+      const isOff = offs.some(off => off.date === selectedDate && (off.time === selectedTime || off.time === null));
+      if (isOff) {
+        $(this).addClass('disabled-card');
+        $(this).attr('title', 'Dentist unavailable for this date'); // optional tooltip
+      } else {
+        $(this).removeAttr('title');
+      }
+    });
+  }
+
   function renderTimeSlots($modal, date, availableSlots = []) {
     const container = $modal.find('#scheduled-time-slots');
     container.empty();
-
+    
     const firstCol = $('<div class="col-6 d-flex flex-column gap-2"></div>');
     const secondCol = $('<div class="col-6 d-flex flex-column gap-2"></div>');
     const midpoint = Math.ceil(workingHours.length / 2);
@@ -28,13 +48,10 @@ $(document).ready(function () {
 
     container.append(firstCol, secondCol);
   }
-
   function showStep($modal, step, totalSteps) {
-    // hide all, show current
     $modal.find('.scheduled-appointment-step').addClass('visually-hidden');
     $modal.find('.scheduled-appointment-prep-step-' + step).removeClass('visually-hidden');
 
-    // buttons
     const $next = $modal.find('.patient-scheduled-appt-btn');
     const $back = $modal.find('.scheduled-appt-bck-btn');
 
@@ -42,17 +59,15 @@ $(document).ready(function () {
     $next.text(step === totalSteps ? 'Confirm' : 'Next');
   }
 
-  // Initialize each schedule modal when shown (so IDs don’t clash across modals)
-  $(document).on('shown.bs.modal', '.modal[id^="schedule-patient-appointment-"]', function () {
-    const $modal = $(this);
 
-    // steps
-    const totalSteps = $modal.find('.scheduled-appointment-step').length; // FIXED selector
+  // Initialize each schedule modal when shown (so IDs don’t clash across modals)
+   $(document).on('shown.bs.modal', '.modal[id^="schedule-patient-appointment-"]', function () {
+    const $modal = $(this);
+    const totalSteps = $modal.find('.scheduled-appointment-step').length;
     $modal.data('currentStep', 1);
     $modal.data('totalSteps', totalSteps);
     showStep($modal, 1, totalSteps);
 
-    // calendar (guard against double init)
     const $cal = $modal.find('#scheduled-calendar-container');
     if ($cal.length && !$cal.data('fp')) {
       const fp = flatpickr($cal[0], {
@@ -65,8 +80,6 @@ $(document).ready(function () {
           });
 
           $modal.find('#scheduled-selected-date-title').text(`Available Time Slots for ${readableDate}`);
-
-          // show a placeholder grid (disabled) while loading
           renderTimeSlots($modal, dateStr, []);
 
           $.ajax({
@@ -76,10 +89,13 @@ $(document).ready(function () {
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content") },
             success: function (response) {
               renderTimeSlots($modal, dateStr, response.availableSlots || []);
+              // Reset doctor selection
+              $modal.find('input[name="scheduled_appt_selected_time"]').val('');
+              $modal.find('input[name="scheduled_appt_selected_doctor_id"]').val('');
+              $modal.find('.scheduled-appt-doctor-card').removeClass('disabled-card border-success border-3');
             },
             error: function (error) {
               console.error(error);
-              // keep disabled grid on error
             }
           });
         }
@@ -88,21 +104,25 @@ $(document).ready(function () {
     }
   });
 
-  // Time slot pick (scoped)
   $(document).on('click', '.scheduled-time-slots', function () {
     const $modal = $(this).closest('.modal');
     const selectedTime = $(this).data('time');
     const selectedDate = $(this).data('date');
+
+    if ($(this).hasClass('disabled')) return;
 
     $modal.find('.scheduled-time-slots').removeClass('active');
     $(this).addClass('active');
 
     $modal.find('input[name="scheduled_appt_selected_time"]').val(selectedTime);
     $modal.find('input[name="scheduled_appt_selected_date"]').val(selectedDate);
+
+    // --- Update Doctor Availability ---
+    updateDoctorAvailability($modal, selectedDate, selectedTime);
   });
 
   // Service pick (scoped)
-  $(document).on('click', '.scheduled-appt-service-card', function () {
+$(document).on('click', '.scheduled-appt-service-card', function () {
     const $modal = $(this).closest('.modal');
     $modal.find('.scheduled-appt-service-card').removeClass('border-primary border-3');
     $(this).addClass('border-primary border-3');
@@ -110,13 +130,20 @@ $(document).ready(function () {
   });
 
   // Doctor pick (scoped)
-  $(document).on('click', '.scheduled-appt-doctor-card', function () {
+   $(document).on('click', '.scheduled-appt-doctor-card', function () {
     const $modal = $(this).closest('.modal');
+    if ($(this).hasClass('disabled-card')) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Doctor unavailable',
+        text: 'This dentist is off-schedule for the selected date/time.'
+      });
+      return;
+    }
     $modal.find('.scheduled-appt-doctor-card').removeClass('border-success border-3');
     $(this).addClass('border-success border-3');
     $modal.find('input[name="scheduled_appt_selected_doctor_id"]').val($(this).data('id'));
   });
-
   // Back
   $(document).on('click', '.scheduled-appt-bck-btn', function (e) {
     e.preventDefault();

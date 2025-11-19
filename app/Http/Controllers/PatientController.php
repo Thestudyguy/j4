@@ -93,31 +93,61 @@ $availableDoctors = array_values($availableDoctors);
         return view('pages.patients.new-appointment-form', compact('availableDoctors','subServices', 'doctors'));
     }
 
-    public function PatientProfile()
-    {
-        try {
-            $prepAppointment = DB::table('appointments')
-                ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
-                ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
-                ->join('users', 'users.id', '=', 'appointments.patient_id')
-                ->select(
-                    'doctors.FirstName as dfName',
-                    'doctors.ProfessionalTitle as title',
-                    'doctors.LastName as dlname',
-                    'doctors.MiddleName as dmname',
-                    'sub_services.Service as service',
-                    'appointments.Time',
-                    'appointments.Date',
-                    'appointments.status'
-                )
-                ->get();
-            $subServices = SubService::all();//'isVisible', true put this shit back when we rollback its migration
-            $doctors = Doctors::where('isRemoved', false)->get();
-            return view('pages.patients.patient-profile', compact('subServices', 'doctors', 'prepAppointment'));
-        } catch (\Throwable $th) {
-            throw $th;
-        }
+  public function PatientProfile()
+{
+    try {
+        $prepAppointment = DB::table('appointments')
+            ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
+            ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
+            ->join('users', 'users.id', '=', 'appointments.patient_id')
+            ->select(
+                'doctors.FirstName as dfName',
+                'doctors.ProfessionalTitle as title',
+                'doctors.LastName as dlname',
+                'doctors.MiddleName as dmname',
+                'sub_services.Service as service',
+                'appointments.Time',
+                'appointments.Date',
+                'appointments.status'
+            )
+            ->get();
+
+        $subServices = SubService::all();
+
+        // Get all dentists and their off-schedules raw
+        $dentists = DB::table('doctors')
+            ->where('isRemoved', false)
+            ->get();
+
+        $offSchedules = DB::table('dentist_off_scheds')->get();
+
+        // Combine dentists with their off-schedules
+        $availableDoctors = $dentists->map(function ($dentist) use ($offSchedules) {
+            // Filter off-schedules for this dentist
+            $offs = $offSchedules->filter(function ($off) use ($dentist) {
+                return $off->dentist_id == $dentist->id;
+            })->map(function ($off) {
+                return [
+                    'date' => $off->date,
+                    'time' => $off->time,
+                ];
+            })->values(); // reindex array
+
+            return [
+                'dentist' => $dentist,
+                'off_sched' => $offs,
+            ];
+        });
+
+        Log::info(json_encode($availableDoctors, JSON_PRETTY_PRINT));
+
+        return view('pages.patients.patient-profile', compact('prepAppointment', 'subServices', 'availableDoctors'));
+
+    } catch (\Throwable $th) {
+        throw $th;
     }
+}
+
 
 
     public function GetVacantTimeSlots(Request $request)

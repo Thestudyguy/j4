@@ -80,9 +80,11 @@
 
                             @if ($appt->status === 'Completed')
                                 {{-- Show eye icon --}}
-                                <span style="cursor: pointer;" class="text-muted">
-                                    <i class="fas fa-eye fw-semibold"></i>
-                                </span>
+                                 <span class="text-muted" style="cursor: pointer;">
+    <a href="{{ route('appointments.summary', ['apptID' => $appt->id]) }}" target="_blank">
+        <i class="fas fa-eye fw-semibold"></i>
+    </a>
+</span>
                             @elseif($appt->status !== 'cancel')
                                 {{-- Show plus icon for all active appointments --}}
                                 <span style="cursor: pointer;" class="text-muted"

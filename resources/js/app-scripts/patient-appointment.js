@@ -7,13 +7,14 @@ $(document).ready(function () {
     });
     function updateDoctorAvailability(selectedDate, selectedTime) {
     $('.doctor-card').removeClass('disabled-card');
-
+        console.log($(this).attr('data-offsched'));
+        
     $('.doctor-card').each(function() {
         const offsString = $(this).attr('data-offsched'); // Get raw string
         let offs = [];
         
         try {
-            offs = JSON.parse(offsString); // Convert to array
+            offs = JSON.parse(offsString);
             console.log(offs);
         } catch (e) {
             console.warn('Invalid offsched JSON', offsString);
@@ -62,7 +63,6 @@ $(document).ready(function () {
             });
 
             $('#selected-date-title').text(`Available Time Slots for ${readableDate}`);
-            renderTimeSlots(dateStr);
         }
     });
 
@@ -108,7 +108,7 @@ $(document).ready(function () {
     $(document).on('click', '.time-slots', function () {
     const selectedTime = $(this).data('time');
     const selectedDate = $(this).data('date');
-
+        
     $('.time-slots').removeClass('active');
     $(this).addClass('active');
 

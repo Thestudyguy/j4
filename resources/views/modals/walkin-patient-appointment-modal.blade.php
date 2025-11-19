@@ -80,24 +80,30 @@
                             <div class="scheduled-appointment-step scheduled-appointment-prep-step-3 visually-hidden">
                                 <h4 class="fw-semibold mb-3 text-secondary">Our Dentists</h4>
                                 <div class="row">
-                                    @foreach ($doctors as $doctor)
-                                        <div class="col-md-4 mb-4">
-                                            <div class="card h-100 shadow-sm scheduled-appt-doctor-card" data-id="{{ $doctor->id }}">
-                                                <img src="{{ asset($doctor->image_path) }}"
-                                                    class="card-img-top img-fluid rounded-top"
-                                                    alt="{{ $doctor->FirstName }}"
-                                                    style="height: 250px; object-fit: contain;">
-                                                <div class="card-body text-center">
-                                                    <h5 class="card-title">
-                                                        {{ $doctor->ProfessionalTitle ?? '' }} {{ $doctor->FirstName }}
-                                                        {{ $doctor->MiddleName ?? '' }} {{ $doctor->LastName }}
-                                                    </h5>
-                                                    <p class="text-muted mb-0">
-                                                        {{ $doctor->AreaOfExpertise ?? 'Dentist' }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
+                                    @foreach ($availableDoctors as $item)
+    @php
+        $doctor = $item['doctor'];       // the doctor info
+        $offsched = $item['off_sched'];  // the off-schedule array
+    @endphp
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm scheduled-appt-doctor-card" 
+             data-id="{{ $doctor['dentistID'] }}" 
+             data-offsched='@json($offsched, JSON_HEX_APOS | JSON_HEX_QUOT)'>
+            <img src="{{ asset($doctor['image_path']) }}" 
+                 class="card-img-top img-fluid rounded-top" 
+                 alt="{{ $doctor['FirstName'] }}" 
+                 style="height: 250px; object-fit: contain;">
+            <div class="card-body text-center">
+                <h5 class="card-title">
+                    {{ $doctor['ProfessionalTitle'] ?? '' }} {{ $doctor['FirstName'] }}
+                    {{ $doctor['MiddleName'] ?? '' }} {{ $doctor['LastName'] }}
+                </h5>
+                <p class="text-muted mb-0">{{ $doctor['AreaOfExpertise'] ?? 'Dentist' }}</p>
+            </div>
+        </div>
+    </div>
+@endforeach
+
 
                                 </div>
                             </div>

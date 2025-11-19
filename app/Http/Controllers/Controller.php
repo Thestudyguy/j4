@@ -182,6 +182,7 @@ foreach ($doctorss as $row) {
     }
 }
 $availableDoctors = array_values($availableDoctors);
+Log::info(json_encode($availableDoctors, JSON_PRETTY_PRINT));
         $patients = DB::table('patient_info')
         ->leftJoin('appointments','appointments.patient_id', '=', 'patient_info.id')
         ->leftJoin('sub_services','sub_services.id','=', 'appointments.service_id')
@@ -214,6 +215,7 @@ $availableDoctors = array_values($availableDoctors);
         // ->groupBy('refID');
         $subServices = SubService::all();
         $doctors = Doctors::where('isRemoved', false)->get();
+        
         // $servicesCount = count($patients);
         Log::info(json_encode($patients, JSON_PRETTY_PRINT));
         return view('pages.patients', compact('patients', 'subServices', 'doctors', 'availableDoctors'));
@@ -418,47 +420,64 @@ $availableDoctors = array_values($availableDoctors);
     }
 
     public function NewSubService(Request $request)
-    {
+{
+    Log::info($request->all());
 
-        Log::info($request->all());
+    // Normalize price before validation
+    $request->merge([
+        'serviceprice' => str_replace(',', '.', $request->serviceprice)
+    ]);
 
-        $validated = $request->validate([
-            'servicename' => 'required|string|max:255|unique:sub_services,Service',
-            'serviceprice' => 'required|numeric',
-            'servicedescription' => 'required|string|max:1000',
-            'parent-service-id' => 'nullable|exists:services,id',
-            'serviceimage' => 'required|image|mimes:jpg,jpeg,png',
+    // Validate after normalization
+    $validated = $request->validate([
+        'servicename' => 'required|string|max:255|unique:sub_services,Service',
+        'serviceprice' => 'required|numeric',
+        'servicedescription' => 'required|string|max:1000',
+        'parent-service-id' => 'nullable|exists:services,id',
+        'serviceimage' => 'required|image|mimes:jpg,jpeg,png',
+    ]);
+
+    try {
+        $image = $request->file('serviceimage');
+        $fileName = 'sub_service_' . time() . '.' . $image->getClientOriginalExtension();
+        $imagePath = $image->storeAs('services', $fileName, 'public');
+
+        // Cast to float and format to 2 decimals
+        $raw = $request->serviceprice;
+
+// Remove thousand separators
+$raw = str_replace(['.', ' '], '', $raw);
+
+// Convert comma to decimal
+$raw = str_replace(',', '.', $raw);
+
+$price = (float) $raw; // now it's correct
+        Log::info($request->serviceprice);
+        $subService = SubService::create([
+            'parent_service' => $validated['parent-service-id'],
+            'Service' => $validated['servicename'],
+            'Price' => $price,
+            'Description' => $validated['servicedescription'],
+            'image_path' => $imagePath,
         ]);
-        try {
-            $image = $request->file('serviceimage');
-            $fileName = 'sub_service_' . time() . '.' . $image->getClientOriginalExtension();
-            $imagePath = $image->storeAs('services', $fileName, 'public');
 
-            $subService = SubService::create([
-                'parent_service' => $validated['parent-service-id'],
-                'Service' => $validated['servicename'],
-                'Price' => $validated['serviceprice'],
-                'Description' => $validated['servicedescription'],
-                'image_path' => $imagePath,
-            ]);
-            Log::info('Sub-service added successfully.', ['id' => $subService->id]);
+        Log::info('Sub-service added successfully.', ['id' => $subService->id]);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Sub-service created successfully.',
-                'data' => $subService,
-            ], 201);
+        return response()->json([
+            'success' => true,
+            'message' => 'Sub-service created successfully.',
+            'data' => $subService,
+        ], 201);
 
+    } catch (\Exception $e) {
+        Log::error('Error creating sub-service: ' . $e->getMessage());
 
-        } catch (\Exception $e) {
-            Log::error('Error creating sub-service: ' . $e->getMessage());
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong while creating sub-service.',
-            ], 500);
-        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Something went wrong while creating sub-service.',
+        ], 500);
     }
+}
 
     public function GetSubServices($id)
     {
