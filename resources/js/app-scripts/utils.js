@@ -576,12 +576,15 @@ $(document).ready(function () {
         });
     });
 
-    $('.finalise-appt').on('click', function(e) {
+    $(document).on('click', '.finalise-appt', function(e) {
     e.preventDefault();
-
+    
     let modal = $(this).closest('.modal'); // get the current modal
     let refID = $(this).attr('id');
-    let amount = $('.animalt').val();
+    let amount = modal.find('#finalise-amount').val();
+    console.log(
+        $(this).attr('id')
+    );
     if (amount === '') {
         Toast.fire({
             icon: 'warning',

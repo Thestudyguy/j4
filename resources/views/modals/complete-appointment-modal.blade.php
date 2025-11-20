@@ -49,7 +49,7 @@
 
             {{-- FOOTER --}}
             <div class="modal-footer border-0">
-                <button type="submit" class="btn btn-primary fw-bold finalise-appt rounded-0 px-4" id="{{ $appt->refID }}">
+                <button type="submit" class="btn btn-primary fw-bold finalise-appt rounded-0 px-4 id={{$appt->id}}" id="{{$appt->id}}" data-refid="{{ $appt->refID }}">
                     {{ __('Submit') }}
                 </button>
                 <button type="button" class="btn btn-secondary fw-bold rounded-0" data-bs-dismiss="modal">

@@ -40,6 +40,16 @@
                             placeholder="Enter stock amount" min="0" required>
                     </div>
                     <div class="mb-3">
+                        <label for="stock" class="form-label fw-semibold">Manufactured By:</label>
+                        <input type="text" id="manufactured_by" name="manufactured_by" class="form-control"
+                            placeholder="Enter manufacturer" min="0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="stock" class="form-label fw-semibold">Expiration Date</label>
+                        <input type="date" id="expiration_date" name="expiration_date" class="form-control"
+                            placeholder="Enter stock amount" min="0" required>
+                    </div>
+                    <div class="mb-3">
                         <label for="stock" class="form-label fw-semibold">Unit Price</label>
                         <input type="text" class="form-control form-control-sm rounded-1" name="price" id="price" onchange="formatValueInput(this)">
                     </div>

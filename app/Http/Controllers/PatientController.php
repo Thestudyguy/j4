@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\MailPatientAccount;
 use App\Models\Appointment;
 use App\Models\Doctors;
 use App\Models\PatientHistory;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Mail;
 use Users;
 
 class PatientController extends Controller
@@ -291,6 +293,7 @@ $availableDoctors = array_values($availableDoctors);
         DB::beginTransaction();
         Log::info($request['patient_personal_info']['firstname']);
         $patient_id = Auth::user()->id;
+        $patient = User::where('id', $patient_id)->first();
         Log::info($request);
         try {
             // Save Patient data

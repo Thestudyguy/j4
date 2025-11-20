@@ -585,160 +585,185 @@ public function AppointmentSummary(Request $request)
 {
     $apptID = $request->query('apptID');
 
-    try {
-        $appointment = DB::table('appointments')
-            ->leftJoin('patient_info', 'appointments.patient_id', '=', 'patient_info.id')
-            ->leftJoin('sub_services', 'appointments.service_id', '=', 'sub_services.id')
-            ->leftJoin('doctors', 'appointments.doctor_id', '=', 'doctors.id')
-            ->leftJoin('patient_history', 'patient_history.patient_id', '=', 'patient_info.id')
-            ->select(
-                'appointments.*',
-                'sub_services.Service as service_name',
-                'sub_services.Price as service_price',
-                DB::raw("CONCAT(doctors.ProfessionalTitle, ' ', doctors.FirstName, ' ', doctors.MiddleName, ' ', doctors.LastName) as doctor_fullname"),
-                'doctors.AreaOfExpertise',
-                DB::raw("CONCAT(patient_info.FirstName, ' ', patient_info.MiddleName, ' ', patient_info.LastName) as patient_fullname"),
-                'patient_info.BirthDate',
-                'patient_info.Gender',
-                'patient_info.Address',
-                'patient_info.MobileNo',
-                'patient_info.Email',
-                'patient_history.*'
-            )
-            ->where('appointments.id', $apptID)
-            ->first();
+    $appointment = DB::table('appointments')
+        ->where('appointments.id', $apptID)
+        ->join('patient_info', 'patient_info.id','=','appointments.patient_id')
+        ->join('doctors', 'doctors.id','=','appointments.doctor_id')
+        ->join('sub_services', 'sub_services.id','=','appointments.service_id')
+        ->join('users', 'users.id','=','appointments.mark_by')
+        ->select(
+            'appointments.*',
+            'patient_info.FirstName as ptfname', 
+            'patient_info.LastName as ptlname', 
+            'patient_info.BirthDate as ptbdate', 
+            'patient_info.Age as ptage', 
+            'patient_info.Gender as ptgender',
+            'doctors.FirstName as dtfname',
+            'doctors.LastName as dtlname',
+            'doctors.ProfessionalTitle as dcpt',
+            'sub_services.Service as service_name',
+            'sub_services.Price as service_price',
+            'users.FirstName as staff_fname',
+            'users.LastName as staff_lname'
+        )
+        ->first();
 
-        if (!$appointment) {
-            abort(404, 'Appointment not found.');
-        }
+    if (!$appointment) abort(404, 'Appointment not found.');
 
-        $billingItems = DB::table('billings')->where('appointmentID', $apptID)->get();
+    $pdf = new \FPDF('P','mm','A4');
+    $pdf->AddPage();
+    $pdf->SetMargins(15,15,15);
 
-        $pdf = new \FPDF('P', 'mm', 'A4');
-        $pdf->AddPage();
-        $pdf->SetMargins(15, 15, 15);
-
-        // ---------------------------
-        // HEADER
-        // ---------------------------
-        $pdf->SetFont('Arial','B',20);
-        $pdf->SetTextColor(0,51,102);
-        $pdf->Cell(0,10,'Appointment Confirmation',0,1,'C');
-        $pdf->SetFont('Arial','',12);
-        $pdf->SetTextColor(80,80,80);
-        $pdf->Cell(0,6,'Generated on: '.date('F j, Y H:i'),0,1,'C');
-        $pdf->Ln(5);
-
-        // ---------------------------
-        // PATIENT INFO
-        // ---------------------------
-        $pdf->SetFont('Arial','B',14);
-        $pdf->SetFillColor(230,230,250);
-        $pdf->Cell(0,8,'Patient Information',0,1,'L',true);
-        $pdf->SetFont('Arial','',11);
-        $pdf->SetTextColor(0,0,0);
-        $pdf->Cell(45,6,'Full Name:',0,0);
-        $pdf->Cell(0,6,$appointment->patient_fullname ?? 'N/A',0,1);
-        $pdf->Cell(45,6,'Birth Date:',0,0);
-        $pdf->Cell(0,6,$appointment->BirthDate ?? 'N/A',0,1);
-        $pdf->Cell(45,6,'Gender:',0,0);
-        $pdf->Cell(0,6,$appointment->Gender ?? 'N/A',0,1);
-        $pdf->Cell(45,6,'Address:',0,0);
-        $pdf->MultiCell(0,6,$appointment->Address ?? 'N/A',0,1);
-        $pdf->Cell(45,6,'Mobile No:',0,0);
-        $pdf->Cell(0,6,$appointment->MobileNo ?? 'N/A',0,1);
-        $pdf->Cell(45,6,'Email:',0,0);
-        $pdf->Cell(0,6,$appointment->Email ?? 'N/A',0,1);
-        $pdf->Ln(5);
-
-        // ---------------------------
-        // APPOINTMENT DETAILS
-        // ---------------------------
-        $pdf->SetFont('Arial','B',14);
-        $pdf->SetFillColor(200,230,201);
-        $pdf->Cell(0,8,'Appointment Details',0,1,'L',true);
-        $pdf->SetFont('Arial','',11);
-        $pdf->Cell(50,6,'Doctor:',0,0);
-        $pdf->Cell(0,6,$appointment->doctor_fullname.' ('.$appointment->AreaOfExpertise.')',0,1);
-        $pdf->Cell(50,6,'Service:',0,0);
-        $pdf->Cell(0,6,$appointment->service_name,0,1);
-        $pdf->Cell(50,6,'Date & Time:',0,0);
-        $pdf->Cell(0,6,$appointment->date.' '.$appointment->time,0,1);
-        $pdf->Cell(50,6,'Status:',0,0);
-        $pdf->Cell(0,6,$appointment->status,0,1);
-        $pdf->Ln(5);
-
-        // ---------------------------
-        // BILLING TABLE
-        // ---------------------------
-        $pdf->SetFont('Arial','B',14);
-        $pdf->SetFillColor(255,224,178);
-        $pdf->Cell(0,8,'Billing',0,1,'L',true);
-
-        $pdf->SetFont('Arial','B',11);
-        $pdf->SetFillColor(245,245,245);
-        $pdf->Cell(100,6,'Item',1,0,'C',true);
-        $pdf->Cell(30,6,'Qty',1,0,'C',true);
-        $pdf->Cell(40,6,'Price',1,0,'C',true);
-        $pdf->Cell(0,6,'Total',1,1,'C',true);
-
-        $pdf->SetFont('Arial','',11);
-        $fill=false;
-        foreach($billingItems as $item){
-            $rowColor = $fill ? 245 : 255;
-            $pdf->SetFillColor($rowColor,$rowColor,$rowColor);
-            $pdf->Cell(100,6,$item->item,1,0,'L',true);
-            $pdf->Cell(30,6,$item->quantity,1,0,'C',true);
-            $pdf->Cell(40,6,''.number_format($item->itemPrice,2),1,0,'R',true);
-            $pdf->Cell(0,6,''.number_format($item->itemPrice*$item->quantity,2),1,1,'R',true);
-            $fill = !$fill;
-        }
-
-        $billingTotal = $billingItems->sum(fn($i)=> $i->itemPrice*$i->quantity);
-        $servicePrice = $appointment->service_price ?? 0;
-        $total = $billingTotal + $servicePrice;
-        $amountPaid = $appointment->amount_paid ?? 0;
-        $balance = max($total - $amountPaid, 0);
-
-        $pdf->SetFont('Arial','B',12);
-$pdf->SetFillColor(245,245,245);
-
-// Row: Service Price
-$pdf->Cell(130,6,'Service Price',1,0,'R',true);
-$pdf->Cell(50,6,''.number_format($servicePrice,2),1,1,'R',true);
-
-// Row: Subtotal
-$pdf->Cell(130,6,'Subtotal',1,0,'R',true);
-$pdf->Cell(50,6,''.number_format($total,2),1,1,'R',true);
-
-// Row: Amount Paid
-$pdf->Cell(130,6,'Amount Paid',1,0,'R',true);
-$pdf->Cell(50,6,''.number_format($amountPaid,2),1,1,'R',true);
-
-// Row: Balance
-$pdf->Cell(130,6,'Balance',1,0,'R',true);
-$pdf->Cell(50,6,''.number_format($balance,2),1,1,'R',true);
-
-
-        // ---------------------------
-        // FOOTER
-        // ---------------------------
-        $pdf->SetY(-25);
-        $pdf->SetFont('Arial','I',10);
-        $pdf->SetTextColor(100,100,100);
-        $pdf->Cell(0,5,'Thank you for choosing Our Clinic!',0,1,'C');
-        $pdf->Cell(0,5,'Page '.$pdf->PageNo().'/{nb}',0,0,'C');
-        $pdf->AliasNbPages();
-
-        return response($pdf->Output('S','Appointment_Summary.pdf'),200)
-            ->header('Content-Type','application/pdf')
-            ->header('Content-Disposition','inline; filename="Appointment_Summary.pdf"');
-
-    } catch (\Throwable $th) {
-        Log::error('Error generating appointment summary: '.$th->getMessage());
-        abort(500,'Something went wrong while generating the PDF.');
+    // LOGO
+    $logo = public_path('images/dclogo.png');
+    if (file_exists($logo)) {
+        $pdf->Image($logo, 80, 1, 50);
     }
+    $pdf->Ln(30);
+
+    // HEADER
+    $pdf->SetFont('Arial','B',16);
+    $pdf->Cell(0,8,'APPOINTMENT SUMMARY',0,1,'C');
+    $pdf->SetFont('Arial','',10);
+    $pdf->Cell(0,5,'Generated on: '.date('F j, Y - h:i A'),0,1,'C');
+    $pdf->Ln(5);
+
+    // FUNCTION FOR ROWS
+    function rowItem($pdf,$label,$value){
+        $pdf->SetFont('Arial','B',10);
+        $pdf->Cell(40,6,$label.':');
+        $pdf->SetFont('Arial','',10);
+        $pdf->Cell(0,6,$value,0,1);
+    }
+
+    // PATIENT INFO
+    $pdf->SetFont('Arial','B',12);
+    $pdf->Cell(0,6,'Patient Information',0,1);
+    $pdf->Ln(2);
+
+    rowItem($pdf,'Patient Name', $appointment->ptlname.', '.$appointment->ptfname);
+    rowItem($pdf,'Birthdate', $appointment->ptbdate);
+    rowItem($pdf,'Age', $appointment->ptage);
+    rowItem($pdf,'Gender', $appointment->ptgender);
+
+    $pdf->Ln(2);
+    $pdf->Line(15,$pdf->GetY(),195,$pdf->GetY());
+    $pdf->Ln(4);
+
+    // APPOINTMENT DETAILS
+    $pdf->SetFont('Arial','B',12);
+    $pdf->Cell(0,6,'Appointment Details',0,1);
+    $pdf->Ln(2);
+
+    rowItem($pdf,'Service', $appointment->service_name);
+    rowItem($pdf,'Service Price', ''.number_format($appointment->service_price,2));
+    rowItem($pdf,'Appointment Date', $appointment->date);
+    rowItem($pdf,'Appointment Time', $appointment->time);
+
+    $pdf->Ln(2);
+    $pdf->Line(15,$pdf->GetY(),195,$pdf->GetY());
+    $pdf->Ln(4);
+
+    // DOCTOR INFO
+    $pdf->SetFont('Arial','B',12);
+    $pdf->Cell(0,6,'Attending Doctor',0,1);
+    $pdf->Ln(2);
+
+    rowItem(
+        $pdf,
+        'Doctor',
+        $appointment->dcpt.' '.$appointment->dtfname.' '.$appointment->dtlname
+    );
+
+    $pdf->Ln(2);
+    $pdf->Line(15,$pdf->GetY(),195,$pdf->GetY());
+    $pdf->Ln(4);
+
+    // STAFF INFO
+    $pdf->SetFont('Arial','B',12);
+    $pdf->Cell(0,6,'Processed By',0,1);
+    $pdf->Ln(2);
+
+    rowItem(
+        $pdf,
+        'Staff',
+        $appointment->staff_fname.' '.$appointment->staff_lname
+    );
+
+    $pdf->Ln(4);
+
+    // PAYMENT SUMMARY
+    $pdf->SetFont('Arial','B',12);
+    $pdf->Cell(0,6,'Payment Summary',0,1);
+    $pdf->Ln(2);
+
+    $amountPaid = $appointment->amount_paid ?? 0;
+    $pdf->SetFont('Arial','',11);
+    $pdf->Cell(130,6,'Amount Paid:');
+    $pdf->SetFont('Arial','B',12);
+    $pdf->Cell(0,6,''.number_format($amountPaid,2),0,1);
+
+    $pdf->Ln(10);
+// // Get billing items for this appointment
+// $billingItems = DB::table('billings')
+//     ->where('appointmentID', $appointment->id)
+//     ->get();
+
+// if ($billingItems->count() > 0) {
+//     $pdf->SetFont('Arial','B',12);
+//     $pdf->Cell(0,6,'Billing Items',0,1);
+//     $pdf->Ln(2);
+
+//     $pdf->SetFont('Arial','B',10);
+//     $pdf->Cell(100,6,'Item',1);
+//     $pdf->Cell(30,6,'Qty',1,0,'C');
+//     $pdf->Cell(30,6,'Price',1,0,'C');
+//     $pdf->Cell(30,6,'Subtotal',1,1,'C');
+
+//     $pdf->SetFont('Arial','',10);
+//     $totalBilling = 0;
+//     foreach ($billingItems as $item) {
+//         $subtotal = $item->quantity * $item->itemPrice;
+//         $totalBilling += $subtotal;
+
+//         $pdf->Cell(100,6,$item->itemName,1);
+//         $pdf->Cell(30,6,$item->quantity,1,0,'C');
+//         $pdf->Cell(30,6,'₱ '.number_format($item->itemPrice,2),1,0,'C');
+//         $pdf->Cell(30,6,'₱ '.number_format($subtotal,2),1,1,'C');
+//     }
+
+//     // TOTAL
+//     $pdf->SetFont('Arial','B',11);
+//     $pdf->Cell(160,6,'Total Billing:',1);
+//     $pdf->Cell(30,6,'₱ '.number_format($totalBilling,2),1,1,'C');
+//     $pdf->Ln(5);
+// }
+    // SIGNATURES
+    $pdf->SetFont('Arial','B',12);
+    $pdf->Ln(8);
+
+    // Patient signature
+    $pdf->SetFont('Arial','',10);
+    $pdf->Cell(80,5,'',0,0,'C'); // Spacer
+    $pdf->Cell(80,5,'',0,1,'C'); // Centered line
+    $pdf->Line(25, $pdf->GetY(), 95, $pdf->GetY());
+    $pdf->Ln(3);
+    $pdf->Cell(70,5,'Patient Signature',0,0,'C');
+
+    // Staff signature
+    $pdf->Cell(60,5,'',0,0); // Spacer between lines
+    // $pdf->Line(115, $pdf->GetY(), 185, $pdf->GetY());
+    $pdf->Ln(3);
+    // $pdf->Cell(125,5,'Confirmed By: '.$appointment->staff_fname.' '.$appointment->staff_lname,0,1,'C');
+
+    $pdf->Output();
 }
+
+
+
+
+
+
 
 
 
