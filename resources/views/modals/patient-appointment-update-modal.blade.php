@@ -7,7 +7,7 @@
             <div class="modal-header text-dark">
                 <h5 class="modal-title fw-bold">
                     @if (Auth::user()->Role !== 'patient')
-                    Appointment Details
+                    Appointment Details 
                     @else
                     Update Appointment
                     @endif
@@ -52,8 +52,8 @@
                 </div>
 
                 <!-- Update Selection -->
-                @if (Auth::user()->Role !== 'patient')
-                @else
+                {{-- @if (Auth::user()->Role !== 'patient') --}}
+                {{-- @else --}}
                     <div class="mb-4">
                         <label class="fw-semibold mb-2">Update Action</label>
                         <select name="appointment-update-selection" class="form-select appointment-update-selection">
@@ -61,10 +61,10 @@
                             <option value="reschedule" class="text-info fw-semibold">Reschedule</option>
                             {{-- <option value="Completed" class="text-success fw-semibold">Completed</option> --}}
                             {{-- <option value="Cancel" class="text-danger fw-semibold">Cancel</option> --}}
-                            {{-- <option value="cancel" class="text-danger fw-semibold">Cancel</option> --}}
+                            <option value="cancel" class="text-danger fw-semibold">Cancel</option>
                         </select>
                     </div>
-                @endif
+                {{-- @endif --}}
 
                 <div class="date-picker-update visually-hidden">
                     <div class="row mb-5">
@@ -87,10 +87,10 @@
             </div>
 
             <div class="modal-footer">
-                @if (Auth::user()->Role === 'patient')
+                {{-- @if (Auth::user()->Role === 'patient') --}}
                 <button type="submit" class="btn btn-primary rounded-0 px-4 update-appt"
                 data-id='{{ $appt->id ?? '' }}'>Update</button>
-                @endif
+                {{-- @endif --}}
                 <button type="button" class="btn btn-secondary rounded-0 px-4" data-bs-dismiss="modal">Cancel</button>
             </div>
         </div>

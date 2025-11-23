@@ -507,7 +507,7 @@
     <!-- Column 2 -->
     <div class="col-md-3">
         <div class="form-check">
-            <input class="form-check-input bg-secondary" type="checkbox" name="illnesses[]" value="Heart Attack" id="heartAttack"
+            <input class="form-check-input" type="checkbox" name="illnesses[]" value="Heart Attack" id="heartAttack"
                 {{ in_array('Heart Attack', $knownConditions ?? []) ? 'checked' : '' }}>
             <label class="form-check-label" for="heartAttack">Heart Attack</label>
         </div>

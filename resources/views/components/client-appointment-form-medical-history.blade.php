@@ -262,7 +262,7 @@
 
                         <!-- Column 2 -->
                         <div class="col-md-3">
-                        <div class="form-check"><input class="form-check-input bg-secondary" type="checkbox" name="illnesses[]" value="Heart Attack" id="heartAttack"><label class="form-check-label" for="heartAttack">Heart Attack</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" name="illnesses[]" value="Heart Attack" id="heartAttack"><label class="form-check-label" for="heartAttack">Heart Attack</label></div>
                         <div class="form-check"><input class="form-check-input" type="checkbox" name="illnesses[]" value="Thyroid Problem" id="thyroid"><label class="form-check-label" for="thyroid">Thyroid Problem</label></div>
                         <div class="form-check"><input class="form-check-input" type="checkbox" name="illnesses[]" value="Heart Disease" id="heartDisease"><label class="form-check-label" for="heartDisease">Heart Disease</label></div>
                         <div class="form-check"><input class="form-check-input" type="checkbox" name="illnesses[]" value="Head Murmur" id="headMurmur"><label class="form-check-label" for="headMurmur">Head Murmur</label></div>

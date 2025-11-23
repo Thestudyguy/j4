@@ -107,3 +107,6 @@ Route::get('/mission-report-pdf', [PDFController::class, 'PayslipPDF']);
 Route::get('/appointments-report-pdf', [PDFController::class, 'AppointmentsReportPDF']);
 Route::post('/chatbot/respond', [Chatbot::class, 'respond']);
 Route::get('/new-appointment-form', [PatientController::class, 'CreateAppointment'])->name('new-appointment-form');
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

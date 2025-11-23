@@ -32,7 +32,7 @@
                     <th class="small text-center">Category</th>
                     <th class="small text-center">On Hand</th>
                     <th class="small text-center">Unit Price</th>
-                    <th class="small text-center">Manufacturer</th>
+                    <th class="small text-center">Date Manufactured</th>
                     <th class="small text-center">Expiration Date</th>
                     <th class="small text-center">Status</th>
                     <th class="small text-center">Actions</th>
@@ -53,7 +53,7 @@
                             {{ $items->on_hand }}
                         </td>
                         <td class="text-center small">{{ number_format($items->price, 2) }}</td>
-                        <td class="text-center small">{{ $items->manufactured_by }}</td>
+                        <td class="text-center small">{{ $items->manufactured_date }}</td>
                         <td class="text-center small">{{ $items->expiration_date }}</td>
                         <td class="text-center">
                             @if ($isOutOfStock)

@@ -40,8 +40,8 @@
                             placeholder="Enter stock amount" min="0" required>
                     </div>
                     <div class="mb-3">
-                        <label for="stock" class="form-label fw-semibold">Manufactured By:</label>
-                        <input type="text" id="manufactured_by" name="manufactured_by" class="form-control"
+                        <label for="stock" class="form-label fw-semibold">Date Manufactured:</label>
+                        <input type="date" id="manufactured_date" name="manufactured_date" class="form-control"
                             placeholder="Enter manufacturer" min="0" required>
                     </div>
                     <div class="mb-3">

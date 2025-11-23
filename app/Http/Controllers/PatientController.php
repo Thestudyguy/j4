@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\MailAppointmentToPatient;
 use App\Mail\MailPatientAccount;
 use App\Models\Appointment;
 use App\Models\Doctors;
@@ -185,37 +186,74 @@ $availableDoctors = array_values($availableDoctors);
     }
 
     public function AppointmentConfirmation(Request $request)
-    {
-        try {
-            $patientID = DB::table('patient_info')->where('patient_id', Auth::user()->id)->first();
-            $validated = $request->validate([
-                'selected_date' => 'required|date',
-                'selected_time' => 'required|string',
-                'selected_doctor_id' => 'required|exists:doctors,id',
-                'selected_service_id' => 'required|exists:sub_services,id',
-                // 'patient_id' => 'required',
-            ]);
-            Log::info(json_encode($validated, JSON_PRETTY_PRINT));
-            // return;
-            Appointment::create([
-                'user_id' => Auth::user()->id,
-                'patient_id' => $patientID->id,
-                'doctor_id' => $validated['selected_doctor_id'],
-                'service_id' => $validated['selected_service_id'],
-                'date' => $validated['selected_date'],
-                'time' => $validated['selected_time'],
-            ]);
+{
+    try {
+        DB::beginTransaction();
+        $user = Auth::user();
+        Log::info($user->Email);
+        $patientID = DB::table('patient_info')
+        ->where('patient_id', Auth::user()->id)
+        ->first();
 
-            User::where('id', Auth::user()->id)->update(['is_set_up_complete' => true, 'is_first_login' => false]);
-            // return redirect()->route('appointment-lists')->with('success', 'Appointment booked successfully!');
-            return response()->json([
-                'status' => 'success',
-                'redirect' => route('patient-profile'),
-            ]);
-        } catch (\Throwable $th) {
-            throw $th;
-        }
+        $validated = $request->validate([
+            'selected_date' => 'required|date',
+            'selected_time' => 'required|string',
+            'selected_doctor_id' => 'required|exists:doctors,id',
+            'selected_service_id' => 'required|exists:sub_services,id',
+        ]);
+        // Create appointment record
+        $appointment = Appointment::create([
+            'user_id' => Auth::user()->id,
+            'patient_id' => $patientID->id,
+            'doctor_id' => $validated['selected_doctor_id'],
+            'service_id' => $validated['selected_service_id'],
+            'date' => $validated['selected_date'],
+            'time' => $validated['selected_time'],
+        ]);
+
+        // Get doctor + patient
+        $doctor = DB::table('doctors')
+            ->where('id', $validated['selected_doctor_id'])
+            ->first();
+
+        
+
+        // Email details
+        $details = [
+            'firstname'     => $user->FirstName,
+            'lastname'      => $user->LastName,
+            'refID'         => $appointment->id,
+            'doctorName'    => "Dr. {$doctor->FirstName} {$doctor->LastName}",
+            'date'          => $validated['selected_date'],
+            'time'          => $validated['selected_time'],
+            'status'        => 'Pending',
+            'clinicName'    => 'J4 Dental Clinic',
+            'clinicContact' => '09123456789',
+            'arrivalTime'   => 10,
+            'portalUrl'     => url('/patient/profile'),
+        ];
+
+        // Send email
+        Mail::to($patientID->Email)->send(new MailAppointmentToPatient($details));
+
+        // User flags
+        User::where('id', $user->id)->update([
+            'is_set_up_complete' => true,
+            'is_first_login' => false,
+        ]);
+
+        DB::commit();
+
+        return response()->json([
+            'status' => 'success',
+            'redirect' => route('patient-profile'),
+        ]);
+
+    } catch (\Throwable $th) {
+        DB::rollBack();
+        throw $th;
     }
+}
 
     public function PostAppointmentLoc()
     {

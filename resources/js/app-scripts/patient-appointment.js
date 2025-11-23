@@ -287,7 +287,7 @@ $(document).ready(function () {
         Swal.fire({
             icon: 'success',
             title: 'Your appointment has been created!',
-            text: "We'll be contacting you throughh enmail about the status of your appointnent"
+            text: "We'll be contacting you through email about the status of your appointnent"
         });
         localStorage.removeItem('appointment');
     }

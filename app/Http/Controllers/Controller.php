@@ -41,7 +41,7 @@ class Controller
                 'category' => 'required|string|max:255',
                 'stock' => 'required|integer|min:0',
                 'price' => 'required|numeric|min:0',
-                'manufactured_by' => 'nullable|string|max:255',
+                'manufactured_date' => 'nullable|date',
                 'expiration_date' => 'nullable|date',
             ]);
 
@@ -50,7 +50,7 @@ class Controller
             $item->category        = $validated['category'];
             $item->on_hand         = (int) $validated['stock'];
             $item->price           = $validated['price'];
-            $item->manufactured_by = $validated['manufactured_by'] ?? null;  // string now
+            $item->manufactured_date = $validated['manufactured_date'] ?? null;  // string now
             $item->expiration_date = $validated['expiration_date'] ?? null;  // still a date
             $item->save();
 
