@@ -1,6 +1,7 @@
 {{-- <!DOCTYPE html> --}}
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+@vite(['resources/css/app.css', 'resources/js/app.js'])
   <meta charset="UTF-8">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{{ __('J4 DENTAL Clinic') }}</title>
@@ -33,6 +34,5 @@
   <link rel="icon" type="image/x-icon" href="{{ asset('imges/bank.png') }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-@vite(['resources/css/app.css', 'resources/js/app.js'])
 
 </head>
