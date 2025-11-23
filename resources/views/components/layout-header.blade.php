@@ -33,6 +33,8 @@
   <link rel="icon" type="image/x-icon" href="{{ asset('imges/bank.png') }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-@vite(['resources/css/app.css', 'resources/js/app.js'])
+@if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
+            @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @else
 
 </head>
