@@ -32,20 +32,32 @@
             @if (Auth::check() && Auth::user()->Role === 'Front Desk')
                 <li class="nav-item">
                         <a href="{{ route('appointments') }}" class="nav-link">
-                            <i class="nav-icon fas fa-notes-medical"></i>
+                            <i class="nav-icon fas fa-notes-medical" style="color: white;"></i>
                             <p class="text-sm">{{ __('Appointments') }}</p>
                         </a>
                     </li>
                     
                     <li class="nav-item">
                         <a href="{{ route('dashboard') }}" class="nav-link">
-                            <i class="nav-icon fas fa-th"></i>
+                            <i class="nav-icon fas fa-th" style="color: white;"></i>
                             <p class="text-sm">{{ __('Dashboard') }}</p>
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="{{ route('billings') }}" class="nav-link">
+                            <i class="nav-icon fas fa-credit-card" style="color: white;"></i>
+                            <p class="text-sm">{{ __('Billings') }}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('services-dashboard') }}" class="nav-link">
+                            <i class="nav-icon fa fa-file-invoice"style="color: white;"></i>
+                            <p class="text-sm">{{ __('Services') }}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ route('patients') }}" class="nav-link">
-                            <i class="nav-icon fas fa-users"></i>
+                            <i class="nav-icon fas fa-users" style="color: white;"></i>
                             <p class="text-sm">{{ __('Patients') }}</p>
                         </a>
                     </li>

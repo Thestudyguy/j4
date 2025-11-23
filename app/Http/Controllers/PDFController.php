@@ -739,21 +739,21 @@ public function AppointmentSummary(Request $request)
 //     $pdf->Ln(5);
 // }
     // SIGNATURES
-    $pdf->SetFont('Arial','B',12);
-    $pdf->Ln(8);
+    // $pdf->SetFont('Arial','B',12);
+    // $pdf->Ln(8);
 
-    // Patient signature
-    $pdf->SetFont('Arial','',10);
-    $pdf->Cell(80,5,'',0,0,'C'); // Spacer
-    $pdf->Cell(80,5,'',0,1,'C'); // Centered line
-    $pdf->Line(25, $pdf->GetY(), 95, $pdf->GetY());
-    $pdf->Ln(3);
-    $pdf->Cell(70,5,'Patient Signature',0,0,'C');
+    // // Patient signature
+    // $pdf->SetFont('Arial','',10);
+    // $pdf->Cell(80,5,'',0,0,'C'); // Spacer
+    // $pdf->Cell(80,5,'',0,1,'C'); // Centered line
+    // $pdf->Line(25, $pdf->GetY(), 95, $pdf->GetY());
+    // $pdf->Ln(3);
+    // $pdf->Cell(70,5,'Patient Signature',0,0,'C');
 
-    // Staff signature
-    $pdf->Cell(60,5,'',0,0); // Spacer between lines
-    // $pdf->Line(115, $pdf->GetY(), 185, $pdf->GetY());
-    $pdf->Ln(3);
+    // // Staff signature
+    // $pdf->Cell(60,5,'',0,0); // Spacer between lines
+    // // $pdf->Line(115, $pdf->GetY(), 185, $pdf->GetY());
+    // $pdf->Ln(3);
     // $pdf->Cell(125,5,'Confirmed By: '.$appointment->staff_fname.' '.$appointment->staff_lname,0,1,'C');
 
     $pdf->Output();

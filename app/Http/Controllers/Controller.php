@@ -325,6 +325,7 @@ public function deleteInventory($id)
                 'appointments.time as Time',
                 'appointments.status',
                 'sub_services.Service as service',
+                'sub_services.Price as servicePrice',
                 'appointments.id',
                 'opt_notes.Date as note_date',
                 'opt_notes.Tooth',

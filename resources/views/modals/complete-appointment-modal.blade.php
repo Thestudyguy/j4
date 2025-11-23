@@ -25,7 +25,9 @@
                     <p class="mb-1">
                         <strong>Service:</strong> {{ $appt->service }}
                     </p>
-
+<p class="mb-1">
+                        <strong>Service Price:</strong> {{ number_format($appt->servicePrice, 2) }}
+                    </p>
                     <p class="mb-1">
                         <strong>Dentist:</strong>
                         {{ $appt->title }} {{ $appt->dfName }} {{ $appt->dlname }}
