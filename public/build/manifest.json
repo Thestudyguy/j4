@@ -1,0 +1,21 @@
+{
+  "public/images/clinic1.jpg": {
+    "file": "assets/clinic1-d0s_NBtY.jpg",
+    "src": "public/images/clinic1.jpg"
+  },
+  "public/images/theonlycoolimageinhere.png": {
+    "file": "assets/theonlycoolimageinhere-d2QYgSR1.png",
+    "src": "public/images/theonlycoolimageinhere.png"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-DGfXcI0r.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-DtUUDOdR.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  }
+}
