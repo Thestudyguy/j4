@@ -21,10 +21,16 @@
                     class="btn btn-primary btn-sm">
                 <i class="fas fa-plus"></i> Add Item
             </button>
+            <button data-bs-toggle="modal" data-bs-target="#new-category"
+                    class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Add Category
+            </button>
+            @include('modals.new-category-modal')
         </div>
     </div>
-
-    <div class="table-responsive shadow-sm rounded-3 bg-white">
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="table-responsive shadow-sm rounded-3 bg-white">
         <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
                 <tr>
@@ -82,6 +88,31 @@
                 @endforeach
             </tbody>
         </table>
+    </div>
+        </div>
+        <div class="col-sm-4">
+            <table class="table table-stripped">
+            <thead>
+                <tr>
+                    <th class="text-sm fw-semibold">Category</th>
+                    <th class="text-sm fw-semibold"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-muted">casdad</td>
+                    <td class="text-muted">
+                        <span class="badge bg-none border">
+                            <i class="fas fa-pen text-success"></i>
+                        </span>
+                        <span class="badge bg-none border">
+                            <i class="fas fa-trash text-danger"></i>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
     </div>
 </div>
 

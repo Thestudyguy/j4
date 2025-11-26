@@ -7,7 +7,7 @@
             <!-- Left side: Patient stats + Appointment Requests -->
             <div class="col-12 col-lg-8">
                 <div class="row g-3">
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-4">
                         @php
                             // Filter appointments for today
                             $todayAppointments = $appointments->filter(function ($appt) {
@@ -26,7 +26,26 @@
                         </div>
 
                     </div>
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-4">
+                        @php
+                            // Filter appointments for today
+                            $todayAppointments = $appointments->filter(function ($appt) {
+                                return $appt->date == \Carbon\Carbon::now('Asia/Manila')->format('Y-m-d');
+                            });
+
+                            $todayCount = $todayAppointments->count();
+                        @endphp
+
+                        <div class="card text-center">
+                            <div class="card-title p-3">Expired Items</div>
+                            <div class="card-body"></div>
+                            <div class="card-footer p-3 bg-white">
+                                <h1>{{ $todayCount }}</h1>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-12 col-md-4">
                         <div class="card text-center">
                             <div class="card-title p-3">Total Patients</div>
                             <div class="card-body"></div>

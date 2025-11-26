@@ -82,7 +82,7 @@ class Controller
             'category' => 'required|string|max:255',
             'stock' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
-            'manufactured_by' => 'nullable|string|max:255',
+            'manufactured_date' => 'nullable|string|max:255',
             'expiration_date' => 'nullable|date|after_or_equal:today'
         ]);
 
@@ -104,7 +104,7 @@ class Controller
         $item->category = $validated['category'];
         $item->on_hand = $validated['stock'];
         $item->price = $validated['price'];
-        $item->manufactured_by = $validated['manufactured_by'] ?? null;
+        $item->manufactured_date = $validated['manufactured_date'] ?? null;
         $item->expiration_date = $validated['expiration_date'] ?? null;
         $item->save();
 
@@ -430,7 +430,7 @@ public function deleteInventory($id)
 
     // Patients for today
     $today = Carbon::today()->toDateString();
-    $patientsToday = Appointment::whereDate('appointment_date', $today)->count();
+    $patientsToday = Appointment::whereDate('date', $today)->count();
 
     // Pending requests
     $pendingRequests = Appointment::where('status', 'pending')->count();

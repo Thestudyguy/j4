@@ -22,53 +22,12 @@
                     </div>
                     <input type="hidden" name="dentist-id" value=" {{$dentist->id}}">
                     <input type="hidden" name="appointment-id" value="{{$appt->id}}">
-                    <!-- Tooth # (text input for multiple numbers) -->
-                    <div class="mb-3">
-                        <label for="tooth" class="form-label fw-semibold">Tooth #</label>
-                        <input type="text" class="form-control rounded-0" id="tooth" name="tooth"
-                            placeholder="e.g. 1, 2, 3">
-                        <small class="text-muted">Enter tooth numbers separated by commas</small>
-                    </div>
-
-                      <div class="mb-3">
-                        <label for="tooth" class="form-label fw-semibold">Procedure</label>
-                        <input type="text" class="form-control rounded-0" id="procedure" name="procedure">
-                    </div>
-
-                    <!-- Amounts -->
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label for="amount_charge" class="form-label fw-semibold">Amount Charge</label>
-                            <input type="text" class="form-control rounded-0" id="amount_charge" oninput="formatValueInput(this)"
-                                name="amount_charge">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="amount_paid" class="form-label fw-semibold">Amount Paid</label>
-                            <input type="text" class="form-control rounded-0" oninput="formatValueInput(this)" id="amount_paid" name="amount_paid">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="balance" class="form-label fw-semibold">Balance</label>
-                            <input type="text" class="form-control rounded-0"oninput="formatValueInput(this)" id="balance" name="balance">
-                        </div>
-                    </div>
-
+                    <input type="hidden" name="patient-email" value="{{$appt->Email}}">
                     <!-- Post-op Notes -->
                     <div class="mb-3">
-                        <label for="post_op_notes" class="form-label fw-semibold">Post-op Notes</label>
-                        <textarea class="form-control rounded-0" id="post_op_notes" name="post_op_notes" rows="2"></textarea>
+                        <label for="post_op_notes" class="form-label fw-semibold">Note</label>
+                        <textarea class="form-control rounded-0" id="note" name="note" rows="2"></textarea>
                     </div>
-
-                    <!-- Important Notes -->
-                    <div class="mb-3">
-                        <label for="important_notes" class="form-label fw-semibold">Important Notes</label>
-                        <textarea class="form-control rounded-0" id="important_notes" name="important_notes" rows="2"></textarea>
-                    </div>
-
-                    <!-- Dentist -->
-                    {{-- <div class="mb-3">
-                        <label for="dentist" class="form-label fw-semibold">Dentist</label>
-                        <input type="text" class="form-control rounded-0" value="{{ Auth::user()->FirstName }} {{ Auth::user()->LastName }}" id="dentist" name="dentist">
-                    </div> --}}
                 </form>
 
 

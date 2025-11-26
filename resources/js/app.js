@@ -15,6 +15,7 @@ import './app-scripts/appointment-notes';
 import './app-scripts/chatbot';
 import './app-scripts/dentist-offsched';
 import './app-scripts/billing';
+import './app-scripts/patient-billing-list';
 $(document).on('input', 'input[name="serviceprice"]', function() {
     var value = $(this).val().replace(/[^0-9\.]/g, '');
     var parts = value.split('.');

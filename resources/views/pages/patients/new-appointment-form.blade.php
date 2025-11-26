@@ -49,7 +49,7 @@
 
                 {{-- Available Services --}}
                 <div class="appointment-step appointment-prep-step-2 visually-hidden">
-                    <h4 class="fw-semibold mb-3 text-secondary">Available Dental Services aninmal</h4>
+                    <h4 class="fw-semibold mb-3 text-secondary">Available Dental Services</h4>
                     <div class="row mb-5">
                         @foreach ($subServices as $services)
                             <div class="col-md-4 mb-4">

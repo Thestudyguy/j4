@@ -13,6 +13,20 @@
             </button>
             @include('modals.add-walkin-patient')
         </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="card">
+                    <div class="card-header">Total Patients</div>
+                    <div class="card-body">100</div>
+                </div>
+            </div>
+             <div class="col-sm-3">
+                <div class="card">
+                    <div class="card-header">Walk in Patients</div>
+                    <div class="card-body">100</div>
+                </div>
+            </div>
+        </div>
         <div class="col-sm-4">
             <input type="text" name="search" id="searchPatients" class="form-control form-control-sm rounded-5 mb-2"
                 placeholder="search...">
