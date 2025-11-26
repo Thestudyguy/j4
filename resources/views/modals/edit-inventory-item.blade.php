@@ -37,8 +37,8 @@
                             <input type="number" step="0.01" class="form-control form-control-sm" name="price" value="{{ $items->price }}" min="0" >
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Manufactured By</label>
-                            <input type="text" class="form-control form-control-sm" name="manufactured_by" value="{{ $items->manufactured_by }}">
+                            <label class="form-label">Manufactured Date</label>
+                            <input type="date" class="form-control form-control-sm" name="manufactured_date" value="{{ $items->manufactured_date }}">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Expiration Date</label>

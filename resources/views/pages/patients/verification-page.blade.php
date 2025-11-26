@@ -8,15 +8,23 @@
     <title>Verify Your Email</title>
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: whitesmoke;
+
+    /* ✨ NEW cube/grid pattern */
+    background-image:
+        linear-gradient(#e2e8f0 1px, transparent 1px),
+        linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
+    background-size: 40px 40px; /* size of each cube/grid */
+    background-position: center;
+
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
         .verify-container {
             background: #ffffff;
@@ -107,7 +115,13 @@
 </head>
 
 <body>
+      <div class="row w-100 justify-content-center">
+                    <div class="loader-container verify-page" id="verify-page">
+                    <div class="loader"></div>
+                </div>
+                </div>
     <div class="verify-container">
+        <img src="{{ asset('images/dclogo.png') }}" alt="" width="150">
         <h1>Email Verification</h1>
         <p>We sent a verification code to:<br><strong>{{ $email }}</strong></p>
         <p>Please enter the code below to continue.</p>
@@ -132,67 +146,78 @@
 
     <script>
         const resendLink = document.getElementById('resend-code');
-        const timerDisplay = document.getElementById('resend-timer');
-        const resendCooldown = 60; // seconds
-        let timerInterval;
-        const inputs = document.querySelectorAll(".code-input input");
-
-function startResendTimer(seconds = 60) {
-    if (timerInterval) clearInterval(timerInterval); // <- clear previous timer
-    let timeLeft = seconds;
-    resendLink.style.pointerEvents = 'none';
-    resendLink.style.opacity = '0.5';
-    timerDisplay.textContent = `(${timeLeft}s)`;
-
-    timerInterval = setInterval(() => {
-        timeLeft--;
+    const timerDisplay = document.getElementById('resend-timer');
+    const resendCooldownDefault = 60; // seconds
+    let timerInterval = null;
+    let loader = document.getElementById('verify-page');
+    function startResendTimer(seconds = 60) {
+        if (timerInterval) clearInterval(timerInterval);
+        let timeLeft = seconds;
+        resendLink.style.pointerEvents = 'none';
+        resendLink.style.opacity = '0.5';
         timerDisplay.textContent = `(${timeLeft}s)`;
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            timerDisplay.textContent = '';
+
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                timerDisplay.textContent = '';
+                resendLink.style.pointerEvents = 'auto';
+                resendLink.style.opacity = '1';
+                return;
+            }
+            timerDisplay.textContent = `(${timeLeft}s)`;
+        }, 1000);
+    }
+
+    resendLink.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        // disable while waiting for response (prevents double clicks)
+        resendLink.style.pointerEvents = 'none';
+        resendLink.style.opacity = '0.5';
+
+        fetch("{{ route('verification.resend') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({})
+        })
+        .then(async (response) => {
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                // when blocked by cooldown, backend responds 429 and includes wait_time
+                const wait = data.wait_time ?? resendCooldownDefault;
+                alert(data.message ?? 'Unable to resend right now.');
+                startResendTimer(wait);
+                return;
+            }
+
+            // success path
+            if (data.status === 'success') {
+                alert(data.message || 'Verification code resent.');
+                // start the timer using wait_time if provided
+                const wait = data.wait_time ?? resendCooldownDefault;
+                startResendTimer(wait);
+                return;
+            }
+
+            // unexpected but handled
+            const wait = data.wait_time ?? resendCooldownDefault;
+            alert(data.message || 'Something went wrong.');
+            startResendTimer(wait);
+        })
+        .catch((err) => {
+            console.error('Resend fetch error:', err);
+            alert('Something went wrong. Please try again.');
+            // Put link back active (allow user to try)
             resendLink.style.pointerEvents = 'auto';
             resendLink.style.opacity = '1';
-        }
-    }, 1000);
-}
-
-
-        resendLink.addEventListener('click', function(e) {
-            e.preventDefault();
-
-            startResendTimer();
-
-            fetch("{{ route('verification.resend') }}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-                            'content')
-                    },
-                    body: JSON.stringify({})
-                })
-                .then(response => response.json())
-                .then(data => {
-                    alert(data.message);
-                })
-                .catch(() => {
-                    alert('Something went wrong');
-                });
         });
-
-        // Auto-focus next input
-        inputs.forEach((input, index) => {
-            input.addEventListener("input", () => {
-                if (input.value.length === 1 && index < inputs.length - 1) {
-                    inputs[index + 1].focus();
-                }
-            });
-            input.addEventListener("keydown", (e) => {
-                if (e.key === "Backspace" && !input.value && index > 0) {
-                    inputs[index - 1].focus();
-                }
-            });
-        });
+    });
     </script>
 </body>
 

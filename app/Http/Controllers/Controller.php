@@ -451,13 +451,12 @@ public function deleteInventory($id)
     public function VerifyUserEmail(Request $request)
 {
     try {
-
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'user_name' => 'required|string|max:255|unique:users,UserName',
-            'email' => 'required|email|unique:users,Email',
-            'password' => 'required|string|confirmed',
+            'last_name'  => 'required|string|max:255',
+            'user_name'  => 'required|string|max:255|unique:users,UserName',
+            'email'      => 'required|email|unique:users,Email',
+            'password'   => 'required|string|confirmed',
         ]);
 
         if ($validator->fails()) {
@@ -467,21 +466,22 @@ public function deleteInventory($id)
             ], 422);
         }
 
-        // generate verification code
+        // generate verification code (uppercase)
         $code = Str::upper(Str::random(6));
 
-        // store data in session
-        session([
-            'pending_registration' => [
-                'first_name' => $request->first_name,
-                'last_name'  => $request->last_name,
-                'user_name'  => $request->user_name,
-                'email'      => $request->email,
-                'password'   => Hash::make($request->password),
-                'code'       => $code,
-                'last_code_sent_at' => now(),
-            ]
-        ]);
+        // store data in session using plain timestamp (int)
+        $pending = [
+            'first_name' => $request->first_name,
+            'last_name'  => $request->last_name,
+            'user_name'  => $request->user_name,
+            'email'      => $request->email,
+            'password'   => Hash::make($request->password),
+            'code'       => $code,
+            'last_code_sent_at' => now()->timestamp, // store as int
+        ];
+
+        session()->put('pending_registration', $pending);
+        session()->save(); // force write
 
         // send email
         Mail::to($request->email)->send(
@@ -491,75 +491,90 @@ public function deleteInventory($id)
                 $code
             )
         );
-        Log::info('reached');
-       return response()->json([
-    'status' => 'success',
-    'redirect' => route('verification.page', ['email' => $request->email])
-]);
 
+        Log::info('verification email sent to ' . $request->email);
 
+        return response()->json([
+            'status' => 'success',
+            'redirect' => route('verification.page', ['email' => $request->email])
+        ]);
     } catch (\Throwable $th) {
+        Log::error('VerifyUserEmail error: '.$th->getMessage());
         return response()->json(['error' => $th->getMessage()], 500);
     }
 }
-    
 
-    public function VerificationPage(Request $request)
+public function VerificationPage(Request $request)
 {
     return view('pages.patients.verification-page', [
         'email' => $request->email
     ]);
-
 }
+
 public function ResendCode(Request $request)
 {
     $pending = session('pending_registration');
 
-    // Make sure there is a pending registration
     if (!$pending) {
         return response()->json([
             'status' => 'error',
-            'message' => 'No pending registration found.'
+            'message' => 'No pending registration found.',
         ], 422);
     }
 
-    // Cooldown check: strictly 60 seconds
-    $secondsPassed = isset($pending['last_code_sent_at'])
-        ? now()->diffInSeconds($pending['last_code_sent_at'])
-        : 61; // if not set, allow immediately
-
+    // cooldown seconds
     $cooldown = 60;
 
+    // read stored timestamp (int) or allow immediately if not present
+    $lastTs = isset($pending['last_code_sent_at']) ? (int) $pending['last_code_sent_at'] : 0;
+
+    $nowTs = now()->timestamp;
+    $secondsPassed = $lastTs ? ($nowTs - $lastTs) : $cooldown + 1;
+
     if ($secondsPassed < $cooldown) {
+        $remaining = $cooldown - $secondsPassed;
         return response()->json([
             'status' => 'error',
             'message' => 'Please wait before resending the code.',
-            'wait_time' => $cooldown - $secondsPassed // always <= 60
+            'wait_time' => $remaining, // seconds left
         ], 429);
     }
 
-    // Update last sent timestamp
-    $pending['last_code_sent_at'] = now();
-
-    // Generate a new code
+    // generate new code and update timestamp (store ints)
     $newCode = strtoupper(Str::random(6));
     $pending['code'] = $newCode;
+    $pending['last_code_sent_at'] = $nowTs;
 
-    // Update session
-    session(['pending_registration' => $pending]);
+    // save back to session
+    session()->put('pending_registration', $pending);
+    session()->save(); // ensure written immediately
 
-    // Send email
-    Mail::to($pending['email'])->send(
-        new MailVerificationCode(
-            $pending['first_name'],
-            $pending['last_name'],
-            $newCode
-        )
-    );
+    // send email
+    try {
+        Mail::to($pending['email'])->send(
+            new MailVerificationCode(
+                $pending['first_name'],
+                $pending['last_name'],
+                $newCode
+            )
+        );
+    } catch (\Throwable $e) {
+        Log::error('ResendCode mail error: '.$e->getMessage());
+        // Roll back timestamp if mail failed (optional)
+        // $pending['last_code_sent_at'] = $lastTs;
+        // session()->put('pending_registration', $pending);
+        // session()->save();
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Failed to send email. Try again later.'
+        ], 500);
+    }
 
     return response()->json([
         'status' => 'success',
-        'message' => 'A new verification code has been sent to your email.'
+        'message' => 'A new verification code has been sent to your email.',
+        'wait_time' => $cooldown,
     ]);
 }
 

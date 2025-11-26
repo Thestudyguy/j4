@@ -2,11 +2,12 @@
 
 @section('content')
     <div class="container vh-100 d-flex justify-content-center align-items-center">
-        <div class="row w-100 justify-content-center">
-            <div class="loader-container register-page visually-hidden">
-            <div class="loader"></div>
-        </div>
-            <div class="col-md-6">
+        <div class="col-md-6">
+                <div class="row w-100 justify-content-center">
+                    <div class="loader-container register-page visually-hidden">
+                    <div class="loader"></div>
+                </div>
+                </div>
                 <div class="card" style="overflow: hidden;">
                     <div class="card-body">
                         <div class="row">

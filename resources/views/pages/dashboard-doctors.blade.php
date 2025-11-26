@@ -49,10 +49,8 @@
                                 <!-- <img width="50" src="{{ asset($doctor->image_path) }}" alt=""> -->
 
                                 <div class="col-sm-4 pl-2 d-flex align-items-center justify-content-center">
-                                    {{-- <button class="btn btn-transparent p-0 ml-3" data-bs-target='' data-bs-toggle='modal'><i
+                                    <button class="btn btn-transparent p-0 ml-3" data-bs-target='' data-bs-toggle='modal'><i
                                             class="fas fa-trash text-danger text-sm"></i></button>
-                                    <button class="btn btn-transparent p-0"><i
-                                            class="fas fa-pen text-success text-sm"></i></button> --}}
                                     <button data-bs-target="#dentist-offsched-{{ $doctor->id }}" data-bs-toggle="modal" class="btn btn-transparent p-0" data-bs-target="" data-bs-toggle="modal">
                                         <i class="fas fa-user-clock text-dark"></i>
                                     </button>

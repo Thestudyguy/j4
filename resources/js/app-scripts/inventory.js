@@ -9,6 +9,7 @@ $(document).ready(function() {
     $('.save-new-inventory-item').on('click', function(e){
         e.preventDefault();
         let isInvalid = true;
+    let today = new Date().toISOString().split('T')[0];
         const formData = $('.new-inventory-item').serializeArray();
         // $('.new-inventory-item-modal').removeClass('visually-hidden');
         $.each(formData, (index, fields)=>{
@@ -19,6 +20,23 @@ $(document).ready(function() {
                 isInvalid = false
                 $(`[name='${fields.name}']`).addClass('is-invalid');
             }
+            if(fields.name === 'expiration_date'){
+            let expDate = new Date(fields.value);
+            let todayDate = new Date(today);
+
+            if(expDate < todayDate){
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Invalid Date',
+                    text: 'Expiration date cannot be in the past'
+                });
+                $(`[name='${fields.name}']`).addClass('is-invalid');
+                isInvalid = true;
+                return false;
+            } else {
+                $(`[name='${fields.name}']`).removeClass('is-invalid');
+            }
+        }
         });
         if(!isInvalid){
                 Toast.fire({

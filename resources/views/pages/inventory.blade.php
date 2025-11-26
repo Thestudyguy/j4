@@ -30,7 +30,7 @@
                 <tr>
                     <th class="small text-center">Product Name</th>
                     <th class="small text-center">Category</th>
-                    <th class="small text-center">On Hand</th>
+                    <th class="small text-center">Quantity</th>
                     <th class="small text-center">Unit Price</th>
                     <th class="small text-center">Date Manufactured</th>
                     <th class="small text-center">Expiration Date</th>
