@@ -18,7 +18,7 @@
                         @endphp
 
                         <div class="card text-center">
-                            <div class="card-title p-3">Patients Today</div>
+                            <div class="card-title p-3">Patients Today asd</div>
                             <div class="card-body"></div>
                             <div class="card-footer p-3 bg-white">
                                 <h1>{{ $todayCount }}</h1>

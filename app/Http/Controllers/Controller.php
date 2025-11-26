@@ -15,6 +15,7 @@ use App\Models\Services;
 use App\Models\sub_services;
 use App\Models\SubService;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -422,9 +423,23 @@ public function deleteInventory($id)
     }
 
     public function DentistDashboard()
-    {
-        return view('pages.dentist-dashboard');
-    }
+{
+    // Total patients
+    $totalPatients = Appointment::count();
+
+    // Patients for today
+    $today = Carbon::today()->toDateString();
+    $patientsToday = Appointment::whereDate('appointment_date', $today)->count();
+
+    // Pending requests
+    $pendingRequests = Appointment::where('status', 'pending')->count();
+
+    return view('pages.dentist-dashboard', compact(
+        'totalPatients',
+        'patientsToday',
+        'pendingRequests'
+    ));
+}
 
     public function ServicesDashboard()
     {

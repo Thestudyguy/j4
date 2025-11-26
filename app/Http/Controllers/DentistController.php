@@ -85,7 +85,7 @@ class DentistController extends Controller
             ->pluck('total', 'status'); // returns associative array: ['completed' => 10, 'pending' => 5, ...]
             $inventoryItems = Inventory::where('isVisible', true)->get();
             Log::info(json_encode($statusCounts, JSON_PRETTY_PRINT));
-
+            
             $dentist = Doctors::where('user_id', $doctorID)->firstOrFail();
         return view('pages.dentist.dentist-interface', compact('appointments', 'count', 'test', 'statusCounts', 'testCount', 'dentistAppointments', 'inventoryItems', 'dentist'));
 
