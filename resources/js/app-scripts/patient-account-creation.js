@@ -16,7 +16,7 @@ $(document).ready(function() {
         
         $.each($(this).serializeArray(), (index, fields)=>{
                 $(`[name='${fields.name}']`).removeClass('is-invalid');
-            if(fields.value === '' && fields.name !== 'email'){
+            if(fields.value === ''){
                 Toast.fire({
                     icon: 'warning',
                     title: 'Missing Fields',
@@ -28,26 +28,26 @@ $(document).ready(function() {
             }
             userData[fields.name] = fields.value;
         });
+            $('.register-page').removeClass('visually-hidden');
             if(!callFlag){
                 $.ajax({
                     type: 'POST',
-                    url: `new-user`,
+                    url: `user-registration`,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
                     },
                     data: userData,
                     success: function (response) {
-                        localStorage.setItem('service-removal', true);
+            $('.register-page').addClass('visually-hidden');
                         console.log(response);
-                           window.location.href = response.redirect;
+                        window.location.href = response.redirect;
                     },
                     error: function(xhr) {
-    $('.loader-container').addClass('visually-hidden');
+            $('.register-page').addClass('visually-hidden');
 
     // Check if errors object exists
     let errorMessage = 'An error occurred';
     if (xhr.responseJSON && xhr.responseJSON.errors) {
-        // Collect all error messages into a single string
         errorMessage = Object.values(xhr.responseJSON.errors)
             .flat() // flatten arrays
             .join('\n'); // join multiple messages with a newline
@@ -67,6 +67,7 @@ $(document).ready(function() {
 
         
     });
+
 
     $('.patient-profile-nav-btn').on('click', function(e){
         $(this).removeClass('bg-white p-2 text-dark border');
