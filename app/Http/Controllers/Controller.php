@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Mail\MailDentistAccount;
 use App\Mail\MailPatientAccount;
 use App\Mail\MailPatientAppointmentStatus;
+use App\Mail\MailVerificationCode;
 use App\Models\Appointment;
 use App\Models\Billings;
 use App\Models\DentistOffSched;
@@ -17,13 +18,13 @@ use App\Models\SubService;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-use Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Str;
-use Validator;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 class Controller
 {
     //
@@ -432,56 +433,157 @@ public function deleteInventory($id)
         return view('pages.dashboard-services', compact('services'));
     }
 
+    public function VerifyUserEmail(Request $request)
+{
+    try {
+
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'user_name' => 'required|string|max:255|unique:users,UserName',
+            'email' => 'required|email|unique:users,Email',
+            'password' => 'required|string|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // generate verification code
+        $code = Str::upper(Str::random(6));
+
+        // store data in session
+        session([
+            'pending_registration' => [
+                'first_name' => $request->first_name,
+                'last_name'  => $request->last_name,
+                'user_name'  => $request->user_name,
+                'email'      => $request->email,
+                'password'   => Hash::make($request->password),
+                'code'       => $code,
+                'last_code_sent_at' => now(),
+            ]
+        ]);
+
+        // send email
+        Mail::to($request->email)->send(
+            new MailVerificationCode(
+                $request->first_name,
+                $request->last_name,
+                $code
+            )
+        );
+        Log::info('reached');
+       return response()->json([
+    'status' => 'success',
+    'redirect' => route('verification.page', ['email' => $request->email])
+]);
+
+
+    } catch (\Throwable $th) {
+        return response()->json(['error' => $th->getMessage()], 500);
+    }
+}
+    
+
+    public function VerificationPage(Request $request)
+{
+    return view('pages.patients.verification-page', [
+        'email' => $request->email
+    ]);
+
+}
+public function ResendCode(Request $request)
+{
+    $pending = session('pending_registration');
+
+    // Make sure there is a pending registration
+    if (!$pending) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'No pending registration found.'
+        ], 422);
+    }
+
+    // Cooldown check: strictly 60 seconds
+    $secondsPassed = isset($pending['last_code_sent_at'])
+        ? now()->diffInSeconds($pending['last_code_sent_at'])
+        : 61; // if not set, allow immediately
+
+    $cooldown = 60;
+
+    if ($secondsPassed < $cooldown) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Please wait before resending the code.',
+            'wait_time' => $cooldown - $secondsPassed // always <= 60
+        ], 429);
+    }
+
+    // Update last sent timestamp
+    $pending['last_code_sent_at'] = now();
+
+    // Generate a new code
+    $newCode = strtoupper(Str::random(6));
+    $pending['code'] = $newCode;
+
+    // Update session
+    session(['pending_registration' => $pending]);
+
+    // Send email
+    Mail::to($pending['email'])->send(
+        new MailVerificationCode(
+            $pending['first_name'],
+            $pending['last_name'],
+            $newCode
+        )
+    );
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'A new verification code has been sent to your email.'
+    ]);
+}
+
+
+
 
     public function NewUser(Request $request)
     {
 
         try {
-            $validator = Validator::make($request->all(), [
-                'first_name' => 'required|string|max:255',
-                'last_name' => 'required|string|max:255',
-                'user_name' => 'required|string|max:255|unique:users,UserName',
-                'email' => 'required|email|unique:users,Email',
-                'password' => 'required|string|confirmed', // expects password_confirmation field
-            ]);
+            $request->validate([
+        'code' => 'required|array|size:6',
+        'email' => 'required|email',
+    ]);
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => 'error',
-                    'errors' => $validator->errors()
-                ], 422);
-            }
-            $plainPassword = $request->password;
-            $data = [
-                'FirstName' => $request->first_name,
-                'LastName' => $request->last_name,
-                'UserName' => $request->user_name,
-                'Email' => $request->email,
-                'password' => Hash::make($request->password),
-            ];
+    $pending = session('pending_registration');
 
-            if ($request->has('role')) {
-                $data['Role'] = $request->role;
-            }
+    if (!$pending || $pending['email'] !== $request->email) {
+        return redirect()->back()->with('error', 'No pending registration found.');
+    }
 
-            $user = User::create($data);
-            Mail::to($user->Email)->send(
-                new MailPatientAccount(
-                    $user->FirstName,
-                    $user->LastName,
-                    $user->UserName,
-                    $plainPassword // send original password
-                )
-            );
-            Auth::login($user);
-            // return redirect()->route('dashboard')->with('success', 'Account created successfully.');
+    $inputCode = implode('', $request->code);
 
-            return response()->json([
-                'status' => 'success',
-                'redirect' => route('patient-profile'),
-            ]);
+    if ($inputCode !== $pending['code']) {
+        return redirect()->back()->with('error', 'Invalid verification code.');
+    }
 
+    $user = User::create([
+        'FirstName' => $pending['first_name'],
+        'LastName' => $pending['last_name'],
+        'UserName' => $pending['user_name'],
+        'Email' => $pending['email'],
+        'password' => $pending['password'],
+    ]);
 
+    Auth::login($user);
+    session()->forget('pending_registration');
+
+    return redirect()->route('patient-profile')->with('success', 'Account verified and created!');
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -835,7 +937,7 @@ public function deleteInventory($id)
                 'time' => $request->time,
                 'status' => 'Pending',
                 'is_walk_in' => true,
-                'created_by' => auth()->user()->FirstName . ' ' . auth()->user()->LastName,
+                'created_by' => Auth::user()->FirstName . ' ' . Auth::user()->LastName,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

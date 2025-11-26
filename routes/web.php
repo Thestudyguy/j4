@@ -12,7 +12,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\HomeController;
 Route::get('/', [HomeController::class, 'index'])->name('default');
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+
 Auth::routes();
 Route::view('/dental-medical-history', 'pages.dental-medical-history')->name('dental-medical-history');
 Route::post('/chatbot', function (Request $request) {
@@ -74,6 +77,7 @@ Route::middleware('authenticated')->group(function(){
     Route::post('dentist/off-schedule', [Controller::class,'storeOffSchedule']);
     Route::post('report/billing-pdf/{id}', [PDFController::class,'GenerateBillingReport']);
     Route::post('appointments/complete', [Controller::class,'CompleteAppointment'])->name('appointments/complete');
+    
 Route::get('appointments/appointment-summary', [PDFController::class,'AppointmentSummary'])->name('appointments.summary');
 Route::post('inventory/update/{id}', [Controller::class, 'updateInventory'])->name('inventory.update');
 Route::delete('inventory/delete/{id}', [Controller::class, 'deleteInventory']);
@@ -110,3 +114,9 @@ Route::get('/new-appointment-form', [PatientController::class, 'CreateAppointmen
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/user-registration', [Controller::class, 'VerifyUserEmail'])
+     ->name('user.registration');
+    Route::get('/user/email/verification', [Controller::class, 'VerificationPage'])
+     ->name('verification.page');
+     Route::post('/user/email/resend-code', [Controller::class, 'ResendCode'])
+     ->name('verification.resend');
