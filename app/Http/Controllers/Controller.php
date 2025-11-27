@@ -7,6 +7,7 @@ use App\Mail\MailPatientAppointmentStatus;
 use App\Mail\MailVerificationCode;
 use App\Models\Appointment;
 use App\Models\Billings;
+use App\Models\Category;
 use App\Models\DentistOffSched;
 use App\Models\Doctors;
 use App\Models\Inventory;
@@ -77,7 +78,8 @@ class Controller
     public function Inventory()
     {
         $inventory = Inventory::where('isVisible', true)->get();
-        return view('pages.inventory', compact('inventory'));
+        $category = Category::all();
+        return view('pages.inventory', compact('inventory', 'category'));
     }
     public function updateInventory(Request $request, $id)
     {
@@ -209,6 +211,87 @@ class Controller
         Mail::to($details['email'])->send(new MailPatientAppointmentStatus($details));
 
     }
+public function StoreCategory(Request $request)
+    {
+        // Validate
+        $request->validate([
+            'category' => 'required|string|max:255|unique:categories,category'
+        ]);
+
+        // Save to DB
+        $category = Category::create([
+            'category' => $request->category
+        ]);
+
+        // Return response
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Category added successfully!',
+            'data' => $category
+        ]);
+    }
+    public function UpdateCategory(Request $request)
+{
+    // If your request comes as `form` array
+    if ($request->has('form')) {
+        foreach ($request->form as $field) {
+            if ($field['name'] === 'category') {
+                $request->merge(['category' => $field['value']]);
+                break;
+            }
+        }
+    }
+
+    $request->validate([
+        'category' => 'required|string|max:255|unique:categories,category,' . $request->catID
+    ]);
+
+    $category = Category::findOrFail($request->catID);
+
+    $category->update([
+        'category' => $request->category
+    ]);
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Category updated successfully!',
+        'data' => $category
+    ]);
+}
+
+
+    public function DeleteCategory(Request $request)
+{
+    try {
+        // Validate the incoming request
+        $request->validate([
+            'catID' => 'required|integer|exists:categories,id',
+        ]);
+
+        // Find the category
+        $category = Category::findOrFail($request->catID);
+
+        // Delete the category
+        $category->delete();
+
+        // Return success response
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Category deleted successfully.'
+        ]);
+
+    } catch (\Illuminate\Validation\ValidationException $ve) {
+        return response()->json([
+            'status' => 'error',
+            'errors' => $ve->errors()
+        ], 422);
+    } catch (\Throwable $th) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Something went wrong while deleting the category.'
+        ], 500);
+    }
+}
 
     public function Patients()
     {

@@ -105,45 +105,56 @@
                                         <div class="col text-success rounded-5">Completed</div> -->
                                 @foreach ($inventory as $items)
     @php
-        // Stock Logic
-        $maxStock = $items->max_stock ?? 100;
-        $lowStockThreshold = $maxStock * 0.15;
+        // --- STOCK LOGIC WITH THRESHOLD ---
+        $threshold = $items->threshold ?? 0;
+
+        // Determine 10% threshold or fallback to 10
+        $lowStockLimit = $threshold > 0 ? ceil($threshold * 0.10) : 10;
+
         $isOutOfStock = $items->on_hand == 0;
-        $isLowStock = !$isOutOfStock && $items->on_hand <= $lowStockThreshold;
+        $isLowStock = !$isOutOfStock && $items->on_hand <= $lowStockLimit;
 
-        // Expiry Logic
+        // --- EXPIRY LOGIC ---
         $today = now()->startOfDay();
-        $expirationDate = $items->expiration_date ? \Carbon\Carbon::parse($items->expiration_date) : null;
+        $expirationDate = $items->expiration_date 
+            ? \Carbon\Carbon::parse($items->expiration_date) 
+            : null;
 
-        // Is expired?
         $isExpired = $expirationDate && $expirationDate->lt($today);
 
-        // Nearly expired (optional): within next 30 days
-        $isNearExpiry = $expirationDate && !$isExpired && $expirationDate->lte($today->copy()->addDays(30));
+        // Nearly expired (within next 30 days)
+        $isNearExpiry = $expirationDate && !$isExpired && $expirationDate->lte(
+            $today->copy()->addDays(30)
+        );
 
-        // Should display? (Out of stock OR low stock OR expired OR near expiry)
+        // Show row only if any condition true
         $shouldDisplay = $isOutOfStock || $isLowStock || $isExpired || $isNearExpiry;
     @endphp
 
     @if ($shouldDisplay)
         <div class="row inventory-row bg-light mt-1">
+            
+            {{-- Item Name --}}
             <div class="col-sm-2">
                 <span class="fw-semibold text-muted small">{{ $items->item_name }}</span>
             </div>
 
+            {{-- Category --}}
             <div class="col-sm-2">
                 <span class="fw-semibold text-muted small">{{ $items->category }}</span>
             </div>
 
+            {{-- Quantity --}}
             <div class="col-sm-2">
                 <span class="fw-semibold small
                     @if ($isOutOfStock) text-danger fw-bold
-                    @elseif($isLowStock) text-warning fw-semibold
+                    @elseif ($isLowStock) text-warning fw-semibold
                     @endif">
                     {{ $items->on_hand }}
                 </span>
             </div>
 
+            {{-- Status --}}
             <div class="col-sm-2">
                 @if ($isOutOfStock)
                     <small class="text-danger fw-bold">Out of Stock</small>
@@ -159,6 +170,7 @@
                 @endif
             </div>
 
+            {{-- Date --}}
             <div class="col-sm-2">
                 <span class="fw-semibold small text-muted">
                     {{ $items->created_at->timezone('Asia/Manila')->format('F j, Y g:i A') }}
@@ -167,6 +179,7 @@
         </div>
     @endif
 @endforeach
+
 
 
                             </div>
