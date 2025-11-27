@@ -5,9 +5,9 @@
             {{-- HEADER --}}
             <div class="modal-header border-0 pb-0">
                 <div>
-                    <h5 class="modal-title fw-bold text-dark">{{ __('Complete Appointment') }}</h5>
+                    <h5 class="modal-title fw-bold text-dark">{{ __('Add Payment ') }}</h5>
                     <p class="text-muted small mb-0">
-                        {{ __('Marking this appointment as completed will finalize the record.') }}
+                        {{-- {{ __('.') }} --}}
                     </p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>

@@ -8,6 +8,6 @@ class Inventory extends Model
 {
     //
     protected $fillable = [
-        "item_name","category","on_hand", "price", 'manufactured_date', 'expiration_Date'
+        "item_name","category","on_hand", "threshold", "price", 'manufactured_date', 'expiration_Date'
     ];
 }

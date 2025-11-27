@@ -11,7 +11,7 @@
     border: 1px solid #ccc;
     padding: 12px 16px;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 8px rgba(35, 32, 32, 0.15);
     font-family: Arial, sans-serif;
     font-size: 14px;
     z-index: 9999;">

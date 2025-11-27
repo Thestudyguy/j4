@@ -12,7 +12,7 @@
 
                     @if (Auth::user()->Role !== 'Dentist')
                         <small class="opacity-75">
-                            {{ $appt->title }} {{ $appt->dfname }} {{ $appt->dlname }} {{ $appt->dmname ?? '' }}
+                            {{ $appt->title }} {{ $appt->dfName }} {{ $appt->dlname }} {{ $appt->dmname ?? '' }}
                         </small>
                     @endif
                 </div>
@@ -43,19 +43,6 @@
                         </div>
                     </div>
 
-                    <!-- PATIENT INFORMATION -->
-                    <div class="col-md-6">
-                        <div class="border rounded p-3 bg-white h-100">
-                            <h6 class="fw-bold text-primary mb-2">🧑‍⚕️ Patient Information</h6>
-                            <p class="mb-1"><strong>Name:</strong> {{ $appt->FirstName }} {{ $appt->LastName }}</p>
-                            <p class="mb-1"><strong>Patient ID:</strong> {{ $appt->refID }}</p>
-                            <p class="mb-0">
-                                <a href="{{ route('dentist/patient/med-history', ['id' => $appt->refID]) }}" target="_blank" class="text-decoration-none">
-                                    <i class="fas fa-notes-medical text-info"></i> Medical History
-                                </a>
-                            </p>
-                        </div>
-                    </div>
 
                     <!-- NOTE CONTENT -->
                     <div class="col-12">
