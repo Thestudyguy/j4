@@ -11,14 +11,13 @@ use App\Models\PatientHistory;
 use App\Models\Patients;
 use App\Models\SubService;
 use App\Models\User;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use Users;
-
 class PatientController extends Controller
 {
     public function NewPatient(Request $request)
