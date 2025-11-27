@@ -292,6 +292,7 @@ $availableDoctors = array_values($availableDoctors);
     ->leftJoin('patient_info as p', 'p.id', '=', 'a.patient_id')
     ->join('billings as b', 'b.appointmentID', '=', 'a.id')
     ->leftJoin('inventories as i', 'i.id', '=', 'b.itemID')
+    ->leftJoin('patient_payments as pp', 'a.id', '=', 'pp.appointment_id')
     ->where('a.patient_id', $patient['id'])
     ->select(
         'a.id as appointment_id',
@@ -321,7 +322,11 @@ $availableDoctors = array_values($availableDoctors);
         // Billing
         'b.item',
         'b.itemPrice',
-        'b.quantity'
+        'b.quantity',
+
+        //payments
+        'pp.amount_paid as pp_paid',
+        'pp.created_at as pp_paid_at',
     )
     ->get();
 
@@ -329,17 +334,41 @@ $availableDoctors = array_values($availableDoctors);
         $grouped = $appointments->groupBy('appointment_id')->map(function ($items) {
     $first = $items->first();
 
-    return [
+    // Collect all patient payments for this appointment
+    $payments = $items->filter(function ($i) {
+        return $i->pp_paid !== null;
+    })->map(function ($i) {
+        return [
+            "paid" => $i->pp_paid,
+            "paid_at" => $i->pp_paid_at
+        ];
+    })->values();
 
+    // Sum all patient payment amounts
+    $totalPayments = $payments->sum('paid');
+
+    // Total due (service + billing items)
+    $servicePrice = $first->service_price ?? 0;
+    $billingTotal = $items->sum(function ($i) {
+        return ($i->itemPrice ?? 0) * ($i->quantity ?? 0);
+    });
+
+    $grandTotal = $servicePrice + $billingTotal;
+
+    // Remaining balance
+    $remainingBalance = $grandTotal - $totalPayments;
+
+    return [
         "appointment_id" => $first->appointment_id,
         "date" => $first->date,
         "time" => $first->time,
         "status" => $first->status,
         "created_by" => $first->created_by,
-        "amount_paid" => $first->amount_paid,
         "is_walk_in" => $first->is_walk_in,
+
+        // Service
         "service_name" => $first->service_name,
-        "service_price" => $first->service_price,
+        "service_price" => $servicePrice,
 
         // Patient info
         "patient" => [
@@ -365,6 +394,14 @@ $availableDoctors = array_values($availableDoctors);
                 "quantity" => $i->quantity
             ];
         })->values(),
+
+        // Payments list
+        "payments" => $payments,
+
+        // Totals
+        "total_payments" => $totalPayments,
+        "grand_total" => $grandTotal,
+        "remaining_balance" => $remainingBalance,
     ];
 });
 

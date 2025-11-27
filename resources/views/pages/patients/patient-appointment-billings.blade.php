@@ -87,7 +87,7 @@
 
                 {{-- Appointment Summary --}}
                 <div class="mb-3 p-3 rounded border bg-light">
-                    <div class="fw-semibold">{{ $b['service_name'] }}</div>
+                    <div class="fw-semibold">{{ $b['service_name'] }} - {{ number_format($b['service_price'], 2) }}</div>
 
                     <div class="small text-muted">
                         {{ $b['date'] }} at {{ $b['time'] }} • Status: 
@@ -113,9 +113,11 @@
                         </div>
                     @endif
                 </div>
+                    <div class="fw-semibold">Paid in Total: {{ number_format($b['total_payments'], 2) }}</div>
+                    <div class="fw-semibold">Balance: {{ number_format($b['service_price'] - $b['total_payments'], 2) }}</div>
 
                 {{-- Billing Items List --}}
-                <ul class="list-group">
+                {{-- <ul class="list-group">
                     @foreach ($b['billing_items'] as $item)
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <div>
@@ -127,7 +129,7 @@
                             </div>
                         </li>
                     @endforeach
-                </ul>
+                </ul> --}}
 
             </div>
 

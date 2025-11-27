@@ -39,10 +39,14 @@
             </div> --}}
             <div class="col-md-4 mb-4">
                 <h6 class="fw-semibold text-uppercase mb-3 text-info">Received your login details? Sign in now to view your appointments</h6>
-                @if (session('error'))
+                {{-- @if (session('error'))
                     <p>{{ session('error') }}</p>
-                @endif
-                @include('auth.login')
+                @endif --}}
+                <a href="{{route('login')}}">
+                    <button class="btn btn-primary sm lead rounded-0 form-control">Login</button>
+                </a>
+                {{-- @include('auth.login') --}}
+
             </div>
                     
             <!-- Social Media -->

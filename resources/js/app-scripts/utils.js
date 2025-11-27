@@ -651,7 +651,7 @@ $(document).ready(function () {
     if (localStorage.getItem('patient-setup') === 'created') {
         Toast.fire({
             icon: 'success',
-            title: 'Walkin Patient Added'
+            title: 'Account created successfully'
         });
         localStorage.removeItem('patient-setup'); // clear so it doesn't fire again
     }
