@@ -11,6 +11,7 @@ use App\Models\DentistOffSched;
 use App\Models\Doctors;
 use App\Models\Inventory;
 use App\Models\PatientHistory;
+use App\Models\PatientPayments;
 use App\Models\Patients;
 use App\Models\Services;
 use App\Models\sub_services;
@@ -38,6 +39,9 @@ class Controller
     public function NewInventoryItem(Request $request)
     {
         try {
+            $request->merge([
+                'price' => str_replace(',', '', $request->price)
+            ]);
             $validated = $request->validate([
                 'item_name' => 'required|string|max:255',
                 'category' => 'required|string|max:255',
@@ -48,10 +52,11 @@ class Controller
             ]);
 
             $item = new Inventory();
-            $item->item_name       = $validated['item_name'];
-            $item->category        = $validated['category'];
-            $item->on_hand         = (int) $validated['stock'];
-            $item->price           = $validated['price'];
+            $item->item_name = $validated['item_name'];
+            $item->category = $validated['category'];
+            $item->on_hand = (int) $validated['stock'];
+            $item->threshold = (int) $validated['stock'];
+            $item->price = $validated['price'];
             $item->manufactured_date = $validated['manufactured_date'] ?? null;  // string now
             $item->expiration_date = $validated['expiration_date'] ?? null;  // still a date
             $item->save();
@@ -75,78 +80,78 @@ class Controller
         return view('pages.inventory', compact('inventory'));
     }
     public function updateInventory(Request $request, $id)
-{
-    try {
-        $validated = $request->validate([
-            'item_name' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
-            'stock' => 'required|integer|min:0',
-            'price' => 'required|numeric|min:0',
-            'manufactured_date' => 'nullable|string|max:255',
-            'expiration_date' => 'nullable|date|after_or_equal:today'
-        ]);
+    {
+        try {
+            $validated = $request->validate([
+                'item_name' => 'required|string|max:255',
+                'category' => 'required|string|max:255',
+                'stock' => 'required|integer|min:0',
+                'price' => 'required|numeric|min:0',
+                'manufactured_date' => 'nullable|string|max:255',
+                'expiration_date' => 'nullable|date|after_or_equal:today'
+            ]);
 
-        // Check for duplicates excluding current item
-        $duplicate = Inventory::where('item_name', $validated['item_name'])
-            ->where('category', $validated['category'])
-            ->where('id', '!=', $id)
-            ->first();
+            // Check for duplicates excluding current item
+            $duplicate = Inventory::where('item_name', $validated['item_name'])
+                ->where('category', $validated['category'])
+                ->where('id', '!=', $id)
+                ->first();
 
-        if ($duplicate) {
+            if ($duplicate) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An inventory item with the same name and category already exists.'
+                ], 400);
+            }
+
+            $item = Inventory::findOrFail($id);
+            $item->item_name = $validated['item_name'];
+            $item->category = $validated['category'];
+            $item->on_hand = $validated['stock'];
+            $item->price = $validated['price'];
+            $item->manufactured_date = $validated['manufactured_date'] ?? null;
+            $item->expiration_date = $validated['expiration_date'] ?? null;
+            $item->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Inventory updated successfully.',
+                'item' => $item
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $ve) {
             return response()->json([
                 'success' => false,
-                'message' => 'An inventory item with the same name and category already exists.'
-            ], 400);
+                'message' => $ve->errors()
+            ], 422);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update inventory.',
+                'error' => $th->getMessage()
+            ], 500);
         }
-
-        $item = Inventory::findOrFail($id);
-        $item->item_name = $validated['item_name'];
-        $item->category = $validated['category'];
-        $item->on_hand = $validated['stock'];
-        $item->price = $validated['price'];
-        $item->manufactured_date = $validated['manufactured_date'] ?? null;
-        $item->expiration_date = $validated['expiration_date'] ?? null;
-        $item->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Inventory updated successfully.',
-            'item' => $item
-        ]);
-
-    } catch (\Illuminate\Validation\ValidationException $ve) {
-        return response()->json([
-            'success' => false,
-            'message' => $ve->errors()
-        ], 422);
-    } catch (\Throwable $th) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Failed to update inventory.',
-            'error' => $th->getMessage()
-        ], 500);
     }
-}
 
-public function deleteInventory($id)
-{
-    try {
-        $item = Inventory::findOrFail($id);
-        $item->delete();
+    public function deleteInventory($id)
+    {
+        try {
+            $item = Inventory::findOrFail($id);
+            $item->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Item has been successfully deleted.'
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Item has been successfully deleted.'
+            ]);
 
-    } catch (\Throwable $th) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Failed to delete item.',
-            'error' => $th->getMessage()
-        ], 500);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete item.',
+                'error' => $th->getMessage()
+            ], 500);
+        }
     }
-}
 
     public function FrontDeskBoardingPage()
     {
@@ -314,7 +319,7 @@ public function deleteInventory($id)
             ->leftJoin('users', 'users.id', '=', 'appointments.patient_id')
             ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
             ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
-            ->leftJoin('opt_notes', 'opt_notes.appointment', '=', 'appointments.id')
+            ->leftJoin('patient_appointment_notes', 'patient_appointment_notes.appointment_id', '=', 'appointments.id')
             ->select(
                 'doctors.ProfessionalTitle as title',
                 'doctors.Firstname as dfName',
@@ -329,15 +334,10 @@ public function deleteInventory($id)
                 'sub_services.Service as service',
                 'sub_services.Price as servicePrice',
                 'appointments.id',
-                'opt_notes.Date as note_date',
-                'opt_notes.Tooth',
-                'opt_notes.Procedure',
-                'opt_notes.AmountCharge',
-                'opt_notes.AmountPaid',
-                'opt_notes.Balance',
-                'PostOpNotes',
-                'ImportantNotes',
-                'opt_notes.id as note_id'
+                'patient_appointment_notes.date as note_date',
+                'patient_appointment_notes.note',
+                'patient_appointment_notes.created_at',
+                'patient_appointment_notes.id as note_id'
             )
             ->get();
 
@@ -424,23 +424,23 @@ public function deleteInventory($id)
     }
 
     public function DentistDashboard()
-{
-    // Total patients
-    $totalPatients = Appointment::count();
+    {
+        // Total patients
+        $totalPatients = Appointment::count();
 
-    // Patients for today
-    $today = Carbon::today()->toDateString();
-    $patientsToday = Appointment::whereDate('date', $today)->count();
+        // Patients for today
+        $today = Carbon::today()->toDateString();
+        $patientsToday = Appointment::whereDate('date', $today)->count();
 
-    // Pending requests
-    $pendingRequests = Appointment::where('status', 'pending')->count();
+        // Pending requests
+        $pendingRequests = Appointment::where('status', 'pending')->count();
 
-    return view('pages.dentist-dashboard', compact(
-        'totalPatients',
-        'patientsToday',
-        'pendingRequests'
-    ));
-}
+        return view('pages.dentist-dashboard', compact(
+            'totalPatients',
+            'patientsToday',
+            'pendingRequests'
+        ));
+    }
 
     public function ServicesDashboard()
     {
@@ -449,134 +449,134 @@ public function deleteInventory($id)
     }
 
     public function VerifyUserEmail(Request $request)
-{
-    try {
-        $validator = Validator::make($request->all(), [
-            'first_name' => 'required|string|max:255',
-            'last_name'  => 'required|string|max:255',
-            'user_name'  => 'required|string|max:255|unique:users,UserName',
-            'email'      => 'required|email|unique:users,Email',
-            'password'   => 'required|string|confirmed',
-        ]);
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'user_name' => 'required|string|max:255|unique:users,UserName',
+                'email' => 'required|email|unique:users,Email',
+                'password' => 'required|string|confirmed',
+            ]);
 
-        if ($validator->fails()) {
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            // generate verification code (uppercase)
+            $code = Str::upper(Str::random(6));
+
+            // store data in session using plain timestamp (int)
+            $pending = [
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'user_name' => $request->user_name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'code' => $code,
+                'last_code_sent_at' => now()->timestamp, // store as int
+            ];
+
+            session()->put('pending_registration', $pending);
+            session()->save(); // force write
+
+            // send email
+            Mail::to($request->email)->send(
+                new MailVerificationCode(
+                    $request->first_name,
+                    $request->last_name,
+                    $code
+                )
+            );
+
+            Log::info('verification email sent to ' . $request->email);
+
+            return response()->json([
+                'status' => 'success',
+                'redirect' => route('verification.page', ['email' => $request->email])
+            ]);
+        } catch (\Throwable $th) {
+            Log::error('VerifyUserEmail error: ' . $th->getMessage());
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function VerificationPage(Request $request)
+    {
+        return view('pages.patients.verification-page', [
+            'email' => $request->email
+        ]);
+    }
+
+    public function ResendCode(Request $request)
+    {
+        $pending = session('pending_registration');
+
+        if (!$pending) {
             return response()->json([
                 'status' => 'error',
-                'errors' => $validator->errors()
+                'message' => 'No pending registration found.',
             ], 422);
         }
 
-        // generate verification code (uppercase)
-        $code = Str::upper(Str::random(6));
+        // cooldown seconds
+        $cooldown = 60;
 
-        // store data in session using plain timestamp (int)
-        $pending = [
-            'first_name' => $request->first_name,
-            'last_name'  => $request->last_name,
-            'user_name'  => $request->user_name,
-            'email'      => $request->email,
-            'password'   => Hash::make($request->password),
-            'code'       => $code,
-            'last_code_sent_at' => now()->timestamp, // store as int
-        ];
+        // read stored timestamp (int) or allow immediately if not present
+        $lastTs = isset($pending['last_code_sent_at']) ? (int) $pending['last_code_sent_at'] : 0;
 
+        $nowTs = now()->timestamp;
+        $secondsPassed = $lastTs ? ($nowTs - $lastTs) : $cooldown + 1;
+
+        if ($secondsPassed < $cooldown) {
+            $remaining = $cooldown - $secondsPassed;
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Please wait before resending the code.',
+                'wait_time' => $remaining, // seconds left
+            ], 429);
+        }
+
+        // generate new code and update timestamp (store ints)
+        $newCode = strtoupper(Str::random(6));
+        $pending['code'] = $newCode;
+        $pending['last_code_sent_at'] = $nowTs;
+
+        // save back to session
         session()->put('pending_registration', $pending);
-        session()->save(); // force write
+        session()->save(); // ensure written immediately
 
         // send email
-        Mail::to($request->email)->send(
-            new MailVerificationCode(
-                $request->first_name,
-                $request->last_name,
-                $code
-            )
-        );
+        try {
+            Mail::to($pending['email'])->send(
+                new MailVerificationCode(
+                    $pending['first_name'],
+                    $pending['last_name'],
+                    $newCode
+                )
+            );
+        } catch (\Throwable $e) {
+            Log::error('ResendCode mail error: ' . $e->getMessage());
+            // Roll back timestamp if mail failed (optional)
+            // $pending['last_code_sent_at'] = $lastTs;
+            // session()->put('pending_registration', $pending);
+            // session()->save();
 
-        Log::info('verification email sent to ' . $request->email);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to send email. Try again later.'
+            ], 500);
+        }
 
         return response()->json([
             'status' => 'success',
-            'redirect' => route('verification.page', ['email' => $request->email])
+            'message' => 'A new verification code has been sent to your email.',
+            'wait_time' => $cooldown,
         ]);
-    } catch (\Throwable $th) {
-        Log::error('VerifyUserEmail error: '.$th->getMessage());
-        return response()->json(['error' => $th->getMessage()], 500);
     }
-}
-
-public function VerificationPage(Request $request)
-{
-    return view('pages.patients.verification-page', [
-        'email' => $request->email
-    ]);
-}
-
-public function ResendCode(Request $request)
-{
-    $pending = session('pending_registration');
-
-    if (!$pending) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'No pending registration found.',
-        ], 422);
-    }
-
-    // cooldown seconds
-    $cooldown = 60;
-
-    // read stored timestamp (int) or allow immediately if not present
-    $lastTs = isset($pending['last_code_sent_at']) ? (int) $pending['last_code_sent_at'] : 0;
-
-    $nowTs = now()->timestamp;
-    $secondsPassed = $lastTs ? ($nowTs - $lastTs) : $cooldown + 1;
-
-    if ($secondsPassed < $cooldown) {
-        $remaining = $cooldown - $secondsPassed;
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Please wait before resending the code.',
-            'wait_time' => $remaining, // seconds left
-        ], 429);
-    }
-
-    // generate new code and update timestamp (store ints)
-    $newCode = strtoupper(Str::random(6));
-    $pending['code'] = $newCode;
-    $pending['last_code_sent_at'] = $nowTs;
-
-    // save back to session
-    session()->put('pending_registration', $pending);
-    session()->save(); // ensure written immediately
-
-    // send email
-    try {
-        Mail::to($pending['email'])->send(
-            new MailVerificationCode(
-                $pending['first_name'],
-                $pending['last_name'],
-                $newCode
-            )
-        );
-    } catch (\Throwable $e) {
-        Log::error('ResendCode mail error: '.$e->getMessage());
-        // Roll back timestamp if mail failed (optional)
-        // $pending['last_code_sent_at'] = $lastTs;
-        // session()->put('pending_registration', $pending);
-        // session()->save();
-
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Failed to send email. Try again later.'
-        ], 500);
-    }
-
-    return response()->json([
-        'status' => 'success',
-        'message' => 'A new verification code has been sent to your email.',
-        'wait_time' => $cooldown,
-    ]);
-}
 
 
 
@@ -586,34 +586,34 @@ public function ResendCode(Request $request)
 
         try {
             $request->validate([
-        'code' => 'required|array|size:6',
-        'email' => 'required|email',
-    ]);
+                'code' => 'required|array|size:6',
+                'email' => 'required|email',
+            ]);
 
-    $pending = session('pending_registration');
+            $pending = session('pending_registration');
 
-    if (!$pending || $pending['email'] !== $request->email) {
-        return redirect()->back()->with('error', 'No pending registration found.');
-    }
+            if (!$pending || $pending['email'] !== $request->email) {
+                return redirect()->back()->with('error', 'No pending registration found.');
+            }
 
-    $inputCode = implode('', $request->code);
+            $inputCode = implode('', $request->code);
 
-    if ($inputCode !== $pending['code']) {
-        return redirect()->back()->with('error', 'Invalid verification code.');
-    }
+            if ($inputCode !== $pending['code']) {
+                return redirect()->back()->with('error', 'Invalid verification code.');
+            }
 
-    $user = User::create([
-        'FirstName' => $pending['first_name'],
-        'LastName' => $pending['last_name'],
-        'UserName' => $pending['user_name'],
-        'Email' => $pending['email'],
-        'password' => $pending['password'],
-    ]);
+            $user = User::create([
+                'FirstName' => $pending['first_name'],
+                'LastName' => $pending['last_name'],
+                'UserName' => $pending['user_name'],
+                'Email' => $pending['email'],
+                'password' => $pending['password'],
+            ]);
 
-    Auth::login($user);
-    session()->forget('pending_registration');
+            Auth::login($user);
+            session()->forget('pending_registration');
 
-    return redirect()->route('patient-profile')->with('success', 'Account verified and created!');
+            return redirect()->route('patient-profile')->with('success', 'Account verified and created!');
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -732,7 +732,7 @@ public function ResendCode(Request $request)
     public function DoctorsPage()
     {
         try {
-            $doctors = Doctors::all();
+            $doctors = Doctors::where('IsRemoved', 0)->get();
             return view('pages.dashboard-doctors', compact('doctors'));
         } catch (\Exception $th) {
             throw $th;
@@ -1094,7 +1094,17 @@ public function ResendCode(Request $request)
     {
         try {
             Log::info($request->all());
-            SubService::where('id', $request->id)->update(['isVisible' => false]);
+            SubService::where('id', $request->id)->update(['IsRemoved' => true]);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()]);
+            //throw $th;
+        }
+    }
+    public function RemoveDentist(Request $request)
+    {
+        try {
+            Log::info($request->all());
+            Doctors::where('id', $request->id)->update(['IsRemoved' => true]);
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()]);
             //throw $th;
@@ -1397,55 +1407,80 @@ public function ResendCode(Request $request)
     }
 
     public function CompleteAppointment(Request $request)
-    {
-        try {
-            // Validate incoming data
-            Log::info($request['amount']);
-            $request->merge([
-                'amount' => str_replace(',', '', $request->amount)
-            ]);
-            $validated = $request->validate([
-                'refID' => 'required|integer',
-                'amount' => 'required|numeric|min:1',
-            ]);
+{
+    try {
+        // Normalize input (remove commas from the amount)
+        $request->merge([
+            'amount' => str_replace(',', '', $request->amount)
+        ]);
 
-            $apptID = $validated['refID'];
+        $validated = $request->validate([
+            'refID'  => 'required|integer',
+            'amount' => 'required|numeric|min:1',
+        ]);
 
-            // Find appointment
-            $appointment = Appointment::find($apptID);
+        $apptID = $validated['refID'];
 
-            if (!$appointment) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Appointment not found.'
-                ], 404);
-            }
-
-
-            // Update fields
-            $appointment->update([
-                'amount_paid' => $validated['amount'],
-                'mark_by' => Auth::id(),
-                'status' => 'Completed',   // optional but recommended
-            ]);
-
+        // Fetch appointment
+        $appointment = Appointment::find($apptID);
+        if (!$appointment) {
             return response()->json([
-                'status' => 'success',
-                'message' => 'Appointment completed successfully.'
-            ]);
-
-        } catch (\Throwable $th) {
-
-            Log::error('CompleteAppointment error:', [
-                'error' => $th->getMessage(),
-            ]);
-
-            return response()->json([
-                'status' => 'error',
-                'message' => 'An error occurred while completing the appointment.'
-            ], 500);
+                'status'  => 'error',
+                'message' => 'Appointment not found.'
+            ], 404);
         }
+
+        // Fetch service price
+        $service = SubService::find($appointment->service_id);
+        if (!$service) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Service not found.'
+            ], 404);
+        }
+
+        $servicePrice = (float) $service->Price;
+
+        // 1️⃣ Store the new payment
+        $payment = new PatientPayments();
+        $payment->appointment_id = $apptID;
+        $payment->entered_by      = auth()->id();
+        $payment->amount_paid     = (float) $validated['amount'];
+        $payment->save();
+
+        // 2️⃣ Recalculate total paid for this appointment
+        $totalPaid = PatientPayments::where('appointment_id', $apptID)
+                        ->sum('amount_paid');
+
+        // 3️⃣ Update appointment status
+        $appointment->status  = ($totalPaid >= $servicePrice) ? 'Completed' : 'Pending';
+        $appointment->mark_by = auth()->id();
+        $appointment->save();
+
+        // Optional log
+        Log::info("Appointment #$apptID updated to: " . $appointment->status);
+
+        return response()->json([
+            'status'             => 'success',
+            'total_paid'         => $totalPaid,
+            'service_price'      => $servicePrice,
+            'appointment_status' => $appointment->status
+        ]);
+
+    } catch (\Throwable $th) {
+        Log::error('CompleteAppointment error:', [
+            'error' => $th->getMessage(),
+        ]);
+
+        return response()->json([
+            'status'  => 'error',
+            'message' => 'An error occurred while completing the appointment.'
+        ], 500);
     }
+}
+
+
+
 
 
 }

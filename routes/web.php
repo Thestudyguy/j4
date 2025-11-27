@@ -70,6 +70,7 @@ Route::middleware('authenticated')->group(function(){
     Route::post('service/update-service', [Controller::class,'UpdateService'])->name('service/update-service');
     Route::post('services/update-sub-service', [Controller::class,'UpdateSubServices'])->name('services/update-sub-service');
     Route::post('services/remove-sub-service', [Controller::class,'RemoveSubService'])->name('services/remove-sub-service');
+    Route::post('dentist/remove-dentist', [Controller::class,'RemoveDentist'])->name('dentist/remove-dentist');
     Route::post('doctors/get-doctors-appointment/{id}', [Controller::class,'GetDoctorsAppointments'])->name('services/remove-sub-service');
     Route::post('appointments/new-note', [DentistController::class,'CreateNotes']);
     Route::get('billings', [Controller::class,'Billings'])->name('billings');

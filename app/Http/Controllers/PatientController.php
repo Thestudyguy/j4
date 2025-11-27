@@ -408,7 +408,7 @@ $availableDoctors = array_values($availableDoctors);
     ->join('users', 'users.id', '=', 'patient_info.patient_id') // user → patient_info
     ->join('doctors', 'doctors.id', '=', 'appointments.doctor_id')
     ->join('sub_services', 'sub_services.id', '=', 'appointments.service_id')
-    ->leftJoin('opt_notes', 'opt_notes.appointment', '=', 'appointments.id')
+    ->leftJoin('patient_appointment_notes', 'patient_appointment_notes.appointment_id', '=', 'appointments.id')
     ->where('patient_info.patient_id', Auth::id()) // filter by logged-in user
     ->select(
         'doctors.FirstName as dfName',
@@ -421,15 +421,10 @@ $availableDoctors = array_values($availableDoctors);
         'appointments.date',
         'appointments.status',
         'appointments.id',
-        'opt_notes.Date as note_date',
-        'opt_notes.Tooth',
-        'opt_notes.Procedure',
-        'opt_notes.AmountCharge',
-        'opt_notes.AmountPaid',
-        'opt_notes.Balance',
-        'opt_notes.PostOpNotes',
-        'opt_notes.ImportantNotes',
-        'opt_notes.id as note_id'
+        'patient_appointment_notes.date as note_date',
+        'patient_appointment_notes.note',
+        'patient_appointment_notes.created_at',
+        'patient_appointment_notes.id as note_id'
     )
     ->get();
             $appointmentcount = Appointment::where('patient_id', $patient->id)->get();

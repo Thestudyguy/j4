@@ -7,7 +7,7 @@
     {{-- ✅ AdminLTE Preloader --}}
     
     {{-- ✅ Top Navbar --}}
-        @include('layouts.dashboard-sidebar') {{-- should use .main-sidebar class inside --}}
+    @include('layouts.dashboard-sidebar')
     
     @include('layouts.dashboard-navbar') {{-- should use .main-header class inside --}}
 

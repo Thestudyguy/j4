@@ -293,7 +293,7 @@ $(document).ready(function () {
                     data-price="${data.Price}"
                     data-image="/storage/${data.image_path}"
                                 class="btn btn-transparent p-0 m-0 edit-sub-service-btn" data-bs-target="#update-sub-service" data-bs-toggle="modal"><i class="fas fa-pen text-success text-sm"></i></button>
-                                <button data-id="${data.id}" data-description="${data.Description}" data-price="${data.Price}" data-service="${data.Service}" class="prep-remove-sub-service btn btn-transparent visually-hidden p-0 m-0" data-bs-target='#remove-sub-service' data-bs-toggle="modal"><i class="fas fa-trash text-danger text-sm"></i></button>
+                                <button data-id="${data.id}" data-description="${data.Description}" data-price="${data.Price}" data-service="${data.Service}" class="prep-remove-sub-service btn btn-transparent p-0 m-0" data-bs-target='#remove-sub-service' data-bs-toggle="modal"><i class="fas fa-trash text-danger text-sm"></i></button>
                             </div>
                         </div>
                     </div>
@@ -363,7 +363,29 @@ $(document).ready(function () {
             },
             success: function(response){
                 console.log(response);
+                localStorage.setItem('remove-service', 'removed');
+                location.reload();
+            },
+            error: function(jqXHR, err, stat){
+                console.log(err);
                 
+            },
+        });
+        
+    });
+    $('.prep-remove-doctor-btn').on('click', function(){
+        console.log($(this).attr('data-id'));
+        $.ajax({
+            type: 'POST',
+            url: 'dentist/remove-dentist',
+            data: {id: $(this).attr('data-id')},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
+            },
+            success: function(response){
+                console.log(response);
+                localStorage.setItem('remove-dentist', 'removed');
+                location.reload();
             },
             error: function(jqXHR, err, stat){
                 console.log(err);
@@ -518,7 +540,22 @@ $(document).ready(function () {
             }
         });
     });
-
+              let subService =  localStorage.getItem('remove-service');
+              let dentist =  localStorage.getItem('remove-dentist');
+    if(subService === 'removed'){
+        Toast.fire({
+            icon: 'success',
+            title: 'Sub-service has been removed successfully'
+        });
+        localStorage.removeItem('remove-service')
+    }
+    if(dentist === 'removed'){
+        Toast.fire({
+            icon: 'success',
+            title: 'Dentist has been removed successfully'
+        });
+        localStorage.removeItem('remove-dentist')
+    }
     function setPostActionToast(messageType = 'success', messageTitle = '', messageText = '') {
         localStorage.setItem('postActionToast', JSON.stringify({
             type: messageType,

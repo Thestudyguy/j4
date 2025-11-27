@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('item_name');
             $table->string('category');
             $table->integer('on_hand');
+            $table->integer('threshold');
             $table->date('manufactured_date')->nullable();
             $table->date('expiration_date')->nullable();
             $table->decimal('price', 15);

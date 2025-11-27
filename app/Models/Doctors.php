@@ -18,6 +18,7 @@ class Doctors extends Model
         'MDLink',
         'AreaOfExpertise',
         'NameExtensions',
+        'IsRemoved',
         'image_path'
     ];
 }

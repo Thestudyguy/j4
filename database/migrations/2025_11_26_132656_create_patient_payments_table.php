@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('appointment_id')->nullable();
             $table->foreign('appointment_id')->references('id')->on('appointments')->nullOnDelete();
+            $table->unsignedBigInteger('entered_by')->nullable();
+            $table->foreign('entered_by')->references('id')->on('users')->nullOnDelete();
             $table->string('amount_paid');
             $table->timestamps();
         });

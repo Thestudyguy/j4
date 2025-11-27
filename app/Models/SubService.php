@@ -13,6 +13,7 @@ class SubService extends Model
         'Price',
         'Description',
         'image_path',
+        'IsRemoved',
         'parent_service'
     ];
 }
