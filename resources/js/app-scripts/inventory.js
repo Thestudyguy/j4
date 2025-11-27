@@ -196,6 +196,15 @@ let updateUrl = `/inventory/update/${refID}`;
     });
 });
 
+    $('.save-category').on('click', function(e){
+        e.preventDefault();
+        console.log(
+            $(this).closest('.modal').find('form').serializeArray()
+        );
+        
+    });
+
+
     const inventoryStat = localStorage.getItem('inventory');
     if(inventoryStat === 'added'){
         Toast.fire({

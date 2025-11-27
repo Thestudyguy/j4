@@ -3,14 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\FollowUpCheckupMail;
 use App\Models\Appointment;
 use App\Models\Doctors;
 use App\Models\Inventory;
 use App\Models\opt_notes;
+use App\Models\PatientHistory;
+use App\Models\Patients;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 class DentistController extends Controller
 {
     //
@@ -57,7 +61,7 @@ class DentistController extends Controller
             ->join('appointments', 'appointments.doctor_id','=','doctors.id')
             ->join('patient_info', 'patient_info.id','=','appointments.patient_id')
             ->join('sub_services', 'sub_services.id','=','appointments.service_id')
-            ->leftJoin('opt_notes','opt_notes.appointment','=','appointments.id')
+            ->leftJoin('patient_appointment_notes','patient_appointment_notes.appointment_id','=','appointments.id')
             ->select(
                 'doctors.ProfessionalTitle as title', 'doctors.Firstname as dfName', 'doctors.LastName as dlname',
                 'appointments.id',
@@ -70,7 +74,7 @@ class DentistController extends Controller
                 'patient_info.LastName',
                 'patient_info.id as refID',
                 'sub_services.Service as service',
-                'opt_notes.Date as note_date', 'opt_notes.Tooth','opt_notes.Procedure','opt_notes.AmountCharge','opt_notes.AmountPaid','opt_notes.Balance', 'PostOpNotes', 'ImportantNotes', 'opt_notes.id as note_id'
+                'patient_appointment_notes.date as note_date', 'patient_appointment_notes.id as note_id', 'patient_appointment_notes.note as note', 'patient_appointment_notes.created_at'
             )
             ->where('appointments.status', '!=', 'archive')
             ->get();
@@ -97,34 +101,70 @@ class DentistController extends Controller
     public function CreateNotes(Request $request)
 {
     try {
-        
-        Log::info($request['appointment-id']);
-        $notes = opt_notes::create([
-            'appointment'            => $request->input('appointment-id'),
-            'Date'            => $request->input('date'),
-            'dentist'      => $request->input('dentist-id'),
-            'Tooth'           => $request->input('tooth'),
-            'Procedure'       => $request->input('procedure'),
-            'AmountCharge' => str_replace(',', '', $request->input('amount_charge') ?? 0),
-            'AmountPaid'     =>  str_replace(',', '', $request->input('amount_paid') ?? 0),
-            'Balance'         =>  str_replace(',', '', $request->input('balance') ?? 0),
-            'PostOpNotes'   => $request->input('post_op_notes'),
-            'ImportantNotes' => $request->input('important_notes'),
+        $appointmentId = $request->input('appointment-id');
+        $dentistId = $request->input('dentist-id');
+
+        // Create the note
+        $notesId = DB::table('patient_appointment_notes')->insertGetId([
+            'appointment_id' => $appointmentId,
+            'date'        => $request->input('date'),
+            'dentist'     => $dentistId,
+            'note'        => $request->input('note'),
         ]);
 
+        // Fetch raw appointment, patient, and dentist data
+        $appointmentData = DB::table('appointments as a')
+            ->join('patient_info as p', 'a.patient_id', '=', 'p.id')
+            ->join('doctors as d', 'a.doctor_id', '=', 'd.id')
+            ->select(
+                'a.id as appointment_id',
+                'a.date as appointment_date',
+                'a.time as appointment_time',
+                'p.FirstName as patient_firstname',
+                'p.LastName as patient_lastname',
+                'p.Email as patient_email',
+                'p.MobileNo as patient_mobile',
+                'd.FirstName as doctor_firstname',
+                'd.LastName as doctor_lastname',
+                'd.ProfessionalTitle as doctor_title',
+                'd.email as doctor_email'
+            )
+            ->where('a.id', $appointmentId)
+            ->first();
+
+        // Send email if patient email exists
+        if ($appointmentData->patient_email) {
+            Mail::to($appointmentData->patient_email)->send(new FollowUpCheckupMail([
+                'appointment' => $appointmentData,
+                'note_id'     => $notesId,
+            ]));
+        }
+
         return response()->json([
-            'status'  => 'success',
-            'message' => 'Notes successfully created',
-            'data'    => $notes
+            'status' => 'success',
+            'message' => 'Notes successfully created and email sent',
+            'data' => $notesId
         ], 201);
 
     } catch (\Throwable $th) {
         return response()->json([
-            'status'  => 'error',
+            'status' => 'error',
             'message' => $th->getMessage()
         ], 500);
     }
 }
-
+public function PatientMedicalHistory(Request $request){
+    try {
+        $patientID = $request->id;
+        $prepPatient = Patients::where('id', $patientID)->first();
+        $patientHistory = PatientHistory::where('patient_id', $prepPatient->id)->first();
+        return view('pages.patients.patient-profile-medical-history', [
+    'patientHistory' => $patientHistory,
+    'patientInfo' => $prepPatient
+]);
+    } catch (\Throwable $th) {
+        throw $th;
+    }
+}
 
 }

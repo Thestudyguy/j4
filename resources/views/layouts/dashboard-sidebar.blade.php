@@ -70,13 +70,25 @@
                     {{-- Only show this if the user is a patient --}}
                     <li class="nav-item">
                         <a href="{{ route('patient-appointments-page') }}" class="nav-link">
-                            <i class="nav-icon fas fa-user"></i>
+                            <i class="nav-icon fas fa-user" style="color: white;"></i>
                             <p class="text-sm">{{ __('Profile') }}</p>
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="{{ route('patient/billing') }}" class="nav-link">
+                            <i class="nav-icon fas fa-file" style="color: white;"></i>
+                            <p class="text-sm">{{ __('Billings') }}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('patient/med-history') }}" class="nav-link">
+                            <i class="nav-icon fas fa-book-medical" style="color: white;"></i>
+                            <p class="text-sm">{{ __('Medical History') }}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ route('new-appointment-form') }}" class="nav-link">
-                            <i class="nav-icon fas fa-notes-medical"></i>
+                            <i class="nav-icon fas fa-notes-medical" style="color: white;"></i>
                             <p class="text-sm">{{ __('New Appointment') }}</p>
                         </a>
                     </li>

@@ -49,15 +49,25 @@
 
                 {{-- Available Services --}}
                 <div class="appointment-step appointment-prep-step-2 visually-hidden">
-                    <h4 class="fw-semibold mb-3 text-secondary">Available Dental Services aninmal</h4>
+                    <h4 class="fw-semibold mb-3 text-secondary">Available Dental Services</h4>
                     <div class="row mb-5">
-                        @foreach ($subServices as $services)
-                            <div class="col-md-4 mb-4">
-                                <div class="card h-100 shadow-sm service-card" data-id="{{ $services->id }}">
-                                    <img src="{{ asset('storage/' . $services->image_path) }}"
-                                        class="card-img-top img-fluid rounded-top" alt="{{ $services->Service }}">
-                                    <div class="card-body text-center">
-                                        <h5 class="card-title">{{ $services->Service }}</h5>
+                        @foreach ($subServices as $service)
+                            <div class="col-sm-3 mb-3">
+                                <div class="card h-100 shadow-sm service-card" data-id="{{ $service->id }}">
+                                    <div class="row g-0">
+                                        <div class="col-4 d-flex justify-content-center align-items-center p-2">
+                                            <img src="{{ asset('storage/' . $service->image_path) }}"
+                                                class="img-fluid rounded" alt="{{ $service->Service }}"
+                                                style="max-height: 80px; object-fit: cover;">
+                                        </div>
+                                        <div class="col-8">
+                                            <div class="card-body p-2">
+                                                <h6 class="card-title mb-1 fw-bold">{{ $service->Service }}</h6>
+                                                <p class="card-text text-muted small mb-1">{{ $service->Description }}</p>
+                                                <p class="card-text text-info fw-semibold mb-0">
+                                                    ₱{{ number_format($service->Price, 2) }}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -69,12 +79,12 @@
                 <div class="appointment-step appointment-prep-step-3 visually-hidden">
                     <h4 class="fw-semibold mb-3 text-secondary">Our Dentists</h4>
                     <div class="row">
-                        @foreach ($availableDoctors as $item)
+                        {{-- @foreach ($availableDoctors as $item)
     @php
         $doctor = $item['doctor'];
         $offsched = $item['off_sched'];
     @endphp
-    <div class="col-md-4 mb-4">
+    <div class="col-md-3 mb-4">
         <div class="card h-100 shadow-sm doctor-card" data-id="{{ $doctor['dentistID'] }}"
              data-offsched='@json($offsched, JSON_HEX_APOS | JSON_HEX_QUOT)'>
             <img src="{{ asset($doctor['image_path']) }}" class="card-img-top img-fluid rounded-top"
@@ -89,8 +99,54 @@
             </div>
         </div>
     </div>
-@endforeach
+@endforeach --}}
 
+                    @foreach ($availableDoctors as $item)
+                            @php
+                                $doctor = $item['doctor'];
+                                $offsched = $item['off_sched'];
+                            @endphp
+                            <div class="col-md-3 mb-3">
+                                <div class="card h-100 shadow-sm doctor-card" data-id="{{ $doctor['dentistID'] }}"
+                                    data-offsched='@json($offsched, JSON_HEX_APOS | JSON_HEX_QUOT)'>
+
+                                    <div class="row g-0">
+                                        {{-- Image on the left --}}
+                                        <div class="col-4 d-flex justify-content-center align-items-center p-2">
+                                            <img src="{{ asset($doctor['image_path']) }}" class="img-fluid rounded"
+                                                alt="{{ $doctor['FirstName'] }}"
+                                                style="max-height: 100%; object-fit: contain;">
+                                        </div>
+
+                                        {{-- Details on the right --}}
+                                        <div class="col-8">
+                                            <div class="card-body p-2 text-start">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <h6 class="card-title mb-1 fw-bold">
+                                                            {{-- {{ $doctor->ProfessionalTitle ?? '' }}
+                                                            {{ $doctor->FirstName }} {{ $doctor->MiddleName ?? '' }}
+                                                            {{ $doctor->LastName }} --}}
+                                                             {{ $doctor['ProfessionalTitle'] ?? '' }}
+                                                             {{ $doctor['FirstName'] }} {{ $doctor['MiddleName'] }}
+                                                             {{ $doctor['LastName'] }}
+                                                        </h6>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <p class="text-muted small mb-1">
+                                                            {{ $doctor['AreaOfExpertise'] ?? 'Dentist' }}
+
+                                                    </div>
+                                                </div>
+
+                                                {{-- Optional: add status or off-schedule badge --}}
+                                                {{-- <span class="badge bg-warning">Off Schedule</span> --}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
 
                     </div>
                 </div>

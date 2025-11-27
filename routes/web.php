@@ -89,7 +89,9 @@ Route::post('/patient-setup', [PatientController::class, 'PatientSetUp'])->name(
 Route::post('/available-slots', [PatientController::class, 'GetVacantTimeSlots'])->name('available-slots')->middleware('auth');
 Route::post('/appointments', [PatientController::class, 'AppointmentConfirmation'])->name('appointment-confirmation')->middleware('auth');
 Route::get('/user-appointment-list', [PatientController::class, 'PostAppointmentLoc'])->name('appointment-lists')->middleware('auth');
-
+Route::get('patient/billing', [PatientController::class, 'PatientAppointmentBillings'])->name('patient/billing');
+Route::get('patient/med-history', [PatientController::class, 'PatientMedicalHistory'])->name('patient/med-history');
+Route::get('dentist/patient/med-history', [DentistController::class, 'PatientMedicalHistory'])->name('dentist/patient/med-history');
 
 
 Route::get('/test-mail', function () {

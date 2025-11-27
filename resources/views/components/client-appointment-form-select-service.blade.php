@@ -1,5 +1,5 @@
 <div class="">
-    <p class="client-info fw-bold">Select service</p>
+    <p class="client-info fw-bold">Select service ssss</p>
     <div class="row">
         @foreach ($subServices as $service)
         <div class="col-sm-3 mb-4 is-dom-card-selected" id="selected-sub-service-id-{{ $service->id }}">

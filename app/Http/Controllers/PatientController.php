@@ -280,6 +280,122 @@ $availableDoctors = array_values($availableDoctors);
         }
     }
 
+    public function PatientAppointmentBillings()
+{
+    try {
+        $userID = Auth::user()->id;
+        $patient = Patients::where('patient_id', $userID)->first();
+
+        // Fetch raw appointment & billing records
+        $appointments = DB::table('appointments as a')
+    ->leftJoin('sub_services as s', 's.id', '=', 'a.service_id')
+    ->leftJoin('doctors as d', 'd.id', '=', 'a.doctor_id')
+    ->leftJoin('patient_info as p', 'p.id', '=', 'a.patient_id')
+    ->join('billings as b', 'b.appointmentID', '=', 'a.id')
+    ->leftJoin('inventories as i', 'i.id', '=', 'b.itemID')
+    ->where('a.patient_id', $patient['id'])
+    ->select(
+        'a.id as appointment_id',
+        'a.date',
+        'a.time',
+        'a.status',
+        'a.created_by',
+        'a.amount_paid',
+        'a.is_walk_in',
+
+        // Service
+        's.Service as service_name',
+        's.Price as service_price',
+
+        // Doctor
+        'd.id as doctor_id',
+        'd.ProfessionalTitle',
+        'd.FirstName as doctor_first',
+        'd.LastName as doctor_last',
+        'd.Suffix as doctor_suffix',
+        'd.image_path',
+
+        // Patient
+        'p.FirstName as patient_first_name',
+        'p.LastName as patient_last_name',
+
+        // Billing
+        'b.item',
+        'b.itemPrice',
+        'b.quantity'
+    )
+    ->get();
+
+        // Group & format results
+        $grouped = $appointments->groupBy('appointment_id')->map(function ($items) {
+    $first = $items->first();
+
+    return [
+
+        "appointment_id" => $first->appointment_id,
+        "date" => $first->date,
+        "time" => $first->time,
+        "status" => $first->status,
+        "created_by" => $first->created_by,
+        "amount_paid" => $first->amount_paid,
+        "is_walk_in" => $first->is_walk_in,
+        "service_name" => $first->service_name,
+        "service_price" => $first->service_price,
+
+        // Patient info
+        "patient" => [
+            "first_name" => $first->patient_first_name,
+            "last_name" => $first->patient_last_name
+        ],
+
+        // Doctor info
+        "doctor" => [
+            "doctor_id" => $first->doctor_id,
+            "title" => $first->ProfessionalTitle,
+            "first_name" => $first->doctor_first,
+            "last_name" => $first->doctor_last,
+            "suffix" => $first->doctor_suffix,
+            "image" => $first->image_path
+        ],
+
+        // Billing items
+        "billing_items" => $items->map(function ($i) {
+            return [
+                "item" => $i->item,
+                "price" => $i->itemPrice,
+                "quantity" => $i->quantity
+            ];
+        })->values(),
+    ];
+});
+
+        Log::info(json_encode($grouped, JSON_PRETTY_PRINT));
+
+        return view('pages.patients.patient-appointment-billings', [
+            'appointments' => $grouped
+        ]);
+
+    } catch (\Throwable $th) {
+        throw $th;
+    }
+}
+
+    public function PatientMedicalHistory(){
+        try {
+            $patientID = Auth::user()->id;
+            $prepPatient = Patients::where('patient_id', $patientID)->first();
+            $patientHistory = PatientHistory::where('patient_id', $prepPatient->id)->first();
+            // Log::info($prepPatient->id);
+            Log::info(json_encode($patientHistory, JSON_PRETTY_PRINT));
+            return view('pages.patients.patient-profile-medical-history', [
+    'patientHistory' => $patientHistory,
+    'patientInfo' => $prepPatient
+]);
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 
     public function PatientAppointmentList()
     {
@@ -316,11 +432,12 @@ $availableDoctors = array_values($availableDoctors);
         'opt_notes.id as note_id'
     )
     ->get();
-
-                Log::info(json_encode($patient, JSON_PRETTY_PRINT));
+            $appointmentcount = Appointment::where('patient_id', $patient->id)->get();
+            $patientAppointmentCount = count($appointmentcount);
+            Log::info(json_encode($patient, JSON_PRETTY_PRINT));
             $patientForecastPayment = $prepAppointment->sum('price');
             $patientDuePayments = $prepAppointment->where('status', 'completed')->sum('price');
-            return view('pages.patients.patient-appointment-list', compact('prepAppointment', 'patientForecastPayment', 'patient', 'patientHistory', 'patientDuePayments'));
+            return view('pages.patients.patient-appointment-list' , compact('prepAppointment', 'patientForecastPayment', 'patient', 'patientHistory', 'patientDuePayments', 'patientAppointmentCount'));
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -332,7 +449,7 @@ $availableDoctors = array_values($availableDoctors);
         Log::info($request['patient_personal_info']['firstname']);
         $patient_id = Auth::user()->id;
         $patient = User::where('id', $patient_id)->first();
-        Log::info($request);
+        Log::info($patient_id);
         try {
             // Save Patient data
             $patient = Patients::create([

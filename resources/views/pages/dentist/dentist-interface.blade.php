@@ -89,7 +89,7 @@
                                 @else bg-secondary @endif">
                                 {{ ucfirst($appt->status) }}
                             </span>
-                            <a href="{{ route('patient-details-view', ['id' => $appt->patient_id]) }}"
+                            <a href="{{ route('dentist/patient/med-history', ['id' => $appt->refID]) }}"
                                 class="text-secondary ms-2 me-1" title="View patient information" target="_blank">
                                 <i class="fas fa-eye text-warning"></i>
                             </a>
