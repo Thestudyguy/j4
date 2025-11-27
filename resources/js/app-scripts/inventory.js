@@ -197,13 +197,131 @@ let updateUrl = `/inventory/update/${refID}`;
 });
 
     $('.save-category').on('click', function(e){
-        e.preventDefault();
-        console.log(
-            $(this).closest('.modal').find('form').serializeArray()
-        );
-        
-    });
+    e.preventDefault();
 
+    let form = $('#category-form');
+    let formData = form.serialize();
+
+    $.ajax({
+        url: "categories/store",
+        type: "POST",
+        data: formData,
+        success: function(res) {
+            if(res.status === 'success') {
+                localStorage.setItem('category', 'saved');
+                location.reload();
+
+                // OPTIONAL: Update a dropdown/table dynamically
+                // $('#category-table').append(...)
+
+                // $('#new-category').modal('hide');  // Close modal
+                // form.trigger('reset');            // Clear form
+            }
+        },
+        error: function(xhr){
+            if(xhr.status === 422){
+                let errors = xhr.responseJSON.errors;
+                alert(Object.values(errors).join("\n"));
+            } else {
+                alert("Something went wrong.");
+            }
+        }
+    });
+});
+// OPEN EDIT MODAL
+$(document).on('click', '.update-category', function() {
+    let catID = $(this).attr('id');
+    let form = $(this).closest('.modal').find('form').serializeArray();
+    console.log(form);
+        $('#edit-category-name').removeClass('is-invalid');
+    if($('#edit-category-name').val() == ''){
+        Toast.fire({
+            icon: 'warning',
+            title: 'Please fill all fields'
+        });
+        $('#edit-category-name').addClass('is-invalid');
+        return;
+    }
+    $.ajax({
+        url: "categories/update",
+        type: "POST",
+        data: {form, catID},
+        success: function(res) {
+            if(res.status === 'success') {
+                localStorage.setItem('category', 'updated');
+                location.reload();
+
+                // OPTIONAL: Update a dropdown/table dynamically
+                // $('#category-table').append(...)
+
+                // $('#new-category').modal('hide');  // Close modal
+                // form.trigger('reset');            // Clear form
+            }
+        },
+        error: function(xhr){
+            if(xhr.status === 422){
+                let errors = xhr.responseJSON.errors;
+                alert(Object.values(errors).join("\n"));
+            } else {
+                alert("Something went wrong.");
+            }
+        }
+    });
+});
+    $('.delete-cat').on('click', function(e){
+    e.preventDefault();
+    let catID = $(this).data('id'); // use data-id
+
+    $.ajax({
+        url: "/categories/delete", // absolute path
+        type: "POST",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: { catID: catID },
+        success: function(res) {
+            if(res.status === 'success') {
+                localStorage.setItem('category', 'deleted');
+                location.reload();
+            }
+        },
+        error: function(xhr){
+            if(xhr.status === 422){
+                let errors = xhr.responseJSON.errors;
+                alert(Object.values(errors).join("\n"));
+            } else {
+                alert("Something went wrong.");
+            }
+        }
+    });
+});
+
+
+    const cat = localStorage.getItem('category');
+    if(cat === 'saved'){
+        Toast.fire({
+            icon: 'success',
+            title: 'Inventory',
+            text: 'Category has been added successfully'
+        });
+        localStorage.removeItem('category');
+    }
+    if(cat === 'deleted'){
+        Toast.fire({
+            icon: 'success',
+            title: 'Inventory',
+            text: 'Category has been deleted successfully'
+        });
+        localStorage.removeItem('category');
+    }
+    if(cat === 'updated'){
+        Toast.fire({
+            icon: 'success',
+            title: 'Inventory',
+            text: 'Category has been added successfully'
+        });
+        localStorage.removeItem('category');
+    }
 
     const inventoryStat = localStorage.getItem('inventory');
     if(inventoryStat === 'added'){

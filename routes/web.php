@@ -78,11 +78,12 @@ Route::middleware('authenticated')->group(function(){
     Route::post('dentist/off-schedule', [Controller::class,'storeOffSchedule']);
     Route::post('report/billing-pdf/{id}', [PDFController::class,'GenerateBillingReport']);
     Route::post('appointments/complete', [Controller::class,'CompleteAppointment'])->name('appointments/complete');
-    
+    Route::post('/categories/store', [Controller::class, 'StoreCategory'])->name('categories/store');
+    Route::post('/categories/delete', [Controller::class, 'DeleteCategory'])->name('categories/delete');
 Route::get('appointments/appointment-summary', [PDFController::class,'AppointmentSummary'])->name('appointments.summary');
 Route::post('inventory/update/{id}', [Controller::class, 'updateInventory'])->name('inventory.update');
 Route::delete('inventory/delete/{id}', [Controller::class, 'deleteInventory']);
-});
+});Route::post('/categories/update', action: [Controller::class, 'UpdateCategory'])->name('categories/update');
 Route::get('/patient-appointments', [PatientController::class, 'PatientAppointmentList'])->name('patient-appointments-page');
 Route::post('/appointments/update', [PatientController::class, 'UpdateAppointment']);
 Route::get('/patient-details', [Controller::class, 'ViewPatientDetails'])->name('patient-details');

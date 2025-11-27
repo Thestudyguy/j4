@@ -21,16 +21,9 @@
                         <label for="category" class="form-label fw-semibold">Category</label>
                         <select id="category" name="category" class="form-select" required>
                             <option value="" hidden selected>Select a category</option>
-                            <option value="ppe">PPE</option>
-                            <option value="patient protection">Patient Protection</option>
-                            <option value="patient protection">Procedure Supplies</option>
-                            <option value="consumables">Consumables</option>
-                            <option value="tools">Tools</option>
-                            <option value="anesthetics">Anesthetics</option>
-                            <option value="orthodontics">Orthodontics</option>
-                            <option value="restoratives">Restoratives</option>
-                            <option value="hygiene">Hygiene</option>
-                            <option value="other">Other</option>
+                            @foreach ($category as $cat)
+                                <option value="{{$cat->category}}">{{$cat->category}}</option>
+                                @endforeach
                         </select>
                     </div>
 

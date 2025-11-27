@@ -99,17 +99,21 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach ($category as $cat)
                 <tr>
-                    <td class="text-muted">casdad</td>
+                    <td class="text-muted">{{$cat->category}}</td>
                     <td class="text-muted">
-                        <span class="badge bg-none border">
+                        <span class="badge bg-none border" data-bs-target="#edit-category-{{$cat->id}}" data-bs-toggle="modal">
                             <i class="fas fa-pen text-success"></i>
                         </span>
-                        <span class="badge bg-none border">
+                        <span class="badge bg-none border" data-bs-target="#delete-category-{{ $cat->id }}" data-bs-toggle="modal">
                             <i class="fas fa-trash text-danger"></i>
                         </span>
                     </td>
                 </tr>
+    @include('modals.delete-category')
+    @include('modals.edit-category')
+                @endforeach
             </tbody>
         </table>
         </div>
