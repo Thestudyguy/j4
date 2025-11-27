@@ -135,7 +135,13 @@
                     <li class="nav-item">
                         <a href="{{ route('dentist-interface') }}" class="nav-link">
                             <i class="nav-icon fas fa-file"></i>
-                            <p class="text-sm">{{ __('My appointments') }}</p>
+                            <p class="text-sm">{{ __('Appointments') }}</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('dentist-interface') }}" class="nav-link">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p class="text-sm">{{ __('Patients') }}</p>
                         </a>
                     </li>
                 @endif

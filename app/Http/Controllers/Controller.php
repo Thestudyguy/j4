@@ -430,7 +430,7 @@ public function deleteInventory($id)
 
     // Patients for today
     $today = Carbon::today()->toDateString();
-    $patientsToday = Appointment::whereDate('appointment_date', $today)->count();
+    $patientsToday = Appointment::whereDate('date', $today)->count();
 
     // Pending requests
     $pendingRequests = Appointment::where('status', 'pending')->count();
