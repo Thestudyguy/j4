@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('parent_service')->references('id')->on('services')->nullOnDelete();
             $table->string('Service')->unique();
             $table->decimal('Price', 15);
-            $table->boolean('IsRemoved')->default(false);
+            $table->boolean('isVisible')->default(false);
             $table->string('Description');
             $table->string('image_path');
             $table->timestamps();

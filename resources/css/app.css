@@ -17,6 +17,31 @@
 } */
 
  /* style for unavailable doctors */
+.quick-replies {
+    position: absolute;
+    bottom: 70px; /* above input bar */
+    left: 10px;
+    right: 10px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    z-index: 10;
+}
+
+.qr-btn {
+    padding: 6px 12px;
+    background: #20536B;
+    color: #fff;
+    font-size: 12px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.qr-btn:hover {
+    background: #173d4f;
+}
 
 .disabled-card {
     opacity: 0.5;

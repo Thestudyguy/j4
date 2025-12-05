@@ -83,13 +83,20 @@
         </div>
 
         <div id="chatMessages" class="chat-messages">
+            <div id="quickReplies" class="quick-replies">
+    <button class="qr-btn" data-text="services">Services</button>
+    <button class="qr-btn" data-text="pricing">Pricing</button>
+    <button class="qr-btn" data-text="teeth whitening">Teeth Whitening</button>
+</div>
             <div class="message-wrapper bot">
                 <div class="avatar">🤖</div>
                 <div class="message-bubble bot">Hello! 👋 How can I help you today?</div>
+                
             </div>
         </div>
 
         <div class="chat-input">
+            
             <input id="chatInput" type="text" placeholder="Type a message..." autocomplete="off" />
             <button id="sendBtn">Send</button>
         </div>

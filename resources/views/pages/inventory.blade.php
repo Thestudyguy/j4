@@ -21,15 +21,15 @@
                     class="btn btn-primary btn-sm">
                 <i class="fas fa-plus"></i> Add Item
             </button>
-            <button data-bs-toggle="modal" data-bs-target="#new-category"
+            {{-- <button data-bs-toggle="modal" data-bs-target="#new-category"
                     class="btn btn-primary btn-sm">
                 <i class="fas fa-plus"></i> Add Category
-            </button>
+            </button> --}}
             @include('modals.new-category-modal')
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-12">
             <div class="table-responsive shadow-sm rounded-3 bg-white">
         <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
@@ -90,7 +90,7 @@
         </table>
     </div>
         </div>
-        <div class="col-sm-4">
+        {{-- <div class="col-sm-4">
             <table class="table table-stripped">
             <thead>
                 <tr>
@@ -116,7 +116,7 @@
                 @endforeach
             </tbody>
         </table>
-        </div>
+        </div> --}}
     </div>
 </div>
 

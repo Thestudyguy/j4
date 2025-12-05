@@ -22,7 +22,7 @@
      <div class="col-sm-4">
     <a href="{{ url('/services-report-pdf') }}" target="_blank"
        class="btn btn-transparent border border-secondary float-end btn-sm fw-semibold text-sm">
-        <i class="fas fa-upload"></i>
+        <i class="fas fa-download"></i>
     </a>
 </div>
     <button data-bs-target="#new-service" data-bs-toggle="modal"

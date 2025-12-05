@@ -1,5 +1,11 @@
 $(document).ready(function(){
 $(function () {
+    $('.qr-btn').on('click', function(){
+      let text = $(this).data("text");
+    appendMessage('user', text);
+    $("#quickReplies").remove();
+    sendMessage(text);
+    });
       // ensure jQuery is loaded
       if (typeof $ === 'undefined') {
         console.error("jQuery not loaded.");
@@ -97,39 +103,40 @@ $(function () {
       }
 
       // Send handler
-      function sendMessage() {
-        const msg = $input.val().trim();
-        if (!msg) return;
+      function sendMessage(forcedText = null) {
+    // Ignore if forcedText is not string
+    if (forcedText && typeof forcedText !== 'string') forcedText = null;
+
+    const msg = forcedText || $input.val().trim();
+    if (!msg) return; // prevent empty messages
+
+    if (!forcedText) {
         appendMessage('user', msg);
         $input.val('');
-        $input.prop('disabled', true);
-        $send.prop('disabled', true);
+    }
 
-        const typingEl = createTyping();
+    $input.prop('disabled', true);
+    $send.prop('disabled', true);
 
-        getBotResponse(msg, function (err, reply) {
-          typingEl.remove();
-          $input.prop('disabled', false);
-          $send.prop('disabled', false);
-          $input.focus();
+    const typingEl = createTyping();
 
-          if (err) {
-            log("reply error:", err);
+    getBotResponse(msg, function (err, reply) {
+        typingEl.remove();
+        $input.prop('disabled', false);
+        $send.prop('disabled', false);
+        $input.focus();
+
+        if (err) {
             appendMessage('bot', "⚠️ " + (err.message || "Sorry, something went wrong."));
             return;
-          }
-          appendMessage('bot', reply);
-        });
-      }
+        }
+        appendMessage('bot', reply);
+    });
+}
+
 
       // wire send button and enter key
-      $send.on('click', sendMessage);
-      $input.on('keydown', function (e) {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          sendMessage();
-        }
-      });
+     $send.on('click', e => { e.preventDefault(); sendMessage(); });
 
       // For dev: show console hint
       log("Chat UI ready. Ensure route POST /chatbot/respond exists.");
